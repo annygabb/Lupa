@@ -8,21 +8,25 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      # Sem lockfile nesta etapa por indisponibilidade de registry no ambiente de autoria.
-      # Gerar lockfile para substituir npm install por npm ci após validação.
+          cache: "pnpm"
+          cache-dependency-path: "package.json"
       - name: Instalar dependências
-        run: npm install --no-audit --no-fund
+        run: pnpm install --no-frozen-lockfile
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
       - name: Tipagem
-        run: npm run typecheck
+        run: pnpm run typecheck
       - name: Testes unitários
-        run: npm test
+        run: pnpm run test
       - name: Build
-        run: npm run build
+        run: pnpm run build
