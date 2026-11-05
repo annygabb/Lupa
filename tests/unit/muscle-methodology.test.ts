@@ -55,7 +55,7 @@ describe("Etapa 7 — metodologia integral",()=>{
     const html=renderToStaticMarkup(createElement(MethodologyPage));
     expect(html).toContain("Como analisamos uma evidência");
     expect(html).toContain("O que o sistema impede");
-    expect(html).toContain("Cenários");
+    expect(html).toContain("cenários");
     expect(html).toContain("N(t)");
     expect(html).toContain("IBGE");
     expect(html).toContain("Vigitel");

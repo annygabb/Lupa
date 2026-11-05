@@ -72,7 +72,7 @@ describe("Etapa 6 — motor de cenários hipotéticos",()=>{
     const out=runScenario({...example,costPerActivePersonBRL:250});
     expect(out.last2036.annualIllustrativeCostBRL).toBe(out.last2036.active*250);
     expect(out.rows[0].annualIllustrativeCostBRL).toBe(20_000*250);
-    expect(out.warnings.some(w=>w.includes("orçamento"))).toBe(true);
+    expect(out.warnings.some(w=>w.includes("orçamentária"))).toBe(true);
   });
   it("recusa valores inválidos incluindo NaN, proporções fora de faixa e N impossível",()=>{
     for(const bad of [

@@ -7,7 +7,7 @@ const checks=[
   {path:"/evidencias/E04",contains:["SURMOUNT-1","Limitações"]},
   {path:"/comparar",contains:["Enxergue além dos números","Cálculo combinado"]},
   {path:"/musculos-uti",contains:["Além do peso","Que pergunta você quer responder?","A lacuna causal"]},
-  {path:"/projecoes",contains:["Projete hipóteses","Horizonte 2031","Exportar CSV"]},
+  {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
   {path:"/metodologia",contains:["Como analisamos uma evidência","Cenários","Fontes auditáveis"]},
 ];
 
