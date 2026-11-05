@@ -2,7 +2,7 @@
 
 MVP do **Hack Brasil 2026**, na trilha Saúde & bem-estar. O produto organizará evidências científicas sobre medicamentos para emagrecimento, composição muscular e estudos de UTI, além de explorar cenários populacionais transparentes.
 
-> **Etapa 1 — fundação concluída.** A navegação, as páginas-base, os componentes visuais, o endpoint `/api/health` e o pipeline de qualidade foram implementados. O explorador de estudos e o motor de projeções **ainda não** estão prontos.
+> **Etapas 1 e 2 (contratos científicos) concluídas.** A navegação, as páginas-base, os componentes visuais, o endpoint `/api/health` e o pipeline de qualidade foram implementados. O explorador de estudos e o motor de projeções **ainda não** estão prontos.
 
 ## Executar localmente
 
@@ -31,6 +31,7 @@ O `GET /api/health` informa `status: ok`, `stage: foundation` e `database: not-c
 - `app/`: navegação e Route Handlers.
 - `components/`: UI e páginas-base.
 - `lib/`: funções e contratos independentes.
+- `features/evidence/`: contratos de dados, catálogo local de 14 referências candidatas e Evidence Guard (sem projeções executadas).
 - `tests/`: testes automatizados.
 - `docs/`: arquitetura, metodologia e acompanhamento.
 
@@ -46,4 +47,6 @@ O repositório foi criado após 04/11/2026 às 21h (Brasília), no período perm
 
 A execução de qualidade do GitHub Actions passou em todas as etapas em 05/11/2026: [ver execução](https://github.com/annygabb/Lupa/actions/runs/42055453543). Como não há lockfile no primeiro scaffold, a instalação da CI usa `pnpm install --no-frozen-lockfile`; gerar e versionar o lockfile será uma melhoria da próxima revisão.
 
-Veja também [STATUS](docs/STATUS.md), [ARQUITETURA](docs/ARCHITECTURE.md) e [METODOLOGIA](docs/METHODOLOGY.md).
+Veja também [STATUS](docs/STATUS.md), [ARQUITETURA](docs/ARCHITECTURE.md), [METODOLOGIA](docs/METHODOLOGY.md) e [ETAPA 2 — contratos](docs/ETAPA2_CONTRATOS.md).
+
+Os 14 registros do catálogo local são candidatos em revisão, não estudos liberados para projeções clínicas. CI da Etapa 2: https://github.com/annygabb/Lupa/actions/runs/42062501251.

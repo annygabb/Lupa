@@ -1,26 +1,37 @@
-# Estado do LUPA Saúde — Etapa 1 (05/11/2026)
+# Estado do LUPA Saúde — Etapa 2 (05/11/2026)
 
 | Entrega | Estado verificado |
 |---|---|
-| Repositório público elegível pela data de criação | Confirmado |
-| Next.js, TypeScript e Tailwind v4 | Arquivos implementados; build no CI aprovado |
-| Componentes de base shadcn/ui | Código implementado; CLI oficial não executada |
-| Navegação responsiva e rotas de apresentação | Criadas; ainda sem dados científicos |
-| GET /api/health | Rota implementada, contrato unitário aprovado |
-| ESLint | GitHub Actions aprovado |
-| TypeScript | GitHub Actions aprovado |
-| Testes Vitest | GitHub Actions aprovado |
-| Build Next.js | GitHub Actions aprovado |
-| Supabase / banco de dados | **Não configurado** |
-| Vercel / deploy | **Não configurado** |
-| Evidências e projeções científicas | **Não implementadas** |
+| Repositório público criado durante o período elegível | Confirmado |
+| Next.js + TypeScript + Tailwind | Fundação implementada |
+| Páginas e navegação responsiva | Páginas-base; sem gráficos de pesquisa implementados |
+| GET /api/health | API de fundação implementada |
+| 20 contratos de entidades (181 campos) | Implementados em Zod/TypeScript; não representam tabelas criadas |
+| Catálogo inicial de 14 referências | Seed local validado; todas candidatas a revisão |
+| Busca no catálogo e sobreposição por famílias | Funções locais testadas; ainda sem UI pública |
+| Evidence Guard | Regras de bloqueio implementadas, testadas com dados sintéticos |
+| Lint / TypeScript / Vitest / Build | GitHub Actions aprovado |
+| Configuração Supabase | **Não realizada** |
+| Migrações ou SQL | **Não executados** |
+| Deploy Vercel | **Não realizado** |
+| Projeções epidemiológicas | **Não implementadas** |
+| Revisão clínica para projeção | **Pendente** |
 
-Execução confirmada: https://github.com/annygabb/Lupa/actions/runs/42055453543
+CI confirmada: https://github.com/annygabb/Lupa/actions/runs/42062501251
 
-## Observações
-O npm local não conseguiu acessar o registry. Uma primeira execução remota falhou no npm durante a instalação; a CI foi corrigida para usar pnpm e então **lint, tipagem, testes e build passaram**. Não houve execução E2E, nem teste de site publicado.
+## Limites científicos
+- Os resumos do CSV de 14 registros foram preservados; os registros continuam `candidate` e `projectionApproved=false`.
+- Mesmo a indicação "artigo/resumo original conferido" **não comprova** revisão detalhada de todos os números ou aptidão para projetar.
+- E01 e E04 pertencem à família SURMOUNT-1; não contabilizar amostras como independentes.
+- FAERS e documentos regulatórios não permitem inferir incidência.
+- A relação entre tirzepatida e desfechos futuros em UTI segue como hipótese não validada.
+- Os testes do Evidence Guard foram feitos com valores sintéticos; não validam estatisticamente projeções de saúde.
 
-O repositório ainda não possui lockfile de dependências. O pipeline usa `pnpm install --no-frozen-lockfile` na fundação; a próxima iteração técnica deverá versionar `pnpm-lock.yaml` e usar instalação imutável.
+## Qualidade e segurança
+- CI aprovou instalação, lint, tipagem, testes e build após o commit de implementação.
+- O projeto ainda não possui lockfile versionado. A CI usa instalação `pnpm install --no-frozen-lockfile`; pendência de reprodutibilidade a corrigir antes da submissão.
+- Não houve teste E2E ou teste de interface publicada; não existe URL de deploy.
+- Nenhum dado de paciente, credencial de Supabase, secret ou chave privada foi incluído.
 
 ## Próximo gate de aprovação
-Revisar schema de artigos e versão de referências para o explorador, sem migrar banco nem fazer deploy antes da autorização específica.
+Revisar e autorizar separadamente qualquer integração do catálogo às telas públicas, criação de observações clínicas estruturadas, banco de dados, migrações ou deploy. Nenhuma dessas ações está incluída nesta etapa.
