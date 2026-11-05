@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Activity, ArrowLeftRight, ArrowRight, ArrowUpRight, BarChart3, BookOpen,
-  Brain, ChartNoAxesCombined, CheckCircle2, ChevronDown, FlaskConical,
+  Brain, ChartNoAxesCombined, CheckCircle2, FlaskConical,
   HeartPulse, Layers3, LockKeyhole, ShieldCheck, Sparkles,
 } from "lucide-react";
 import { EvidenceOrbit } from "@/components/comparison/evidence-orbit";

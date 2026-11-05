@@ -1,10 +1,10 @@
-# LUPA Saúde — Estado após Etapa 4B (05/11/2026)
+# LUPA Saúde — Estado após Etapa 4C (05/11/2026)
 
 | Recurso | Situação no código |
 |---|---|
 | Fundação Next.js/React/TypeScript/Tailwind | Implementada |
-| Sistema visual compartilhado | Tokens, foco, navegação ativa, header/footer e home redesenhados |
-| Explorador Científico | 50 referências canônicas; busca, filtros e 55 rotas com aliases |
+| Sistema visual compartilhado | Research Studio com hero visual, bento, rail desktop, menu ativo e homepage redesenhada |
+| Explorador Científico | 50 referências, filtros preservados, cards e hero harmonizados ao visual premium |
 | Comparador Científico | Seleção A/B, inversão, fichas, fontes originais |
 | Bloco de compatibilidade | Veredito principal + três estados + 4 avisos resumidos e justificativas completas |
 | Estado quando dois campos indicam mesma publicação | Bloqueio de lado a lado |
@@ -44,3 +44,9 @@ A CI do GitHub executará ESLint, TypeScript, Vitest e build após o commit. **O
 ## Gate de implantação
 
 A equipe deve conferir visualmente `/comparar` em 360, 390, 768 e 1280 px; verificar legibilidade, avisos, indicadores e links. **Supabase, SQL, migrações e deploy continuam dependentes de autorização expressa.**
+
+## Correção da avaliação visual da Etapa 4B
+
+A equipe apontou que a versão anterior ainda se parecia com documentação em cards, apesar de técnica e funcionalmente correta. A Etapa 4C não é somente troca de cor: redesenhou o layout, acrescentou uma visualização conceitual, aumentou o protagonismo dos resultados gráficos e revisou navegação, cards e hero. Os resultados científicos continuam em curadoria. Testes manuais de UI em browser real ainda pendentes.
+
+Detalhes: [Etapa 4C — Dashboard premium](ETAPA4C_DASHBOARD_PREMIUM.md).

@@ -78,3 +78,9 @@ Redesign inspirado nas três referências de dashboards de saúde enviadas pela 
 Documentação completa com textos UX, tokens, responsive e checklist: [Etapa 4B — Design System UX/UI](docs/ETAPA4B_DESIGN_SYSTEM_UX_UI.md).
 
 Os controles e o build são verificados pelo GitHub Actions; inspeção E2E em dispositivos continua pendente de validação local. **Nenhum deploy realizado.**
+
+## Etapa 4C — Research Studio premium (05/11/2026)
+
+Reformulação real da experiência visual após avaliação das capturas: hero com composição científica original (sem inferência clínica), cards bento, painel de compatibilidade com alto contraste, gráfico SVG com escala e valores reais da fonte, navegação de workspace, header e página inicial unificados e Explorador com cards remodelados.
+
+[Especificação de UX/UI, limites e critérios de teste](docs/ETAPA4C_DASHBOARD_PREMIUM.md). O redesign **não alterou** os cinco números científicos, o catálogo, as proteções contra combinação de estudos ou a elegibilidade para projeções. Não houve deploy.

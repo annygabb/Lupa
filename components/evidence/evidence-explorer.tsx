@@ -73,39 +73,39 @@ export function EvidenceExplorer() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
-      <section className="pb-8 pt-12 sm:pb-10 sm:pt-16">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+    <div className="mx-auto w-full max-w-[1480px] px-4 pb-20 pt-6 sm:px-6 sm:pt-9 lg:px-9">
+      <section className="lupa-dashboard-card relative overflow-hidden px-6 pb-8 pt-9 sm:px-9 sm:pb-10 sm:pt-11">
+        <p className="lupa-premium-kicker">
           LUPA Saúde / Biblioteca de evidências
         </p>
         <div className="mt-4 flex flex-wrap items-start justify-between gap-6">
           <div className="max-w-[720px]">
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-              Ciência para investigar. <span className="text-primary">Dados para compreender.</span>
+            <h1 className="lupa-premium-text text-[clamp(2.2rem,4vw,3.9rem)] font-extrabold leading-[1.08]">
+              Ciência para investigar. <span className="text-[#315ff4]">Dados para compreender.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
               Encontre pesquisas sobre medicamentos para emagrecimento, saúde mental, músculos,
               sarcopenia e UTI. Veja as fontes, os resultados descritos e os limites de cada documento.
             </p>
           </div>
-          <div className="flex shrink-0 items-center gap-2 rounded-2xl border border-border bg-white p-3 text-xs text-[#536b75]">
+          <div className="flex shrink-0 items-center gap-2 rounded-2xl border border-[#dce7fa] bg-[#f1f6ff] p-4 text-[12px] font-bold text-[#315ab2]">
             <BookOpenCheck aria-hidden="true" size={19} className="text-primary"/>
             <span>Pesquisa com fontes rastreáveis</span>
           </div>
         </div>
       </section>
 
-      <section aria-label="Situação do catálogo" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-border bg-white p-4 sm:p-5">
-          <p className="text-2xl font-semibold tabular-nums text-foreground">{audit.canonicalRecords}</p>
+      <section aria-label="Situação do catálogo" className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="lupa-dashboard-card lupa-dash-hover p-4 sm:p-5">
+          <p className="lupa-metric-ink text-[34px] font-extrabold tabular-nums text-[#203653]">{audit.canonicalRecords}</p>
           <p className="mt-1 text-xs text-muted-foreground">Registros catalogados</p>
         </div>
-        <div className="rounded-2xl border border-border bg-white p-4 sm:p-5">
-          <p className="text-2xl font-semibold tabular-nums text-foreground">{audit.originalRecords+audit.supplementalSources}</p>
+        <div className="lupa-dashboard-card lupa-dash-hover p-4 sm:p-5">
+          <p className="lupa-metric-ink text-[34px] font-extrabold tabular-nums text-[#203653]">{audit.originalRecords+audit.supplementalSources}</p>
           <p className="mt-1 text-xs text-muted-foreground">Referências de origem</p>
         </div>
         <div className="col-span-2 rounded-2xl border border-border bg-white p-4 sm:col-span-1 sm:p-5">
-          <p className="text-2xl font-semibold tabular-nums text-foreground">{audit.readyForProjection}</p>
+          <p className="lupa-metric-ink text-[34px] font-extrabold tabular-nums text-[#203653]">{audit.readyForProjection}</p>
           <p className="mt-1 text-xs text-muted-foreground">Resultados liberados para projeção</p>
         </div>
       </section>
@@ -119,10 +119,10 @@ export function EvidenceExplorer() {
         </p>
       </div>
 
-      <section className="mt-10" aria-labelledby="filters-heading">
+      <section className="mt-12" aria-labelledby="filters-heading">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 id="filters-heading" className="text-xl font-semibold tracking-tight">Explore os estudos</h2>
+            <h2 id="filters-heading" className="text-[26px] font-extrabold tracking-[-.035em] text-[#203653]">Explore os estudos</h2>
             <p className="mt-1 text-xs text-muted-foreground">
               Combine termos, temas e filtros para encontrar uma referência.
             </p>
@@ -135,7 +135,7 @@ export function EvidenceExplorer() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-border bg-white p-4 sm:p-5">
+        <div className="lupa-dashboard-card lupa-dash-hover p-4 sm:p-5">
           <label htmlFor="evidence-search" className="mb-2 block text-xs font-semibold text-foreground">
             Pesquisar por artigo, desfecho, medicamento ou PMID
           </label>

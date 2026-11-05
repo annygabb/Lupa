@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function EvidenciasPage() {
-  return <EvidenceExplorer/>;
+  return <div className="lupa-studio"><EvidenceExplorer/></div>;
 }

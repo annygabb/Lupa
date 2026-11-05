@@ -15,6 +15,7 @@ Migrar de "página de documentação com cards" para **workspace de pesquisa cl�
 5. **Gráfico real com escala vertical:** plot SVG de duas séries **do mesmo estudo**, barras proporcionais aos números extraídos; para variações percentuais, eixo zero e direção de aumento/redução, para proporções, 0–100%. Valores numéricos destacados em cards de duas cores, seguidos da tabela completa e dos intervalos relatados. Não há linha de tendência fictícia.
 6. **Navegação de workspace:** índice lateral compacto para desktop e âncoras com links no mobile. Foco de teclado e movimento reduzido respeitados.
 7. **Identidade compartilhada:** cabeçalho em cápsulas, navegação ativa e página inicial no mesmo visual, inclusive com indicação de módulos ainda não implementados.
+8. **Explorador científico:** hero editorial com tipografia mais expressiva, cards de referência com nova hierarquia, estados de curadoria visíveis e filtros existentes preservados. Todas as referências continuam em modo local.
 
 ## Paleta e tipografia
 
@@ -51,5 +52,6 @@ Migrar de "página de documentação com cards" para **workspace de pesquisa cl�
 - `components/comparison/metric-chart.tsx`: dados, tabela, estimador e links.
 - `components/comparison/study-comparator.tsx`: layout do workspace.
 - `components/site-header.tsx` e `app/page.tsx`: identidade compartilhada.
+- `components/evidence/evidence-explorer.tsx` e `components/evidence/evidence-card.tsx`: harmonização visual sem alterar a pesquisa científica.
 
 **Limites de autorização preservados:** nenhum Supabase, SQL, migrações, deploy, interação com dados de pacientes ou publicação externa.
