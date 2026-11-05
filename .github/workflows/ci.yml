@@ -1,0 +1,28 @@
+name: Qualidade da fundação
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      # Sem lockfile nesta etapa por indisponibilidade de registry no ambiente de autoria.
+      # Gerar lockfile para substituir npm install por npm ci após validação.
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+      - name: Lint
+        run: npm run lint
+      - name: Tipagem
+        run: npm run typecheck
+      - name: Testes unitários
+        run: npm test
+      - name: Build
+        run: npm run build
