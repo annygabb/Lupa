@@ -47,7 +47,7 @@ describe("Etapa 4B — UX científica de compatibilidade",()=>{
     expect(html).toContain("Indisponíveis");
     expect(html).toContain("Pontos de atenção");
     expect(html).toContain("Ver justificativas científicas completas");
-    expect(html).toContain("Não há estimativa causal");
+    expect(html).toContain("não há estimativa causal");
     expect(html).toContain("não para calcular risco clínico");
   });
   it("veredito da mesma publicação informa bloqueio visual sem verde de sucesso",()=>{
