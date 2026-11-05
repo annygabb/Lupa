@@ -3,360 +3,326 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  Activity, ArrowLeftRight, ArrowRight, ArrowUpRight, BarChart3,
-  BookOpenText, Brain, ChevronDown, ClipboardList, FlaskConical,
-  HeartPulse, Info, Layers3, ShieldCheck, Sparkles,
+  Activity, ArrowLeftRight, ArrowRight, ArrowUpRight, BarChart3, BookOpen,
+  Brain, ChartNoAxesCombined, CheckCircle2, ChevronDown, FlaskConical,
+  HeartPulse, Layers3, LockKeyhole, ShieldCheck, Sparkles,
 } from "lucide-react";
+import { EvidenceOrbit } from "@/components/comparison/evidence-orbit";
+import { StudioStudyCard } from "@/components/comparison/studio-study-card";
 import { CompatibilityPanel } from "@/components/comparison/compatibility-panel";
 import { MetricChart } from "@/components/comparison/metric-chart";
 import { assessStudyComparison } from "@/features/comparison/compatibility";
-import { getReviewedMetric, reviewedMetrics } from "@/features/comparison/reviewed-metrics";
-import {
-  getUnifiedEvidence, unifiedEvidenceCatalog,
-  type UnifiedEvidenceRecord,
-} from "@/features/evidence/unified-catalog";
-import {
-  designNames, drugNames, shortDescription, sourceKindName, topicNames,
-} from "@/lib/evidence-presentation";
+import { reviewedMetrics, getReviewedMetric } from "@/features/comparison/reviewed-metrics";
+import { getUnifiedEvidence, unifiedEvidenceCatalog } from "@/features/evidence/unified-catalog";
 
-const referenceOptions=[...unifiedEvidenceCatalog].sort((a,b)=>
-  a.title.localeCompare(b.title,"pt-BR")
-);
+const references=[...unifiedEvidenceCatalog].sort((a,b)=>a.title.localeCompare(b.title,"pt-BR"));
 const metricGroups=[
-  {key:"composition",label:"Composição corporal",description:"Peso, gordura e massa magra",items:["M01","M02","M03"],icon:Activity},
-  {key:"treatment",label:"Continuidade",description:"Manutenção e retirada",items:["M04"],icon:HeartPulse},
-  {key:"mental",label:"Saúde mental",description:"Categorias PHQ-9",items:["M05"],icon:Brain},
+  {key:"composition",label:"Composição corporal",detail:"Peso, gordura e massa magra",items:["M01","M02","M03"],icon:Activity},
+  {key:"maintenance",label:"Continuidade",detail:"Manutenção e retirada",items:["M04"],icon:HeartPulse},
+  {key:"psychological",label:"Saúde mental",detail:"Categorias PHQ-9",items:["M05"],icon:Brain},
 ] as const;
-
-function StudyColumn({record,side,onSelect}:{
-  record:UnifiedEvidenceRecord;side:"a"|"b";onSelect:(id:string)=>void;
-}) {
-  const isA=side==="a";
-  const id=isA?"compare-left":"compare-right";
-  const accent=isA?"#2563eb":"#0f766e";
-  return (
-    <article className="lupa-surface relative min-w-0 overflow-hidden">
-      <div className={"absolute inset-x-0 top-0 h-1 "+(isA?"bg-[#2563eb]":"bg-[#0f766e]")} aria-hidden="true"/>
-      <div className="p-5 sm:p-6 lg:p-7">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className={"flex size-11 shrink-0 items-center justify-center rounded-2xl text-lg font-extrabold "+
-              (isA?"bg-[#eef3ff] text-[#245ac5]":"bg-[#e9f7f3] text-[#0c6d65]")}>
-              {isA?"A":"B"}
-            </span>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[.14em] text-muted-foreground">
-                Referência selecionada
-              </p>
-              <p className="mt-0.5 text-sm font-bold text-foreground">Estudo {isA?"A":"B"}</p>
-            </div>
-          </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e3e9ef] bg-[#f8fafc] px-2.5 py-1.5 text-[11px] font-semibold text-[#536575]">
-            <span className="size-1.5 rounded-full bg-[#c18d47]"/> Em curadoria
-          </span>
-        </div>
-
-        <label htmlFor={id} className="mt-6 block text-sm font-bold text-foreground">
-          Selecione uma referência
-        </label>
-        <select id={id} value={record.id} onChange={e=>onSelect(e.target.value)}
-          className="lupa-input mt-2">
-          {referenceOptions.map(item=>
-            <option key={item.id} value={item.id}>{item.id} · {item.title}</option>
-          )}
-        </select>
-
-        <div className="mt-6 border-t border-border pt-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-lg px-2.5 py-1 text-xs font-bold"
-              style={{color:accent,backgroundColor:isA?"#eef3ff":"#e9f7f3"}}>
-              {record.id}
-            </span>
-            <span className="text-xs font-semibold text-muted-foreground">
-              {record.year??"Ano não informado"} · {sourceKindName(record.sourceKind)}
-            </span>
-          </div>
-          <h3 className="mt-3 text-lg font-extrabold leading-snug tracking-[-.02em] text-foreground sm:text-xl">
-            {record.title}
-          </h3>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="lupa-inner-surface p-3.5">
-              <p className="text-[11px] font-bold uppercase tracking-[.09em] text-muted-foreground">Tipo de estudo</p>
-              <p className="mt-1.5 text-[13px] font-semibold leading-5 text-foreground">
-                {designNames[record.design]}
-              </p>
-            </div>
-            <div className="lupa-inner-surface p-3.5">
-              <p className="text-[11px] font-bold uppercase tracking-[.09em] text-muted-foreground">Grupo ou amostra</p>
-              <p className="mt-1.5 text-[13px] font-semibold leading-5 text-foreground">
-                {shortDescription(record.populationSummary,115)||"Não detalhada"}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5">
-            <p className="text-xs font-bold uppercase tracking-[.09em] text-[#506273]">
-              O que o documento descreve
-            </p>
-            <p className="mt-2 text-sm leading-6 text-[#495d70]">
-              {shortDescription(record.resultsSummary,175)||"Sem resumo quantitativo disponível"}
-            </p>
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-[#e6edf3] bg-[#f8fafc] px-4 py-3">
-            <p className="flex items-center gap-2 text-xs font-bold text-[#59616a]">
-              <Info size={15} aria-hidden="true" className="text-[#a3773d]"/> Principal limitação
-            </p>
-            <p className="mt-1.5 text-[13px] leading-5 text-[#596778]">
-              {shortDescription(record.limitations,155)}
-            </p>
-          </div>
-
-          <details className="group mt-3 rounded-xl border border-transparent hover:border-border">
-            <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-2 px-2 text-[13px] font-bold text-primary marker:hidden">
-              Ver todos os dados e limitações
-              <ChevronDown size={16} className="transition-transform group-open:rotate-180" aria-hidden="true"/>
-            </summary>
-            <div className="space-y-3 border-t border-border px-2 py-3 text-[13px] leading-6 text-muted-foreground">
-              <p><strong className="text-foreground">População:</strong> {record.populationSummary||"Não descrita no catálogo"}</p>
-              <p><strong className="text-foreground">Resultado:</strong> {record.resultsSummary||"Não descrito"}</p>
-              <p><strong className="text-foreground">Limitações:</strong> {record.limitations}</p>
-            </div>
-          </details>
-
-          <div className="mt-4 flex flex-wrap gap-1.5" aria-label="Temas e tratamentos">
-            {record.topics.slice(0,3).map(topic=>(
-              <span key={topic} className="rounded-lg bg-[#edf6f4] px-2.5 py-1.5 text-[11px] font-bold text-[#17675f]">
-                {topicNames[topic]}
-              </span>
-            ))}
-            {record.drugs.filter(drug=>drug!=="not_applicable").slice(0,2).map(drug=>(
-              <span key={drug} className="rounded-lg bg-[#eef3ff] px-2.5 py-1.5 text-[11px] font-bold text-[#345fb3]">
-                {drugNames[drug]}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border pt-5">
-          <Link href={"/evidencias/"+record.id}
-            className="lupa-button-secondary text-primary">
-            Abrir ficha completa <ArrowUpRight size={16} aria-hidden="true"/>
-          </Link>
-          <a href={record.url} target="_blank" rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-[13px] font-semibold text-[#536575] underline-offset-4 hover:text-primary hover:underline">
-            Fonte original <BookOpenText size={16} aria-hidden="true"/>
-          </a>
-        </div>
-      </div>
-    </article>
-  );
-}
 
 export function StudyComparator() {
   const [leftId,setLeftId]=useState("E04");
   const [rightId,setRightId]=useState("E12");
   const [metricId,setMetricId]=useState("M03");
-
   const left=getUnifiedEvidence(leftId);
   const right=getUnifiedEvidence(rightId);
   const metric=getReviewedMetric(metricId);
   if(!left||!right||!metric)throw new Error("Referência ou indicador não disponível");
-
   const assessment=useMemo(()=>assessStudyComparison(left,right),[left,right]);
-  const currentGroup=metricGroups.find(group=>group.items.some(item=>item===metric.id))??metricGroups[0];
+  const activeGroup=metricGroups.find(g=>g.items.some(id=>id===metric.id))??metricGroups[0];
   const swap=()=>{setLeftId(rightId);setRightId(leftId);};
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 pb-20 pt-7 sm:px-6 sm:pt-10 lg:px-8">
-      <header className="lupa-surface relative overflow-hidden bg-gradient-to-br from-white via-white to-[#f0f5ff] px-6 py-8 sm:px-9 sm:py-10">
-        <span className="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full border-[32px] border-[#e9f1fc]/70" aria-hidden="true"/>
-        <div className="relative grid items-center gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div>
-            <p className="lupa-section-kicker">LUPA Saúde / Comparador científico</p>
-            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-[1.12] tracking-[-.045em] text-foreground sm:text-[44px]">
-              Compare evidências.{" "}
-              <span className="text-primary">Entenda os limites.</span>
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-              Uma leitura científica mais clara: veja os estudos lado a lado, identifique
-              diferenças metodológicas e explore resultados conferidos na fonte original.
-            </p>
-            <span className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#d5e7e3] bg-white px-3.5 py-2 text-xs font-semibold text-[#235f5b]">
-              <ShieldCheck size={16} aria-hidden="true"/> Interpretação responsável de dados
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-3" aria-label="Resumo do catálogo">
-            <div className="rounded-2xl border border-[#e3eaf2] bg-white/90 p-4 sm:p-5">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-[#eef3ff] text-[#2563eb]">
-                <Layers3 size={20} aria-hidden="true"/>
+    <div className="lupa-studio min-h-screen">
+      <div className="mx-auto max-w-[1480px] px-4 pb-20 pt-6 sm:px-6 sm:pt-9 lg:px-9">
+        <header className="lupa-dashboard-card lupa-fade-up overflow-hidden p-3 sm:p-4">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(370px,.85fr)]">
+            <div className="flex min-w-0 flex-col justify-center px-4 py-7 sm:px-8 sm:py-10 lg:py-12">
+              <p className="lupa-premium-kicker">LUPA Saúde / Comparador científico</p>
+              <h1 className="lupa-premium-text mt-4 max-w-[720px] text-[clamp(2.25rem,4.4vw,4.25rem)] font-extrabold leading-[1.04]">
+                Compare estudos.
+                <span className="block text-[#315ff4]">Enxergue além dos números.</span>
+              </h1>
+              <p className="mt-6 max-w-[580px] text-[15px] leading-[1.85] text-[#5a6f89] sm:text-[16px]">
+                Um espaço para investigar evidências científicas, confrontar métodos e entender
+                o que os resultados mostram — e o que ainda não demonstram.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <a href="#comparacao" className="lupa-premium-button lupa-premium-button-primary">
+                  Iniciar comparação <ArrowRight size={17} aria-hidden="true"/>
+                </a>
+                <a href="#indicadores" className="lupa-premium-button lupa-premium-button-outline">
+                  Explorar indicadores <ChartNoAxesCombined size={17} aria-hidden="true"/>
+                </a>
               </div>
-              <p className="mt-3 text-3xl font-extrabold tracking-[-.03em] tabular-nums">50</p>
-              <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">Referências no catálogo</p>
-            </div>
-            <div className="rounded-2xl border border-[#e3eaf2] bg-white/90 p-4 sm:p-5">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-[#eaf5f3] text-primary">
-                <BarChart3 size={20} aria-hidden="true"/>
-              </div>
-              <p className="mt-3 text-3xl font-extrabold tracking-[-.03em] tabular-nums">{reviewedMetrics.length}</p>
-              <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">Indicadores de fonte conferida</p>
-            </div>
-            <div className="col-span-2 flex items-center gap-3 rounded-2xl border border-[#e4eaf3] bg-[#f8fafc]/95 p-4">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-[#fff2e0] text-[#966319]">
-                <ShieldCheck size={19} aria-hidden="true"/>
-              </span>
-              <p className="text-xs leading-5 text-[#526575]">
-                <strong className="text-foreground">0 indicadores liberados para projeções.</strong>{" "}
-                Os resultados ainda não passaram por revisão clínica independente.
+              <p className="mt-6 flex items-center gap-2 text-[12px] font-semibold text-[#69829e]">
+                <ShieldCheck size={16} className="text-[#0d9488]" aria-hidden="true"/>
+                Resultados rastreáveis. Sem diagnósticos ou projeções não validadas.
               </p>
             </div>
+            <EvidenceOrbit leftId={left.id} rightId={right.id}/>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <section className="mt-11 sm:mt-14" aria-labelledby="cross-study-heading">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="lupa-section-kicker">Etapa 01 · Contexto</p>
-            <h2 id="cross-study-heading" className="mt-1.5 text-2xl font-extrabold tracking-[-.025em] sm:text-3xl">
-              Estudos lado a lado
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Selecione referências diferentes para conhecer semelhanças e limites metodológicos.
-            </p>
+        <section className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumo do catálogo">
+          <div className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#edf2ff] text-[#315ff4]">
+              <BookOpen size={22} aria-hidden="true"/>
+            </span>
+            <div>
+              <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">50</p>
+              <p className="text-[12px] font-semibold text-[#71839a]">Referências catalogadas</p>
+            </div>
           </div>
-          <button type="button" onClick={swap} aria-label="Trocar posições dos estudos"
-            className="lupa-button-secondary">
-            <ArrowLeftRight size={17} aria-hidden="true"/> Inverter estudos
-          </button>
-        </div>
-        <div className="grid items-stretch gap-4 lg:grid-cols-2">
-          <StudyColumn side="a" record={left} onSelect={setLeftId}/>
-          <StudyColumn side="b" record={right} onSelect={setRightId}/>
-        </div>
-        <CompatibilityPanel assessment={assessment}/>
-      </section>
-
-      <section className="mt-12 sm:mt-16" aria-labelledby="chart-section-heading">
-        <div>
-          <p className="lupa-section-kicker">Etapa 02 · Resultados observados</p>
-          <h2 id="chart-section-heading" className="mt-1.5 text-2xl font-extrabold tracking-[-.025em] sm:text-3xl">
-            Explore os resultados dos estudos
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-muted-foreground">
-            Os gráficos mostram apenas grupos internos de uma mesma publicação. A seleção
-            do gráfico é <strong>independente dos estudos A e B</strong> acima.
-          </p>
-        </div>
-
-        <div className="lupa-surface mb-4 mt-5 p-5 sm:p-6">
-          <p className="mb-3 flex items-center gap-2 text-sm font-extrabold">
-            <FlaskConical size={18} className="text-primary" aria-hidden="true"/>
-            Selecione um tema de análise
-          </p>
-
-          <div className="hidden flex-wrap gap-2 md:flex" role="group" aria-label="Categorias dos indicadores">
-            {metricGroups.map(group=>{
-              const Icon=group.icon;
-              const isActive=currentGroup.key===group.key;
-              return (
-                <button key={group.key} type="button" aria-pressed={isActive}
-                  onClick={()=>setMetricId(group.items[0])}
-                  className={"flex min-h-12 items-center gap-2 rounded-xl border px-4 text-sm font-semibold transition-colors "+
-                    (isActive
-                      ?"border-primary bg-primary text-white shadow-[0_6px_13px_rgba(15,118,110,.14)]"
-                      :"border-[#dfe7ee] bg-[#fafbfd] text-[#40576a] hover:bg-[#eef3f8]")}>
-                  <Icon size={17} aria-hidden="true"/>{group.label}
-                </button>
-              );
-            })}
+          <div className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#e5faf5] text-[#0d9488]">
+              <BarChart3 size={22} aria-hidden="true"/>
+            </span>
+            <div>
+              <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">{reviewedMetrics.length}</p>
+              <p className="text-[12px] font-semibold text-[#71839a]">Indicadores conferidos</p>
+            </div>
           </div>
-
-          <div className="mt-4 hidden flex-wrap gap-2 md:flex" role="group" aria-label="Indicadores do tema selecionado">
-            {currentGroup.items.map(id=>{
-              const item=getReviewedMetric(id);
-              if(!item)return null;
-              const active=metricId===id;
-              return (
-                <button key={id} type="button" aria-pressed={active}
-                  onClick={()=>setMetricId(id)}
-                  className={"min-h-10 rounded-xl border px-3.5 py-2 text-[13px] font-semibold transition-colors "+
-                    (active
-                      ?"border-[#c4dad7] bg-[#eaf5f3] text-[#0d6e66]"
-                      :"border-[#e1e7ee] bg-white text-[#546477] hover:bg-[#f8fafc]")}>
-                  {item.title}
-                </button>
-              );
-            })}
+          <div className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff4e6] text-[#ad7b34]">
+              <LockKeyhole size={21} aria-hidden="true"/>
+            </span>
+            <div>
+              <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">0</p>
+              <p className="text-[12px] font-semibold text-[#71839a]">Projeções autorizadas</p>
+            </div>
           </div>
-
-          <div className="md:hidden">
-            <label htmlFor="reviewed-metric" className="mb-2 block text-sm font-semibold text-[#42586b]">
-              Indicador
-            </label>
-            <select id="reviewed-metric" className="lupa-input" value={metricId}
-              onChange={event=>setMetricId(event.target.value)}>
-              {metricGroups.map(group=>(
-                <optgroup key={group.key} label={group.label}>
-                  {group.items.map(id=>{
-                    const item=getReviewedMetric(id);
-                    return item?<option key={id} value={id}>{item.title}</option>:null;
-                  })}
-                </optgroup>
-              ))}
-            </select>
-          </div>
-          <div className="mt-4 flex items-start gap-2 rounded-xl bg-[#f5f8fc] px-3.5 py-3">
-            <Info size={16} className="mt-0.5 shrink-0 text-[#2563eb]" aria-hidden="true"/>
-            <p className="text-xs leading-5 text-[#506578]">
-              <strong>{currentGroup.label}:</strong> {currentGroup.description}.
-              {" "}Os valores foram conferidos na fonte, mas não estão aprovados para projeções clínicas.
-            </p>
-          </div>
-        </div>
-        <MetricChart metric={metric}/>
-      </section>
-
-      <section className="mt-12 sm:mt-16" aria-labelledby="reading-heading">
-        <div className="mb-5">
-          <p className="lupa-section-kicker">Etapa 03 · Leitura responsável</p>
-          <h2 id="reading-heading" className="mt-1.5 text-2xl font-extrabold tracking-[-.025em] sm:text-3xl">
-            O que esses dados não demonstram
-          </h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            {title:"Massa magra não é força muscular",detail:"Medidas de DXA não diagnosticam, isoladamente, sarcopenia ou perda de função."},
-            {title:"UTI não é efeito da medicação",detail:"Estudos independentes não comprovam que a tirzepatida altere prognósticos em UTI."},
-            {title:"Estudo não é projeção nacional",detail:"Resultados de grupos selecionados não são taxas aplicáveis automaticamente ao Brasil."},
-          ].map((card,index)=>(
-            <article key={card.title} className="lupa-surface p-5 sm:p-6">
-              <div className={"flex size-11 items-center justify-center rounded-2xl "+
-                (index===1?"bg-[#fff6ea] text-[#946019]":"bg-[#eef3ff] text-[#2563eb]")}>
-                {index===1?<HeartPulse size={20} aria-hidden="true"/>:
-                  index===0?<Activity size={20} aria-hidden="true"/>:<Brain size={20} aria-hidden="true"/>}
+          <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#1b2a51] to-[#263d78] p-5 text-white shadow-[0_12px_32px_rgba(22,42,81,.13)]">
+            <div className="absolute -right-8 -top-8 size-24 rounded-full border-[15px] border-white/10" aria-hidden="true"/>
+            <div className="relative flex items-center gap-3">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/10">
+                <Sparkles size={20} className="text-[#9ff9ea]" aria-hidden="true"/>
+              </span>
+              <div>
+                <p className="text-[13px] font-extrabold">Rigor científico</p>
+                <p className="mt-1 text-[12px] leading-5 text-[#ccd9ef]">Cada dado no contexto original.</p>
               </div>
-              <h3 className="mt-4 text-sm font-extrabold leading-6 text-foreground">{card.title}</h3>
-              <p className="mt-2 text-[13px] leading-6 text-muted-foreground">{card.detail}</p>
-            </article>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#d7e8e5] bg-[#eef7f5] px-5 py-5 sm:px-6">
-          <div>
-            <p className="flex items-center gap-2 text-sm font-bold text-[#165d57]">
-              <Sparkles size={17} aria-hidden="true"/> Explore as fontes completas
-            </p>
-            <p className="mt-1 max-w-2xl text-xs leading-5 text-[#526575]">
-              Consulte artigos, notas de curadoria e referências originais antes de interpretar os resultados.
-            </p>
+            </div>
           </div>
-          <Link href="/evidencias"
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0c625c]">
-            <ClipboardList size={17} aria-hidden="true"/> Abrir biblioteca <ArrowRight size={17} aria-hidden="true"/>
-          </Link>
+        </section>
+
+        <div className="mt-9 grid gap-5 xl:grid-cols-[68px_minmax(0,1fr)]">
+          <aside className="hidden xl:block" aria-label="Navegação da análise">
+            <nav className="lupa-studio-rail sticky top-[94px] flex flex-col items-center gap-3 rounded-[22px] px-2.5 py-4 text-[#aac0e1]">
+              <a href="#comparacao" aria-label="Ir para comparação dos estudos" title="Comparação"
+                className="lupa-focusable flex size-11 items-center justify-center rounded-2xl bg-white/15 text-white hover:bg-white/25">
+                <Layers3 size={19} aria-hidden="true"/>
+              </a>
+              <a href="#indicadores" aria-label="Ir para indicadores" title="Indicadores"
+                className="lupa-focusable flex size-11 items-center justify-center rounded-2xl hover:bg-white/15 hover:text-white">
+                <BarChart3 size={19} aria-hidden="true"/>
+              </a>
+              <a href="#limites" aria-label="Ir para limites da evidência" title="Limites"
+                className="lupa-focusable flex size-11 items-center justify-center rounded-2xl hover:bg-white/15 hover:text-white">
+                <ShieldCheck size={19} aria-hidden="true"/>
+              </a>
+              <div className="my-2 h-px w-7 bg-white/15" aria-hidden="true"/>
+              <Link href="/evidencias" aria-label="Abrir explorador de evidências" title="Explorador"
+                className="lupa-focusable flex size-11 items-center justify-center rounded-2xl hover:bg-white/15 hover:text-white">
+                <BookOpen size={19} aria-hidden="true"/>
+              </Link>
+            </nav>
+          </aside>
+
+          <div className="min-w-0 space-y-13">
+            <section id="comparacao" className="scroll-mt-28">
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span className="lupa-section-number">01</span>
+                    <p className="lupa-premium-kicker">Comparação contextual</p>
+                  </div>
+                  <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
+                    Estudos lado a lado
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-[#657993]">
+                    Comece selecionando duas referências. O LUPA explica o que pode e o que não pode ser comparado.
+                  </p>
+                </div>
+                <p className="inline-flex items-center gap-2 rounded-full bg-[#e7f6f0] px-3 py-2 text-[12px] font-bold text-[#117366]">
+                  <CheckCircle2 size={15} aria-hidden="true"/> Biblioteca local
+                </p>
+              </div>
+
+              <div className="lupa-dashboard-card mb-4 p-4 sm:p-5">
+                <div className="grid items-end gap-3 md:grid-cols-[minmax(0,1fr)_54px_minmax(0,1fr)]">
+                  <div className="min-w-0">
+                    <label htmlFor="compare-left" className="mb-2 flex items-center gap-2 text-[13px] font-extrabold text-[#3e5674]">
+                      <span className="flex size-6 items-center justify-center rounded-lg bg-[#e9efff] text-[12px] text-[#315ff4]">A</span>
+                      Referência A
+                    </label>
+                    <select id="compare-left" className="lupa-input !min-h-[54px] !text-[13px]" value={left.id}
+                      onChange={e=>setLeftId(e.target.value)}>
+                      {references.map(item=><option key={item.id} value={item.id}>{item.id} · {item.title}</option>)}
+                    </select>
+                  </div>
+                  <button type="button" onClick={swap} aria-label="Trocar posições dos estudos"
+                    className="lupa-focusable mx-auto flex size-12 shrink-0 items-center justify-center rounded-2xl border border-[#d6e1f4] bg-[#f2f6ff] text-[#315bd4] transition hover:rotate-180 hover:bg-[#e6eeff]"
+                    title="Inverter estudos">
+                    <ArrowLeftRight size={20} aria-hidden="true"/>
+                  </button>
+                  <div className="min-w-0">
+                    <label htmlFor="compare-right" className="mb-2 flex items-center gap-2 text-[13px] font-extrabold text-[#3e5674]">
+                      <span className="flex size-6 items-center justify-center rounded-lg bg-[#dff9f2] text-[12px] text-[#0d887f]">B</span>
+                      Referência B
+                    </label>
+                    <select id="compare-right" className="lupa-input !min-h-[54px] !text-[13px]" value={right.id}
+                      onChange={e=>setRightId(e.target.value)}>
+                      {references.map(item=><option key={item.id} value={item.id}>{item.id} · {item.title}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid items-stretch gap-4 lg:grid-cols-2">
+                <StudioStudyCard record={left} side="a"/>
+                <StudioStudyCard record={right} side="b"/>
+              </div>
+
+              <CompatibilityPanel assessment={assessment}/>
+            </section>
+
+            <section id="indicadores" className="scroll-mt-28">
+              <div className="mb-5">
+                <div className="flex items-center gap-3">
+                  <span className="lupa-section-number">02</span>
+                  <p className="lupa-premium-kicker">Resultados observados</p>
+                </div>
+                <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
+                  Evidência em perspectiva
+                </h2>
+                <p className="mt-2 max-w-[820px] text-sm leading-7 text-[#657993]">
+                  Explore cinco indicadores extraídos de fontes primárias. Cada gráfico representa
+                  somente os grupos internos do próprio estudo e é <strong>independente dos estudos A e B</strong> acima.
+                </p>
+              </div>
+
+              <div className="lupa-dashboard-card mb-4 p-5 sm:p-6">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                  <p className="flex items-center gap-2 text-[14px] font-extrabold text-[#283e5b]">
+                    <FlaskConical size={18} className="text-[#315ff4]" aria-hidden="true"/>
+                    Selecione um tema de análise
+                  </p>
+                  <span className="rounded-full bg-[#edf4ff] px-2.5 py-1.5 text-[11px] font-bold text-[#3562c5]">
+                    {reviewedMetrics.length} indicadores
+                  </span>
+                </div>
+
+                <div className="hidden flex-wrap gap-2 md:flex" role="group" aria-label="Categorias dos indicadores">
+                  {metricGroups.map(group=>{
+                    const Icon=group.icon;
+                    const active=activeGroup.key===group.key;
+                    return (
+                      <button key={group.key} type="button" aria-pressed={active}
+                        onClick={()=>setMetricId(group.items[0])}
+                        className={"lupa-focusable flex min-h-12 items-center gap-2 rounded-[13px] border px-4 text-[13px] font-bold transition-colors "+
+                          (active?"border-[#315ff4] bg-[#315ff4] text-white shadow-[0_7px_15px_rgba(49,95,244,.16)]":"border-[#dce5f2] bg-[#f7f9fd] text-[#556e8a] hover:bg-[#ecf2fc]")}>
+                        <Icon size={18} aria-hidden="true"/>{group.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 hidden flex-wrap gap-2 md:flex" role="group" aria-label="Indicadores do tema selecionado">
+                  {activeGroup.items.map(id=>{
+                    const item=getReviewedMetric(id);
+                    if(!item)return null;
+                    const active=item.id===metricId;
+                    return (
+                      <button key={item.id} type="button" aria-pressed={active} onClick={()=>setMetricId(id)}
+                        className={"lupa-focusable min-h-10 rounded-xl border px-3.5 py-2 text-[13px] font-bold "+
+                          (active?"border-[#b8d0ff] bg-[#eaf1ff] text-[#2957c4]":"border-[#e3e9f2] bg-white text-[#59718c] hover:bg-[#f4f7fc]")}>
+                        {item.title}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="md:hidden">
+                  <label htmlFor="reviewed-metric" className="mb-2 block text-[13px] font-bold text-[#3e5674]">Indicador</label>
+                  <select id="reviewed-metric" value={metricId} className="lupa-input"
+                    onChange={e=>setMetricId(e.target.value)}>
+                    {metricGroups.map(group=>(
+                      <optgroup key={group.key} label={group.label}>
+                        {group.items.map(id=>{
+                          const item=getReviewedMetric(id);
+                          return item?<option key={id} value={id}>{item.title}</option>:null;
+                        })}
+                      </optgroup>
+                    ))}
+                  </select>
+                </div>
+
+                <p className="mt-4 flex items-start gap-2 rounded-[13px] bg-[#f3f6fc] px-4 py-3 text-[12px] leading-6 text-[#627891]">
+                  <ShieldCheck size={16} className="mt-1 shrink-0 text-[#3768de]" aria-hidden="true"/>
+                  <span><strong>{activeGroup.label}:</strong> {activeGroup.detail}. Dados conferidos na publicação, mas ainda sem revisão clínica independente.</span>
+                </p>
+              </div>
+              <MetricChart metric={metric}/>
+            </section>
+
+            <section id="limites" className="scroll-mt-28">
+              <div className="mb-5 flex items-center gap-3">
+                <span className="lupa-section-number">03</span>
+                <div>
+                  <p className="lupa-premium-kicker">Interpretação responsável</p>
+                  <h2 className="lupa-premium-text mt-1 text-[27px] font-extrabold sm:text-[34px]">
+                    O que esses dados não demonstram
+                  </h2>
+                </div>
+              </div>
+              <div className="grid gap-4 lg:grid-cols-3">
+                <article className="relative overflow-hidden rounded-[25px] bg-gradient-to-br from-[#172c55] to-[#254996] p-6 text-white shadow-[0_14px_32px_rgba(22,45,89,.13)]">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-white/10 text-[#a8e7ff]">
+                    <Activity size={22} aria-hidden="true"/>
+                  </span>
+                  <h3 className="mt-5 text-lg font-extrabold">Massa magra não é força muscular</h3>
+                  <p className="mt-3 text-[13px] leading-6 text-[#cfddf2]">
+                    Medidas por DXA não diagnosticam sozinhas sarcopenia ou perda funcional.
+                  </p>
+                </article>
+                <article className="lupa-dashboard-card p-6">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-[#fff3e7] text-[#ba7c35]">
+                    <HeartPulse size={22} aria-hidden="true"/>
+                  </span>
+                  <h3 className="mt-5 text-lg font-extrabold text-[#273e5a]">UTI não é efeito da medicação</h3>
+                  <p className="mt-3 text-[13px] leading-6 text-[#62778c]">
+                    Pesquisas independentes não provam que a tirzepatida altere a recuperação em UTI.
+                  </p>
+                </article>
+                <article className="lupa-dashboard-card p-6">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-[#e7f6f3] text-[#0f958a]">
+                    <Brain size={22} aria-hidden="true"/>
+                  </span>
+                  <h3 className="mt-5 text-lg font-extrabold text-[#273e5a]">Estudo não é projeção nacional</h3>
+                  <p className="mt-3 text-[13px] leading-6 text-[#62778c]">
+                    Resultados de grupos selecionados não são taxas aplicáveis automaticamente ao Brasil.
+                  </p>
+                </article>
+              </div>
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[23px] border border-[#d9e6f1] bg-gradient-to-r from-[#eef4ff] to-[#e9f8f5] px-5 py-5 sm:px-7">
+                <div>
+                  <p className="flex items-center gap-2 text-sm font-extrabold text-[#294c85]">
+                    <Sparkles size={18} aria-hidden="true"/> A fonte importa tanto quanto o dado.
+                  </p>
+                  <p className="mt-1 text-[13px] leading-6 text-[#627891]">
+                    Consulte os artigos, a população e as limitações antes de interpretar qualquer número.
+                  </p>
+                </div>
+                <Link href="/evidencias" className="lupa-premium-button lupa-premium-button-primary">
+                  Abrir biblioteca <ArrowUpRight size={17} aria-hidden="true"/>
+                </Link>
+              </div>
+            </section>
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

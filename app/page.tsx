@@ -1,148 +1,142 @@
 import Link from "next/link";
 import {
-  Activity, ArrowRight, ArrowUpRight, BookOpenText, ChartNoAxesCombined,
-  CheckCircle2, CircleDashed, HeartPulse, Layers3, ShieldCheck,
+  ArrowRight, ArrowUpRight, BookOpen, BookOpenCheck, ChartNoAxesCombined,
+  CircleDashed, FlaskConical, HeartPulse, Layers3, LockKeyhole, ShieldCheck,
 } from "lucide-react";
+import { EvidenceOrbit } from "@/components/comparison/evidence-orbit";
 
-const modules=[
-  {
-    href:"/evidencias",title:"Explorador científico",tag:"Disponível",ready:true,
-    body:"Pesquise 50 referências consolidadas, com fontes originais, limites e curadoria identificada.",
-    icon:BookOpenText,number:"01",accent:"bg-[#e8f5f2] text-[#0f766e]",
-  },
-  {
-    href:"/comparar",title:"Comparador de estudos",tag:"Disponível",ready:true,
-    body:"Analise estudos lado a lado e consulte cinco indicadores de fontes conferidas, sem combinar efeitos indevidos.",
-    icon:Layers3,number:"02",accent:"bg-[#edf3ff] text-[#2563eb]",
-  },
-  {
-    href:"/musculos-uti",title:"Músculos e UTI",tag:"Em planejamento",ready:false,
-    body:"Investigue reserva muscular, sarcopenia e relações científicas ainda não demonstradas.",
-    icon:HeartPulse,number:"03",accent:"bg-[#fff7ed] text-[#a66d17]",
-  },
-  {
-    href:"/projecoes",title:"Cenários populacionais",tag:"Em planejamento",ready:false,
-    body:"Conheça a proposta de cenários transparentes para 2031 e 2036, ainda sem simulações liberadas.",
-    icon:ChartNoAxesCombined,number:"04",accent:"bg-[#f2f1ff] text-[#6651b5]",
-  },
+const available=[
+  {href:"/evidencias",title:"Explorar evidências",number:"01",icon:BookOpen,
+   summary:"Estudos, fontes originais e limites de cada conclusão.",tag:"Biblioteca científica",
+   color:"from-[#eef3ff] to-white",accent:"#315ff4"},
+  {href:"/comparar",title:"Comparar estudos",number:"02",icon:Layers3,
+   summary:"Contexto lado a lado e indicadores avaliados dentro de cada publicação.",tag:"Research Studio",
+   color:"from-[#edfaf7] to-white",accent:"#0c948b"},
+] as const;
+const upcoming=[
+  {href:"/musculos-uti",title:"Músculos & UTI",detail:"Associações, força muscular e hipóteses ainda em investigação.",icon:HeartPulse},
+  {href:"/projecoes",title:"Cenários populacionais",detail:"Modelo de 2031/2036 ainda sem projeções liberadas.",icon:ChartNoAxesCombined},
 ] as const;
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-      <section className="relative mt-7 overflow-hidden rounded-[30px] border border-[#e0e8f1] bg-gradient-to-br from-white via-white to-[#f0f6ff] px-6 py-10 shadow-[0_16px_48px_rgba(20,47,76,.045)] sm:mt-10 sm:px-10 sm:py-14">
-        <span className="pointer-events-none absolute -right-24 -top-32 size-96 rounded-full border-[44px] border-[#edf3ff]/75" aria-hidden="true"/>
-        <div className="relative grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_330px]">
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#d5e8e4] bg-[#f5faf9] px-3 py-2 text-xs font-bold text-primary">
-              <ShieldCheck size={16} aria-hidden="true"/> Evidência com rastreabilidade
-            </p>
-            <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-[1.08] tracking-[-.05em] sm:text-6xl">
-              Ciência em saúde,{" "}
-              <span className="text-primary">sem perder o contexto.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground">
-              O LUPA organiza pesquisas sobre medicamentos para emagrecimento, saúde mental
-              e composição muscular. Cada resultado vem acompanhado de origem, limitações
-              e avisos sobre o que ainda não pode ser concluído.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/evidencias" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#0b625c]">
-                Explorar evidências <ArrowRight size={18} aria-hidden="true"/>
-              </Link>
-              <Link href="/comparar" className="lupa-button-secondary min-h-12">
-                Comparar pesquisas <ArrowUpRight size={16} aria-hidden="true"/>
-              </Link>
-            </div>
-            <p className="mt-5 text-xs leading-5 text-muted-foreground">
-              MVP de investigação científica · Não oferece diagnóstico, prescrição ou projeções clínicas automatizadas.
-            </p>
-          </div>
-
-          <aside className="lupa-surface relative p-5 sm:p-6" aria-label="Painel de evolução científica">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="lupa-section-kicker">Visão geral</p>
-                <h2 className="mt-1 text-lg font-extrabold">Biblioteca LUPA</h2>
+    <div className="lupa-studio min-h-screen">
+      <div className="mx-auto max-w-[1480px] px-4 pb-20 pt-6 sm:px-6 sm:pt-9 lg:px-9">
+        <section className="lupa-dashboard-card overflow-hidden p-3 sm:p-4">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(370px,.85fr)]">
+            <div className="flex flex-col justify-center px-4 py-8 sm:px-8 sm:py-12">
+              <p className="lupa-premium-kicker">LUPA Saúde / Evidence intelligence</p>
+              <h1 className="lupa-premium-text mt-4 max-w-3xl text-[clamp(2.55rem,4.5vw,4.5rem)] font-extrabold leading-[1.04]">
+                Ciência em saúde.
+                <span className="block text-[#315ff4]">Sem perder o contexto.</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#5f728a] sm:text-[16px]">
+                Explore pesquisas sobre medicamentos para emagrecimento, saúde mental
+                e composição muscular. Compare as fontes e reconheça onde a evidência termina
+                e onde começam as hipóteses.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href="/evidencias" className="lupa-premium-button lupa-premium-button-primary">
+                  Explorar biblioteca <ArrowRight size={17} aria-hidden="true"/>
+                </Link>
+                <Link href="/comparar" className="lupa-premium-button lupa-premium-button-outline">
+                  Abrir Research Studio <ArrowUpRight size={17} aria-hidden="true"/>
+                </Link>
               </div>
-              <span className="flex size-11 items-center justify-center rounded-2xl bg-[#edf5ff] text-[#2563eb]">
-                <Activity size={21} aria-hidden="true"/>
-              </span>
-            </div>
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="lupa-inner-surface p-4">
-                <p className="text-3xl font-extrabold tracking-tight tabular-nums">50</p>
-                <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">Referências canônicas</p>
-              </div>
-              <div className="lupa-inner-surface p-4">
-                <p className="text-3xl font-extrabold tracking-tight tabular-nums">5</p>
-                <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">Indicadores documentais</p>
-              </div>
-            </div>
-            <div className="mt-5 space-y-3">
-              <div className="flex items-center justify-between gap-2 text-xs">
-                <span className="font-semibold text-[#42576b]">Catálogo local</span>
-                <span className="flex items-center gap-1 font-bold text-primary">
-                  <CheckCircle2 size={14} aria-hidden="true"/> Implementado
-                </span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#e5ecf3]"><div className="h-full w-full rounded-full bg-[#0f766e]"/></div>
-              <div className="flex items-center justify-between gap-2 text-xs">
-                <span className="font-semibold text-[#42576b]">Projeções populacionais</span>
-                <span className="flex items-center gap-1 font-bold text-[#8b6c3c]">
-                  <CircleDashed size={14} aria-hidden="true"/> Não liberadas
-                </span>
-              </div>
-              <p className="border-t border-border pt-3 text-xs leading-6 text-muted-foreground">
-                A revisão clínica independente dos resultados ainda é necessária antes de qualquer projeção.
+              <p className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-[#6a829c]">
+                <ShieldCheck size={16} className="text-[#0e998d]" aria-hidden="true"/>
+                MVP científico · Sem diagnósticos ou extrapolações automáticas
               </p>
             </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="mt-14 sm:mt-18" aria-labelledby="modules-heading">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="lupa-section-kicker">Áreas de pesquisa</p>
-            <h2 id="modules-heading" className="mt-2 text-2xl font-extrabold tracking-[-.03em] sm:text-3xl">
-              Explore a plataforma
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Ferramentas disponíveis e módulos ainda em desenvolvimento.
-            </p>
+            <EvidenceOrbit leftId="E04" rightId="E12"/>
           </div>
-          <Link href="/metodologia" className="inline-flex min-h-10 items-center gap-1 text-sm font-bold text-primary underline-offset-4 hover:underline">
-            Ver metodologia <ArrowUpRight size={16} aria-hidden="true"/>
-          </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {modules.map(module=>{
-            const Icon=module.icon;
+        </section>
+
+        <section className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Panorama do acervo">
+          {[
+            {value:"50",label:"Referências únicas",icon:BookOpen,color:"bg-[#edf2ff] text-[#315ff4]"},
+            {value:"55",label:"Fontes de origem",icon:BookOpenCheck,color:"bg-[#e6f9f4] text-[#0b8f84]"},
+            {value:"05",label:"Indicadores conferidos",icon:FlaskConical,color:"bg-[#f1efff] text-[#7654bc]"},
+            {value:"00",label:"Projeções liberadas",icon:LockKeyhole,color:"bg-[#fff4e6] text-[#b77b35]"},
+          ].map(card=>{
+            const Icon=card.icon;
             return (
-              <Link key={module.href} href={module.href}
-                className="group lupa-surface flex min-h-[285px] flex-col p-5 transition-transform duration-200 hover:-translate-y-0.5 hover:border-[#c9d5e2] sm:p-6">
-                <div className="flex items-center justify-between gap-2">
-                  <span className={"flex size-11 items-center justify-center rounded-2xl "+module.accent}>
-                    <Icon size={21} aria-hidden="true"/>
-                  </span>
-                  <span className="text-xs font-bold text-[#9aa5b3]">{module.number}</span>
+              <div key={card.label} className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
+                <span className={"flex size-12 shrink-0 items-center justify-center rounded-2xl "+card.color}>
+                  <Icon size={22} aria-hidden="true"/>
+                </span>
+                <div>
+                  <p className="lupa-metric-ink text-[31px] font-extrabold text-[#203653]">{card.value}</p>
+                  <p className="text-xs font-semibold text-[#6b8199]">{card.label}</p>
                 </div>
-                <span className={"mt-5 inline-flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold "+
-                  (module.ready?"bg-[#e9f7f2] text-[#126f5f]":"bg-[#f2f5f8] text-[#687785]")}>
-                  {module.ready?<CheckCircle2 size={13} aria-hidden="true"/>:<CircleDashed size={13} aria-hidden="true"/>}
-                  {module.tag}
-                </span>
-                <h3 className="mt-3 text-lg font-extrabold tracking-[-.02em]">{module.title}</h3>
-                <p className="mt-2 flex-1 text-[13px] leading-6 text-muted-foreground">{module.body}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-                  {module.ready?"Abrir módulo":"Ver proposta"} <ArrowRight size={16} aria-hidden="true"/>
-                </span>
-              </Link>
+              </div>
             );
           })}
-        </div>
-      </section>
+        </section>
+
+        <section className="mt-13" aria-labelledby="modules-title">
+          <p className="lupa-premium-kicker">Um espaço para investigar</p>
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 id="modules-title" className="lupa-premium-text mt-2 text-[28px] font-extrabold sm:text-[36px]">
+                Escolha como começar
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-[#687c94]">Ferramentas reais do MVP e módulos ainda em pesquisa.</p>
+            </div>
+            <Link href="/metodologia" className="inline-flex min-h-11 items-center gap-2 text-[13px] font-bold text-[#315bd3] hover:underline">
+              Nosso método <ArrowUpRight size={17} aria-hidden="true"/>
+            </Link>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {available.map(card=>{
+              const Icon=card.icon;
+              return (
+                <Link href={card.href} key={card.href}
+                  className={"lupa-dashboard-card lupa-dash-hover relative min-h-[230px] overflow-hidden bg-gradient-to-br p-6 sm:p-7 "+card.color}>
+                  <span className="pointer-events-none absolute -right-10 -top-14 size-52 rounded-full border-[24px] border-[#7197ee]/10" aria-hidden="true"/>
+                  <div className="relative flex items-center justify-between">
+                    <span className="flex size-13 items-center justify-center rounded-2xl bg-white shadow-sm"
+                      style={{color:card.accent}}>
+                      <Icon size={26} aria-hidden="true"/>
+                    </span>
+                    <span className="text-xs font-extrabold tracking-[.1em] text-[#8ea1b9]">{card.number}</span>
+                  </div>
+                  <div className="relative mt-7">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[.13em]" style={{color:card.accent}}>{card.tag}</p>
+                    <h3 className="mt-2 text-[24px] font-extrabold tracking-[-.04em] text-[#203653]">{card.title}</h3>
+                    <p className="mt-2 max-w-lg text-[14px] leading-6 text-[#61768f]">{card.summary}</p>
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold" style={{color:card.accent}}>
+                      Abrir ferramenta <ArrowRight size={17} aria-hidden="true"/>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {upcoming.map(module=>{
+              const Icon=module.icon;
+              return (
+                <Link key={module.href} href={module.href}
+                  className="lupa-dashboard-card lupa-dash-hover flex items-start gap-4 p-5">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#f2f5fb] text-[#7488a3]">
+                    <Icon size={22} aria-hidden="true"/>
+                  </span>
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#8a7a63]">
+                      <CircleDashed size={13} aria-hidden="true"/> Em planejamento
+                    </span>
+                    <h3 className="mt-1 text-[17px] font-extrabold text-[#283f5b]">{module.title}</h3>
+                    <p className="mt-1 text-[13px] leading-6 text-[#61768f]">{module.detail}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

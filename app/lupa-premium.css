@@ -1,0 +1,82 @@
+
+/* LUPA | Studio 2.0 — complements the stable Tailwind design tokens. */
+.lupa-studio {
+  position: relative;
+  isolation: isolate;
+  background: radial-gradient(circle at 5% -3%, rgba(65, 108, 250, .10), transparent 32%),
+              radial-gradient(circle at 95% 7%, rgba(45, 202, 197, .09), transparent 28%),
+              #f4f7fb;
+}
+.lupa-dashboard-card {
+  background: #fff;
+  border: 1px solid rgba(206, 216, 231, .80);
+  border-radius: 26px;
+  box-shadow: 0 14px 48px rgba(25, 44, 76, .055), 0 2px 6px rgba(25, 44, 76, .025);
+}
+.lupa-dash-hover { transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.lupa-dash-hover:hover {
+  border-color: #bbcdf0;
+  box-shadow: 0 22px 55px rgba(28, 65, 125, .095);
+  transform: translateY(-2px);
+}
+.lupa-premium-kicker {
+  color: #3768d6;
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.lupa-premium-text {
+  letter-spacing: -.045em;
+  color: #14233d;
+}
+.lupa-paper-grid {
+  background-image: linear-gradient(rgba(128, 150, 190, .065) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(128, 150, 190, .065) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.lupa-hero-violet {
+  background: radial-gradient(ellipse at 76% 32%, #547aff 0%, transparent 54%),
+              radial-gradient(ellipse at 10% 90%, #145bd4 0%, transparent 48%),
+              linear-gradient(135deg, #142e76 0%, #1f49b5 54%, #363eaf 100%);
+}
+.lupa-studio-rail {
+  background: linear-gradient(180deg, #142444, #101e3b);
+  box-shadow: 0 16px 40px rgba(16, 36, 68, .22);
+}
+.lupa-soft-rule { border-color: #e8edf5; }
+.lupa-metric-ink { font-variant-numeric: tabular-nums; letter-spacing: -.055em; }
+.lupa-premium-button {
+  display: inline-flex; min-height: 44px; align-items: center; justify-content: center;
+  gap: .6rem; border-radius: 13px; padding: .65rem 1rem;
+  font-weight: 700; font-size: .88rem; transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.lupa-premium-button:hover { transform: translateY(-1px); }
+.lupa-premium-button-primary {
+  color: white; background: #315ff4;
+  box-shadow: 0 7px 16px rgba(49, 95, 244, .18);
+}
+.lupa-premium-button-primary:hover { background: #254ed3; box-shadow: 0 10px 20px rgba(49, 95, 244, .23); }
+.lupa-premium-button-outline { color: #254278; background: white; border: 1px solid #dbe4f2; }
+.lupa-premium-button-outline:hover { background: #f4f7ff; }
+.lupa-focusable:focus-visible { outline: 3px solid #245ded; outline-offset: 3px; }
+.lupa-editorial-card { background: #f7f9fd; border: 1px solid #e9edf5; border-radius: 18px; }
+.lupa-section-number {
+  display: inline-flex; height: 30px; min-width: 30px; align-items: center; justify-content: center;
+  padding: 0 8px; border-radius: 9px; background: #edf2ff; color: #315ed5;
+  font-size: .73rem; font-weight: 800;
+}
+.lupa-fade-up { animation: lupa-fade-up .5s ease-out both; }
+@keyframes lupa-fade-up { from {opacity: 0; transform: translateY(10px);} to {opacity: 1;transform: translateY(0);} }
+@keyframes lupa-orbit { to {transform: rotate(360deg);} }
+.lupa-orbit-ring { transform-origin: 50% 50%; animation: lupa-orbit 40s linear infinite; }
+.lupa-orbit-ring-reverse { animation-direction: reverse; animation-duration: 55s; }
+@media (max-width: 640px) {
+  .lupa-dashboard-card { border-radius: 20px; }
+  .lupa-premium-kicker { font-size: .68rem; letter-spacing: .135em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lupa-dash-hover, .lupa-premium-button {transition: none}
+  .lupa-dash-hover:hover, .lupa-premium-button:hover {transform: none}
+  .lupa-fade-up, .lupa-orbit-ring {animation: none}
+}
