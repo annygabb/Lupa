@@ -1,41 +1,46 @@
-# Estado do LUPA Saúde — Etapa 3A (05/11/2026)
+# Estado do LUPA Saúde — Interface do Explorador (05/11/2026)
 
 | Entrega | Estado verificado |
 |---|---|
-| Fundação Next.js, TypeScript e Tailwind | Implementada |
-| 20 contratos Zod, 181 campos da Etapa 2 | Preservados, sem tabelas físicas |
-| Fontes locais E / P / R | 14 + 30 + 11 = 55 referências |
-| Consolidação de registros | 50 canônicos, cinco aliases exatos |
-| Famílias de estudos compartilhados | Mapeadas, sem agregação indevida de participantes |
-| Catálogo de referências para curadoria | 50 candidatas, nenhuma aprovada para projeção |
-| Seleção editorial | 15 fichas prioritárias aguardando revisão detalhada |
-| Busca e filtros locais | Implementados e testados, sem interface visual |
-| Evidence Guard | Preservado; não gera projeções |
-| ESLint / TypeScript / Vitest / build | Aprovados na CI da Etapa 3A |
-| Página /evidencias com cards e filtros | NÃO iniciada nesta etapa |
-| Supabase | NÃO configurado |
-| SQL ou migrações | NÃO executados |
-| Vercel | NENHUM deploy |
-| Dados de pacientes | Não utilizados |
-| Modelos clínicos e projeções | Não implementados |
+| Fundação Next.js / TS / Tailwind | Concluída |
+| Contratos Zod — 20 entidades / 181 campos | Código preparado, nenhuma tabela criada |
+| Catálogo local E/P/R | 55 referências de origem e 50 registros canônicos |
+| Identificação de cinco aliases | Testada |
+| Filtros textuais e por tema, medicamento e desenho | Implementados e testados |
+| Filtros de origem, ano e prioridade editorial | Implementados |
+| Cards responsivos e navegação /evidencias | Implementados; build aprovado |
+| Fichas /evidencias/[id] | 55 caminhos estáticos gerados, incluindo aliases |
+| Links externos dos artigos | URLs originais ligadas às fichas; não foi testada resposta HTTP de cada destino |
+| Alertas de curadoria e limitações | Exibidos em cards e fichas |
+| Testes automatizados | **39 testes aprovados** (cinco suítes) |
+| CI de lint, TypeScript e build | **Aprovada** |
+| Teste E2E com browser real | Pendente |
+| Supabase | **NÃO configurado** |
+| SQL e migrações | **NÃO executados** |
+| Vercel / deploy | **NÃO realizado** |
+| Projeções epidemiológicas | **NÃO implementadas** |
+| Revisão clínica fonte por fonte | **Pendente** |
 
-CI de implementação: https://github.com/annygabb/Lupa/actions/runs/42071805210
+Execução aprovada: https://github.com/annygabb/Lupa/actions/runs/42074249386
 
-## Fontes e auditoria
-- A ampliação veio do DOCX da equipe e do CSV de planejamento aprovado.
-- P01 (PMID 40366681), P03 (PMID 41537305) e P24 (PMID 41796096) tiveram indexação e resumos confrontados com PubMed nesta etapa.
-- Não houve revisão integral dos 41 documentos adicionais; os demais e detalhes quantitativos ainda exigem conferência.
-- O seed mantém o texto do material enviado, status candidate e projectionApproved=false.
-- A relação GLP-1 → massa magra → recuperação em UTI não foi estabelecida como causal.
-- Documentos regulatórios não são ensaios; notificações espontâneas não fornecem incidência.
+## Evidências e limitações
 
-Veja: [relatório de curadoria](ETAPA3A_CURADORIA.md) e [contratos anteriores](ETAPA2_CONTRATOS.md).
+- Todos os 50 registros seguem como `candidate` e com `projectionApproved=false`.
+- Os resumos foram extraídos dos documentos da equipe e não constituem validação clínica por si só.
+- Prioridade P0/P1/P2 indica fila editorial; não qualidade científica.
+- Não são calculadas taxas de incidência a partir de relatos espontâneos.
+- Não é inferida relação causal entre tirzepatida, alteração muscular e desfechos em UTI.
+- Ainda faltam conferência integral dos artigos, denominadores, braços e intervalos antes de gráficos clínicos e projeções.
 
-## Pendências técnicas
-- Gerar lockfile imutável de dependências para CI reprodutível antes da submissão.
-- Validar números por publicação/desfecho, incluindo denominadores, braços, IC e período.
-- Executar revisão visual e funcional somente após aprovação de interface (próxima etapa).
-- Não houve testes E2E de UI e não há URL pública de demonstração.
+## Testes e qualidade
 
-## Gate de aprovação
-Nenhuma interface /evidencias, API nova, integração Supabase, SQL, migração ou deploy está autorizada por esta Etapa 3A. Apresentar resultados e solicitar a decisão do usuário antes de iniciar a próxima fase.
+A primeira execução de interface falhou porque o Vitest não reconhecia o alias de módulo `@/`.
+O `vitest.config.ts` foi corrigido para usar o mesmo alias do projeto, e a execução subsequente passou.
+A CI incluiu renderização server-side básica dos componentes e geração das rotas, mas **não** realizou teste visual ou E2E em Chrome/Safari.
+
+Ainda é pendente gerar e versionar o `pnpm-lock.yaml` para reproduzibilidade do pipeline.
+
+## Próximo gate
+
+Apresentar resultados da interface à equipe e recolher feedback. **Nenhum deploy, integração Supabase, SQL ou migração** será realizado sem aprovação separada.
+Documentação: [Etapa 3B — interface](ETAPA3B_INTERFACE.md), [Etapa 3A — curadoria](ETAPA3A_CURADORIA.md).
