@@ -2,7 +2,7 @@
 
 MVP do **Hack Brasil 2026**, na trilha Saúde & bem-estar. O produto organizará evidências científicas sobre medicamentos para emagrecimento, composição muscular e estudos de UTI, além de explorar cenários populacionais transparentes.
 
-> **Etapas 1, 2, 3A e interface do Explorador Científico concluídas em código.** A página `/evidencias`, a busca/filtros interativos e as fichas `/evidencias/[id]` foram implementadas com catálogo local. O **motor de projeções** e a revisão científica integral **ainda não estão prontos**.
+> **Etapas 1–4 (Explorador e Comparador Científico) concluídas em código.** A página `/evidencias`, a busca/filtros interativos e as fichas `/evidencias/[id]` foram implementadas com catálogo local. O **motor de projeções** e a revisão científica integral **ainda não estão prontos**. Na Etapa 4, cinco indicadores de três publicações foram confrontados com as fontes primárias e disponibilizados apenas para comparação descritiva.
 
 ## Executar localmente
 
@@ -31,7 +31,8 @@ O `GET /api/health` informa `status: ok`, `stage: foundation` e `database: not-c
 - `app/`: navegação, Explorador `/evidencias`, fichas estáticas `/evidencias/[id]` e Route Handlers.
 - `components/`: UI e páginas-base.
 - `lib/`: funções e contratos independentes.
-- `features/evidence/`: contratos de dados, catálogo inicial de 14 referências, 41 fontes complementares, 50 registros canônicos, filtros locais e Evidence Guard (sem projeções executadas).
+- `features/evidence/`: contratos, 50 registros científicos, filtros e Evidence Guard.
+- `features/comparison/`: indicadores conferidos nas fontes, avaliação de compatibilidade e bloqueio de combinação numérica entre estudos.
 - `tests/`: testes automatizados.
 - `docs/`: arquitetura, metodologia e acompanhamento.
 
@@ -47,7 +48,7 @@ O repositório foi criado após 04/11/2026 às 21h (Brasília), no período perm
 
 A execução de qualidade do GitHub Actions passou em todas as etapas em 05/11/2026: [ver execução](https://github.com/annygabb/Lupa/actions/runs/42055453543). Como não há lockfile no primeiro scaffold, a instalação da CI usa `pnpm install --no-frozen-lockfile`; gerar e versionar o lockfile será uma melhoria da próxima revisão.
 
-Veja também [ETAPA 3B — interface](docs/ETAPA3B_INTERFACE.md), [STATUS](docs/STATUS.md), [ARQUITETURA](docs/ARCHITECTURE.md), [METODOLOGIA](docs/METHODOLOGY.md) [ETAPA 2 — contratos](docs/ETAPA2_CONTRATOS.md) e [ETAPA 3A — curadoria](docs/ETAPA3A_CURADORIA.md).
+Veja também [ETAPA 4 — comparador](docs/ETAPA4_COMPARADOR.md), [ETAPA 3B — interface](docs/ETAPA3B_INTERFACE.md), [STATUS](docs/STATUS.md), [ARQUITETURA](docs/ARCHITECTURE.md), [METODOLOGIA](docs/METHODOLOGY.md) [ETAPA 2 — contratos](docs/ETAPA2_CONTRATOS.md) e [ETAPA 3A — curadoria](docs/ETAPA3A_CURADORIA.md).
 
 Todas as 50 referências consolidadas estão como candidatas e nenhuma pode alimentar projeções clínicas sem revisão humana por desfecho. CI da Etapa 3A: https://github.com/annygabb/Lupa/actions/runs/42071805210.
 
@@ -57,3 +58,9 @@ A CI executou instalação, lint, TypeScript, **39 testes automatizados em cinco
 [Ver execução aprovada](https://github.com/annygabb/Lupa/actions/runs/42074249386).
 
 A execução automática não substitui teste visual em navegador e mobile; o projeto **não foi publicado**.
+
+## Comparador Científico — Etapa 4
+
+A rota `/comparar` oferece seleção entre estudos, contexto dos métodos, avisos de incompatibilidade, cinco gráficos internos às publicações e tabelas acessíveis. Estudos diferentes **não são somados**. O subestudo de massa magra não permite inferir resultado causal de UTI. Os cinco indicadores continuam bloqueados para projeções de saúde pública.
+
+[CI da Etapa 4: 54 testes em seis suítes, lint, tipagem e build aprovados](https://github.com/annygabb/Lupa/actions/runs/42079968363). A revisão de navegação em dispositivos móveis e os testes E2E ainda são pendentes; não há deploy.

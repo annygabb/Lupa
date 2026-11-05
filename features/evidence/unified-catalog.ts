@@ -1,6 +1,6 @@
 import { evidenceCatalog } from "./catalog";
 import { supplementalEvidenceCatalog, type SupplementalRecord } from "./supplemental";
-import { extractPubmedId, normalizeEvidenceUrl, normalizeSearchText } from "./normalization";
+import { extractPubmedId, normalizeEvidenceUrl } from "./normalization";
 
 export const evidenceTopics = [
   "mental", "quality_of_life", "muscle", "sarcopenia", "icu", "safety",
