@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight, ArrowUpRight, BookOpen, BookOpenCheck, ChartNoAxesCombined,
-  CircleDashed, FlaskConical, HeartPulse, Layers3, LockKeyhole, ShieldCheck,
+  FlaskConical, HeartPulse, Layers3, LockKeyhole, ShieldCheck,
 } from "lucide-react";
 import { EvidenceOrbit } from "@/components/comparison/evidence-orbit";
 
@@ -12,10 +12,12 @@ const available=[
   {href:"/comparar",title:"Comparar estudos",number:"02",icon:Layers3,
    summary:"Contexto lado a lado e indicadores avaliados dentro de cada publicação.",tag:"Research Studio",
    color:"from-[#edfaf7] to-white",accent:"#0c948b"},
-] as const;
-const upcoming=[
-  {href:"/musculos-uti",title:"Músculos & UTI",detail:"Associações, força muscular e hipóteses ainda em investigação.",icon:HeartPulse},
-  {href:"/projecoes",title:"Cenários populacionais",detail:"Modelo de 2031/2036 ainda sem projeções liberadas.",icon:ChartNoAxesCombined},
+  {href:"/musculos-uti",title:"Músculos e UTI",number:"03",icon:HeartPulse,
+   summary:"Investigação guiada de composição corporal, sarcopenia e lacunas de causalidade.",tag:"Investigação crítica",
+   color:"from-[#fff8ec] to-white",accent:"#b17827"},
+  {href:"/projecoes",title:"Cenários para 2031 e 2036",number:"04",icon:ChartNoAxesCombined,
+   summary:"Simule taxas hipotéticas de acesso e continuidade; exporte premissas e resultados.",tag:"Simulador reproduzível",
+   color:"from-[#f2f0ff] to-white",accent:"#755abd"},
 ] as const;
 
 export default function Home() {
@@ -57,7 +59,7 @@ export default function Home() {
             {value:"50",label:"Referências únicas",icon:BookOpen,color:"bg-[#edf2ff] text-[#315ff4]"},
             {value:"55",label:"Fontes de origem",icon:BookOpenCheck,color:"bg-[#e6f9f4] text-[#0b8f84]"},
             {value:"05",label:"Indicadores conferidos",icon:FlaskConical,color:"bg-[#f1efff] text-[#7654bc]"},
-            {value:"00",label:"Projeções liberadas",icon:LockKeyhole,color:"bg-[#fff4e6] text-[#b77b35]"},
+            {value:"00",label:"Projeções clínicas liberadas",icon:LockKeyhole,color:"bg-[#fff4e6] text-[#b77b35]"},
           ].map(card=>{
             const Icon=card.icon;
             return (
@@ -81,7 +83,7 @@ export default function Home() {
               <h2 id="modules-title" className="lupa-premium-text mt-2 text-[28px] font-extrabold sm:text-[36px]">
                 Escolha como começar
               </h2>
-              <p className="mt-1 text-sm leading-6 text-[#687c94]">Ferramentas reais do MVP e módulos ainda em pesquisa.</p>
+              <p className="mt-1 text-sm leading-6 text-[#687c94]">Os quatro módulos funcionais do MVP, com limites científicos identificados.</p>
             </div>
             <Link href="/metodologia" className="inline-flex min-h-11 items-center gap-2 text-[13px] font-bold text-[#315bd3] hover:underline">
               Nosso método <ArrowUpRight size={17} aria-hidden="true"/>
@@ -115,26 +117,6 @@ export default function Home() {
             })}
           </div>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {upcoming.map(module=>{
-              const Icon=module.icon;
-              return (
-                <Link key={module.href} href={module.href}
-                  className="lupa-dashboard-card lupa-dash-hover flex items-start gap-4 p-5">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#f2f5fb] text-[#7488a3]">
-                    <Icon size={22} aria-hidden="true"/>
-                  </span>
-                  <div>
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#8a7a63]">
-                      <CircleDashed size={13} aria-hidden="true"/> Em planejamento
-                    </span>
-                    <h3 className="mt-1 text-[17px] font-extrabold text-[#283f5b]">{module.title}</h3>
-                    <p className="mt-1 text-[13px] leading-6 text-[#61768f]">{module.detail}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
         </section>
       </div>
     </div>

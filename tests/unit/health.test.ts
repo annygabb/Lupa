@@ -4,7 +4,7 @@ describe("contrato de saude da aplicacao", () => {
   it("exibe estado publico sem informacoes sensiveis", () => {
     expect(getHealthPayload()).toEqual({
       status: "ok", service: "lupa-saude",
-      stage: "foundation", schemaVersion: HEALTH_SCHEMA_VERSION,
+      stage: "functional-mvp-v1", schemaVersion: HEALTH_SCHEMA_VERSION,
       dependencies: { database: "not-configured", externalApis: "not-configured" },
     });
   });

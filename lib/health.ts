@@ -1,5 +1,5 @@
 export const HEALTH_SCHEMA_VERSION = "1.0.0" as const;
-export const APPLICATION_STAGE = "foundation" as const;
+export const APPLICATION_STAGE = "functional-mvp-v1" as const;
 export function getHealthPayload() {
   return {
     status: "ok" as const,

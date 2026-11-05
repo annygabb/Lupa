@@ -1,4 +1,4 @@
-name: Qualidade da fundação
+name: Qualidade do LUPA Saúde
 on:
   push:
     branches: [main]
@@ -8,7 +8,7 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -30,3 +30,9 @@ jobs:
         run: pnpm run test
       - name: Build
         run: pnpm run build
+      - name: Smoke HTTP das rotas compiladas
+        run: |
+          PORT=3010 pnpm start &
+          APP_PID=$!
+          trap 'kill $APP_PID || true' EXIT
+          node scripts/smoke.mjs http://127.0.0.1:3010

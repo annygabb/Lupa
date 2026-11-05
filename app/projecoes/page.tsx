@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
-import { ModulePreview } from "@/components/module-preview";
-export const metadata: Metadata={title:"Projeções"};
-export default function Projecoes(){return <ModulePreview eyebrow="Brasil 2027–2036" title="Projetar cenários" description="Explorar hipóteses de adoção e continuidade de tratamento, sem apresentar cenários como previsões clínicas individuais." objectives={["Entradas editáveis com faixas e fontes.","Motor matemático determinístico e resultados reproduzíveis.","Exportação com premissas e advertências metodológicas."]}/>;}
+import { ScenarioDashboard } from "@/components/scenarios/scenario-dashboard";
+
+export const metadata: Metadata = {
+  title: "Cenários para 2031 e 2036",
+  description: "Simulador de cenários hipotéticos de acesso e continuidade do tratamento, com premissas editáveis, fórmulas reproduzíveis e exportação de resultados.",
+};
+export default function ProjecoesPage(){return <ScenarioDashboard/>;}
