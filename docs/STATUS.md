@@ -1,37 +1,41 @@
-# Estado do LUPA Saúde — Etapa 2 (05/11/2026)
+# Estado do LUPA Saúde — Etapa 3A (05/11/2026)
 
 | Entrega | Estado verificado |
 |---|---|
-| Repositório público criado durante o período elegível | Confirmado |
-| Next.js + TypeScript + Tailwind | Fundação implementada |
-| Páginas e navegação responsiva | Páginas-base; sem gráficos de pesquisa implementados |
-| GET /api/health | API de fundação implementada |
-| 20 contratos de entidades (181 campos) | Implementados em Zod/TypeScript; não representam tabelas criadas |
-| Catálogo inicial de 14 referências | Seed local validado; todas candidatas a revisão |
-| Busca no catálogo e sobreposição por famílias | Funções locais testadas; ainda sem UI pública |
-| Evidence Guard | Regras de bloqueio implementadas, testadas com dados sintéticos |
-| Lint / TypeScript / Vitest / Build | GitHub Actions aprovado |
-| Configuração Supabase | **Não realizada** |
-| Migrações ou SQL | **Não executados** |
-| Deploy Vercel | **Não realizado** |
-| Projeções epidemiológicas | **Não implementadas** |
-| Revisão clínica para projeção | **Pendente** |
+| Fundação Next.js, TypeScript e Tailwind | Implementada |
+| 20 contratos Zod, 181 campos da Etapa 2 | Preservados, sem tabelas físicas |
+| Fontes locais E / P / R | 14 + 30 + 11 = 55 referências |
+| Consolidação de registros | 50 canônicos, cinco aliases exatos |
+| Famílias de estudos compartilhados | Mapeadas, sem agregação indevida de participantes |
+| Catálogo de referências para curadoria | 50 candidatas, nenhuma aprovada para projeção |
+| Seleção editorial | 15 fichas prioritárias aguardando revisão detalhada |
+| Busca e filtros locais | Implementados e testados, sem interface visual |
+| Evidence Guard | Preservado; não gera projeções |
+| ESLint / TypeScript / Vitest / build | Aprovados na CI da Etapa 3A |
+| Página /evidencias com cards e filtros | NÃO iniciada nesta etapa |
+| Supabase | NÃO configurado |
+| SQL ou migrações | NÃO executados |
+| Vercel | NENHUM deploy |
+| Dados de pacientes | Não utilizados |
+| Modelos clínicos e projeções | Não implementados |
 
-CI confirmada: https://github.com/annygabb/Lupa/actions/runs/42062501251
+CI de implementação: https://github.com/annygabb/Lupa/actions/runs/42071805210
 
-## Limites científicos
-- Os resumos do CSV de 14 registros foram preservados; os registros continuam `candidate` e `projectionApproved=false`.
-- Mesmo a indicação "artigo/resumo original conferido" **não comprova** revisão detalhada de todos os números ou aptidão para projetar.
-- E01 e E04 pertencem à família SURMOUNT-1; não contabilizar amostras como independentes.
-- FAERS e documentos regulatórios não permitem inferir incidência.
-- A relação entre tirzepatida e desfechos futuros em UTI segue como hipótese não validada.
-- Os testes do Evidence Guard foram feitos com valores sintéticos; não validam estatisticamente projeções de saúde.
+## Fontes e auditoria
+- A ampliação veio do DOCX da equipe e do CSV de planejamento aprovado.
+- P01 (PMID 40366681), P03 (PMID 41537305) e P24 (PMID 41796096) tiveram indexação e resumos confrontados com PubMed nesta etapa.
+- Não houve revisão integral dos 41 documentos adicionais; os demais e detalhes quantitativos ainda exigem conferência.
+- O seed mantém o texto do material enviado, status candidate e projectionApproved=false.
+- A relação GLP-1 → massa magra → recuperação em UTI não foi estabelecida como causal.
+- Documentos regulatórios não são ensaios; notificações espontâneas não fornecem incidência.
 
-## Qualidade e segurança
-- CI aprovou instalação, lint, tipagem, testes e build após o commit de implementação.
-- O projeto ainda não possui lockfile versionado. A CI usa instalação `pnpm install --no-frozen-lockfile`; pendência de reprodutibilidade a corrigir antes da submissão.
-- Não houve teste E2E ou teste de interface publicada; não existe URL de deploy.
-- Nenhum dado de paciente, credencial de Supabase, secret ou chave privada foi incluído.
+Veja: [relatório de curadoria](ETAPA3A_CURADORIA.md) e [contratos anteriores](ETAPA2_CONTRATOS.md).
 
-## Próximo gate de aprovação
-Revisar e autorizar separadamente qualquer integração do catálogo às telas públicas, criação de observações clínicas estruturadas, banco de dados, migrações ou deploy. Nenhuma dessas ações está incluída nesta etapa.
+## Pendências técnicas
+- Gerar lockfile imutável de dependências para CI reprodutível antes da submissão.
+- Validar números por publicação/desfecho, incluindo denominadores, braços, IC e período.
+- Executar revisão visual e funcional somente após aprovação de interface (próxima etapa).
+- Não houve testes E2E de UI e não há URL pública de demonstração.
+
+## Gate de aprovação
+Nenhuma interface /evidencias, API nova, integração Supabase, SQL, migração ou deploy está autorizada por esta Etapa 3A. Apresentar resultados e solicitar a decisão do usuário antes de iniciar a próxima fase.
