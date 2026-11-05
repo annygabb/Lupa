@@ -10,7 +10,7 @@ import {
 import { MetricChart } from "@/components/comparison/metric-chart";
 import { getReviewedMetric } from "@/features/comparison/reviewed-metrics";
 import {
-  evaluateMuscleIcuCausalChain, getResearchClaim, muscleClaims,researchQuestions,
+  evaluateMuscleIcuCausalChain, getResearchClaim, researchQuestions,
 } from "@/features/muscle/evidence-map";
 
 const colors={

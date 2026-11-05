@@ -8,7 +8,7 @@ const checks=[
   {path:"/comparar",contains:["Enxergue além dos números","Cálculo combinado"]},
   {path:"/musculos-uti",contains:["Além do peso","Que pergunta você quer responder?","A lacuna causal"]},
   {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
-  {path:"/metodologia",contains:["Como analisamos uma evidência","Cenários","Fontes auditáveis"]},
+  {path:"/metodologia",contains:["Como analisamos uma evidência","cenários","Fontes auditáveis"]},
 ];
 
 async function waitForServer() {

@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  Activity, ArrowUpRight, BarChart3, BookOpenCheck, Calculator, Download,
-  FileJson2, Info, LockKeyhole, RotateCcw, Settings2, ShieldCheck, UsersRound,
+  ArrowUpRight, BookOpenCheck, Calculator, Download,
+  FileJson2, Info, LockKeyhole, RotateCcw, Settings2, ShieldCheck,
 } from "lucide-react";
 import {
   SCENARIO_PRESETS, scenarioInputSchema, runScenario, scenarioCsv,

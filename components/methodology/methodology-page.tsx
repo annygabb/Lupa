@@ -1,8 +1,8 @@
 import Link from "next/link";
 import {
-  Activity, ArrowRight, ArrowUpRight, BookOpenCheck, Calculator, CheckCircle2,
+  ArrowRight, ArrowUpRight, BookOpenCheck, Calculator,
   CircleAlert, ClipboardCheck, FileCheck2, FlaskConical, Gauge, Layers3,
-  LockKeyhole, Network, ShieldCheck, ShieldX,
+  LockKeyhole, ShieldCheck, ShieldX,
 } from "lucide-react";
 import { SCENARIO_PRESETS } from "@/features/scenarios/engine";
 import { reviewedMetrics } from "@/features/comparison/reviewed-metrics";
