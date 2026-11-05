@@ -2,7 +2,7 @@
 
 MVP do **Hack Brasil 2026**, na trilha Saúde & bem-estar. O produto organizará evidências científicas sobre medicamentos para emagrecimento, composição muscular e estudos de UTI, além de explorar cenários populacionais transparentes.
 
-> **Etapas 1–4 (Explorador e Comparador Científico) concluídas em código.** A página `/evidencias`, a busca/filtros interativos e as fichas `/evidencias/[id]` foram implementadas com catálogo local. O **motor de projeções** e a revisão científica integral **ainda não estão prontos**. Na Etapa 4, cinco indicadores de três publicações foram confrontados com as fontes primárias e disponibilizados apenas para comparação descritiva.
+> **Etapas 1–4B (Explorador, Comparador e refinamento visual) concluídas em código.** A página `/evidencias`, a busca/filtros interativos e as fichas `/evidencias/[id]` foram implementadas com catálogo local. O **motor de projeções** e a revisão científica integral **ainda não estão prontos**. Na Etapa 4, cinco indicadores de três publicações foram confrontados com as fontes primárias e disponibilizados apenas para comparação descritiva.
 
 ## Executar localmente
 
@@ -64,3 +64,17 @@ A execução automática não substitui teste visual em navegador e mobile; o pr
 A rota `/comparar` oferece seleção entre estudos, contexto dos métodos, avisos de incompatibilidade, cinco gráficos internos às publicações e tabelas acessíveis. Estudos diferentes **não são somados**. O subestudo de massa magra não permite inferir resultado causal de UTI. Os cinco indicadores continuam bloqueados para projeções de saúde pública.
 
 [CI da Etapa 4: 54 testes em seis suítes, lint, tipagem e build aprovados](https://github.com/annygabb/Lupa/actions/runs/42079968363). A revisão de navegação em dispositivos móveis e os testes E2E ainda são pendentes; não há deploy.
+
+## Etapa 4B — identidade visual e UX/UI
+
+Redesign inspirado nas três referências de dashboards de saúde enviadas pela equipe, sem copiar layouts ou imagens:
+- Design system compartilhado (fundo claro, branco, azul de suporte, verde-petróleo, tipografia e estados acessíveis).
+- Página inicial com status real dos módulos, cabeçalho com navegação ativa e rodapé padronizado.
+- `/comparar`: cards A/B com hierarquia simplificada, resumos mais diretos e detalhamento expansível.
+- Bloco de compatibilidade com veredito principal, três permissões e alertas científicos priorizados; explicações originais preservadas.
+- Indicadores agrupados no desktop e `select` por categoria no mobile; gráfico com números destacados, barras e tabela equivalente.
+- Dados, projeções e `assessStudyComparison` da Etapa 4 preservados; **nenhum efeito combinado entre artigos**.
+
+Documentação completa com textos UX, tokens, responsive e checklist: [Etapa 4B — Design System UX/UI](docs/ETAPA4B_DESIGN_SYSTEM_UX_UI.md).
+
+Os controles e o build são verificados pelo GitHub Actions; inspeção E2E em dispositivos continua pendente de validação local. **Nenhum deploy realizado.**

@@ -1,49 +1,46 @@
-# Estado do LUPA Saúde — Comparador Científico (05/11/2026)
+# LUPA Saúde — Estado após Etapa 4B (05/11/2026)
 
-| Recurso | Estado verificado |
+| Recurso | Situação no código |
 |---|---|
-| Fundação Next.js/TypeScript/Tailwind | Implementada |
-| Explorador Científico | Busca, filtros e 50 registros canônicos |
-| Fichas individuais | 55 rotas estáticas, com aliases |
-| Comparador Científico /comparar | Implementado com dois seletores, avisos e contexto |
-| Gráficos do comparador | Cinco indicadores dentro de três publicações originais |
-| Tabelas acessíveis dos indicadores | Implementadas |
-| Proteção contra agregação entre estudos | Implementada e coberta por testes |
-| Registros aptos a projeção populacional | **Zero** |
-| Revisão científica independente | **Ainda não realizada** |
-| Testes de código | 54/54 aprovados em seis suítes |
-| Lint, tipagem e build | Aprovados na CI de implementação |
-| Testes E2E em Chrome/Safari e acessibilidade prática | Pendentes |
-| Supabase | **NÃO configurado** |
+| Fundação Next.js/React/TypeScript/Tailwind | Implementada |
+| Sistema visual compartilhado | Tokens, foco, navegação ativa, header/footer e home redesenhados |
+| Explorador Científico | 50 referências canônicas; busca, filtros e 55 rotas com aliases |
+| Comparador Científico | Seleção A/B, inversão, fichas, fontes originais |
+| Bloco de compatibilidade | Veredito principal + três estados + 4 avisos resumidos e justificativas completas |
+| Estado quando dois campos indicam mesma publicação | Bloqueio de lado a lado |
+| Indicadores | Cinco indicadores de três publicações, sem alterações numéricas |
+| Desktop | Categorias por botões e indicadores em chips |
+| Mobile | Select agrupado, cards verticais e tabela com rolagem local |
+| Fonte/intervalo/amostra/limitações | Preservados em gráfico e tabela |
+| Revisão clínica independente | **NÃO concluída** |
+| Indicadores aprovados para projeções | **0** |
+| Teste em navegador real / iPhone / Android | **Pendente** |
+| Banco Supabase | **NÃO configurado** |
 | SQL e migrações | **NÃO executados** |
-| Vercel | **Nenhum deploy realizado** |
-| Motor de projeções populacionais | **Não implementado** |
+| Deploy Vercel | **NÃO realizado** |
+| Motor de projeções | **NÃO implementado** |
 
-**Evidência de CI da implementação:** https://github.com/annygabb/Lupa/actions/runs/42079968363
+## Evidências científicas e segurança
 
-## Bases científicas verificadas para EXIBIÇÃO DESCRITIVA
-- E04 / SURMOUNT-1 DXA (n=160; 124 tirzepatida, 36 placebo): peso, massa gorda e massa magra em 72 semanas. Fonte https://pmc.ncbi.nlm.nih.gov/articles/PMC11965027/
-- E16 / SURMOUNT-4 (670 randomizados; 335 por braço): peso de semana 36 a 88, com limites de confiança. Fonte https://jamanetwork.com/journals/jama/fullarticle/2812936
-- E21 / SURMOUNT 1/2/3 pós-hoc (N total=4.056): categoria PHQ-9 em grupos tirzepatida versus placebo; N por braço **não conferido** no resumo. Fonte https://pubmed.ncbi.nlm.nih.gov/41537305/
-- E12 / UTI e E10 / sarcopenia foram revisados para contexto e limites de inferência, não incluídos em gráficos causais. Fontes: https://pubmed.ncbi.nlm.nih.gov/40462133/ e https://pubmed.ncbi.nlm.nih.gov/30312372/
+A Etapa 4B **não mudou** os indicadores, denominadores, valores, intervalos, estudos ou bloqueios de inferência da Etapa 4.
+- DXA de massa magra não equivale a sarcopenia ou força muscular.
+- Artigos sobre músculo e UTI não estabelecem efeito causal da tirzepatida na recuperação crítica.
+- O módulo não agrega estimativas entre estudos independentes.
+- Dados de PHQ-9 permanecem sem N individual dos braços quando não conferido.
+- Todos os 50 registros gerais continuam em curadoria e nenhum está aprovado para projeções.
 
-Todos os 50 registros gerais continuam como `candidate`. Os cinco indicadores individuais têm `displayStatus="primary_source_checked"` e `approvedForPopulationProjection=false`. Isso não é revisão clínica independente.
+## Qualidade e limites de validação
 
-## Tratamento das limitações
-- Não somar SURMOUNT-1 e subestudos como amostras independentes.
-- Massa magra por DXA não equivale a força ou sarcopenia clínica.
-- OR de pacientes com baixa musculatura na UTI não equivale a risco atribuível à tirzepatida.
-- Denominadores e ICs não encontrados não foram inventados.
-- Gráficos mostrados somente dentro da mesma publicação; comparação de dois artigos é descritiva.
-- Sem dados pessoais de pacientes.
+Foram adicionados testes de apresentação do veredito, status, priorização de avisos, aliases, dados preservados, seleção de indicadores e renderização de gráficos.
+A CI do GitHub executará ESLint, TypeScript, Vitest e build após o commit. **O resultado deve ser consultado no Actions; testes com navegador e screenshots reais não foram executados neste fluxo.**
 
-## Qualidade
-- A CI da implementação passou em 54 testes, lint, TypeScript e build.
-- Foram observados dois avisos de ESLint anteriores (import não usado e export de postcss); corrigidos nesta revisão de manutenção. Conferir a CI correspondente ao commit final.
-- O lockfile de pnpm ainda não foi versionado. Instalação da CI não está imutável; corrigir antes da submissão.
-- Nenhum deploy ou browser E2E ocorreu nesta etapa.
+## Entregáveis documentais
 
-## Próximos gates
-Conferência visual em PowerShell / mobile da página `/comparar`; revisão metodológica humana dos indicadores antes de qualquer nova liberação; autorização separada para módulo de músculos/UTI, motor de projeções, banco ou deploy.
+- [Etapa 4B — especificação visual, microcopy e checklist](ETAPA4B_DESIGN_SYSTEM_UX_UI.md)
+- [Etapa 4 — fontes e indicadores conferidos](ETAPA4_COMPARADOR.md)
+- [Etapa 3A — curadoria](ETAPA3A_CURADORIA.md)
+- [Etapa 3B — interface](ETAPA3B_INTERFACE.md)
 
-Documentação detalhada: [Etapa 4](ETAPA4_COMPARADOR.md), [Etapa 3A](ETAPA3A_CURADORIA.md), [Etapa 3B](ETAPA3B_INTERFACE.md).
+## Gate de implantação
+
+A equipe deve conferir visualmente `/comparar` em 360, 390, 768 e 1280 px; verificar legibilidade, avisos, indicadores e links. **Supabase, SQL, migrações e deploy continuam dependentes de autorização expressa.**

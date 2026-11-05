@@ -117,9 +117,9 @@ describe("Etapa 4 — interface e dados em gráfico",()=>{
     expect(html).toContain('id="compare-left"');
     expect(html).toContain('id="compare-right"');
     expect(html).toContain('id="reviewed-metric"');
-    expect(html).toContain("Verificação de compatibilidade");
-    expect(html).toContain("Relação sobre músculos e UTI não demonstrada");
-    expect(html).toContain("Não calcular efeito combinado");
+    expect(html).toContain("Análise de compatibilidade");
+    expect(html).toContain("Ligação causal não demonstrada");
+    expect(html).toContain("Cálculo combinado");
     expect(html).toContain("-10,9%");
   });
 });

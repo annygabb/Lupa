@@ -1,16 +1,27 @@
 @import "tailwindcss";
 
+/*
+ * LUPA design system v1 — visual clean, clínico e orientado à evidência.
+ * Cor nunca é o único indicador de estado; as mensagens possuem texto explícito.
+ */
 :root {
-  --background: #f7fafb;
-  --foreground: #12313d;
+  --background: #f6f8fb;
+  --foreground: #17283d;
   --card: #ffffff;
-  --card-foreground: #12313d;
-  --primary: #087f83;
+  --card-foreground: #17283d;
+  --primary: #0f766e;
   --primary-foreground: #ffffff;
-  --muted: #e8f6f4;
-  --muted-foreground: #526b75;
-  --border: #dce6e9;
-  --ring: #087f83;
+  --muted: #eaf5f3;
+  --muted-foreground: #526575;
+  --border: #e2e8f0;
+  --ring: #2563eb;
+  --accent-blue: #2563eb;
+  --accent-blue-soft: #eef3ff;
+  --accent-teal-soft: #eaf5f3;
+  --warning-foreground: #8a5a15;
+  --warning-surface: #fff8ec;
+  --danger-foreground: #a33d3d;
+  --danger-surface: #fff2f1;
 }
 @theme inline {
   --color-background: var(--background);
@@ -23,10 +34,72 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
-  --font-sans: "Inter", "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --color-accent-blue: var(--accent-blue);
+  --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
-::selection { background: #ccebe8; color: #12313d; }
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: #dbeafe; color: #17283d; }
+:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+button, input, select, summary { touch-action: manipulation; }
+a, button, select, summary { -webkit-tap-highlight-color: transparent; }
+.lupa-surface {
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background-color: #fff;
+  box-shadow: 0 12px 36px rgba(23,40,61,.045);
+}
+.lupa-inner-surface {
+  border: 1px solid #e9eef4;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+.lupa-section-kicker {
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.lupa-input {
+  min-height: 48px;
+  width: 100%;
+  border: 1px solid #dce4ed;
+  border-radius: 14px;
+  padding: 10px 14px;
+  background: #fff;
+  color: var(--foreground);
+  font-size: .9rem;
+  line-height: 1.5;
+}
+.lupa-input:focus-visible { outline: 3px solid #bfdbfe; outline-offset: 1px; border-color: #2563eb; }
+.lupa-button-secondary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #dce4ed;
+  border-radius: 12px;
+  padding: 10px 15px;
+  background: #fff;
+  color: var(--foreground);
+  font-size: .875rem;
+  font-weight: 650;
+  transition: border-color .15s ease,background-color .15s ease;
+}
+.lupa-button-secondary:hover { background: #f5f8fb; border-color: #b9c9da; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
