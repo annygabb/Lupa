@@ -1,0 +1,39 @@
+import { defineConfig } from "@playwright/test";
+
+const port = 3101;
+const url = "http://127.0.0.1:"+port;
+
+export default defineConfig({
+  testDir: "./tests/e2e",
+  fullyParallel: true,
+  forbidOnly: Boolean(process.env.CI),
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 2 : undefined,
+  reporter: process.env.CI ? [["list"],["html",{open:"never"}]] : "list",
+  timeout: 30_000,
+  expect: { timeout: 10_000 },
+  use: {
+    baseURL: url,
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    actionTimeout: 10_000,
+  },
+  projects: [
+    { name: "desktop-chromium", use: {
+      browserName: "chromium",viewport:{width:1280,height:800},
+      deviceScaleFactor:1,
+    }},
+    { name: "mobile-chromium", use: {
+      browserName:"chromium",viewport:{width:390,height:844},
+      deviceScaleFactor:2,isMobile:true,hasTouch:true,
+    }},
+  ],
+  webServer:{
+    command:"pnpm exec next start -p "+port,
+    url,
+    reuseExistingServer:!process.env.CI,
+    timeout:60_000,
+    stdout:"ignore",
+    stderr:"pipe",
+  },
+});
