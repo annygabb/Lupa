@@ -57,7 +57,7 @@ if (Get-Command uv -ErrorAction SilentlyContinue) {
   Write-Warning "uv/pipx não encontrados. Rode: winget install astral-sh.uv; depois uv tool install 'graphifyy[mcp]'."
 }
 if (Get-Command graphify -ErrorAction SilentlyContinue) {
-  & graphify install --project --platform $Agent
+  & graphify install --platform $Agent
   if ($LASTEXITCODE -ne 0) { throw "Falha ao registrar skill Graphify." }
   $env:GRAPHIFY_BACKEND='none'
   & graphify . --code-only
