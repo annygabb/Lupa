@@ -11,6 +11,13 @@ test.describe("WCAG automatizado — violações críticas e graves",()=>{
       const results=await new AxeBuilder({page})
         .withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"])
         .analyze();
+      const contrast=results.violations.find(v=>v.id==="color-contrast");
+      if(contrast){
+        const pairs=[...new Set(contrast.nodes.flatMap(node=>
+          (node.failureSummary??"").match(/foreground color: #[0-9a-f]{6}, background color: #[0-9a-f]{6}/gi)??[]
+        ))];
+        console.log("AUDITORIA_CONTRASTE "+route+" "+JSON.stringify(pairs));
+      }
       const severe=results.violations.filter(v=>v.impact==="critical"||v.impact==="serious");
       expect(severe.map(v=>({
         id:v.id,impact:v.impact,help:v.help,

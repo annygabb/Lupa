@@ -11,7 +11,7 @@ const available=[
    color:"from-[#eef3ff] to-white",accent:"#315ff4"},
   {href:"/comparar",title:"Comparar estudos",number:"02",icon:Layers3,
    summary:"Contexto lado a lado e indicadores avaliados dentro de cada publicação.",tag:"Research Studio",
-   color:"from-[#edfaf7] to-white",accent:"#0c948b"},
+   color:"from-[#edfaf7] to-white",accent:"#087468"},
   {href:"/musculos-uti",title:"Músculos e UTI",number:"03",icon:HeartPulse,
    summary:"Investigação guiada de composição corporal, sarcopenia e lacunas de causalidade.",tag:"Investigação crítica",
    color:"from-[#fff8ec] to-white",accent:"#b17827"},
@@ -102,7 +102,7 @@ export default function Home() {
                       style={{color:card.accent}}>
                       <Icon size={26} aria-hidden="true"/>
                     </span>
-                    <span className="text-xs font-extrabold tracking-[.1em] text-[#8ea1b9]">{card.number}</span>
+                    <span className="text-xs font-extrabold tracking-[.1em] text-[#536780]">{card.number}</span>
                   </div>
                   <div className="relative mt-7">
                     <p className="text-[11px] font-extrabold uppercase tracking-[.13em]" style={{color:card.accent}}>{card.tag}</p>

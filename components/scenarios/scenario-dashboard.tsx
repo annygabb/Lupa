@@ -178,7 +178,7 @@ export function ScenarioDashboard(){
                     min={field.min} max={field.max} step={field.step}
                     value={input[field.key]} onChange={e=>setField(field.key,Number(e.target.value))}
                     className="lupa-input mt-1.5"/>
-                  <p className="mt-1 text-[11px] leading-5 text-[#72859a]">{field.help}</p>
+                  <p className="mt-1 text-[11px] leading-5 text-[#50667b]">{field.help}</p>
                 </div>
               ))}
             </div>

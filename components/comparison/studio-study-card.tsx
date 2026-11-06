@@ -22,11 +22,11 @@ export function StudioStudyCard({record,side}:{
                 (isA?"bg-[#426df3]":"bg-[#0fae9e]")}/>
             </div>
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#8190a4]">
+              <p className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#52667d]">
                 Referência {isA?"A":"B"}
               </p>
               <p className="mt-0.5 text-sm font-bold text-[#273c58]">
-                {record.id} <span className="font-medium text-[#7a8797]">/ {record.year??"sem ano"}</span>
+                {record.id} <span className="font-medium text-[#52657b]">/ {record.year??"sem ano"}</span>
               </p>
             </div>
           </div>
@@ -41,14 +41,14 @@ export function StudioStudyCard({record,side}:{
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <div className="lupa-editorial-card px-4 py-3.5">
-            <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#69798f]">
+            <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#50627c]">
               <Layers3 size={13} aria-hidden="true"/> Desenho
             </div>
             <p className="mt-2 text-sm font-bold leading-5 text-[#253b56]">{designNames[record.design]}</p>
             <p className="mt-1 text-xs text-[#6b7c8e]">{sourceKindName(record.sourceKind)}</p>
           </div>
           <div className="lupa-editorial-card px-4 py-3.5">
-            <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#69798f]">
+            <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#50627c]">
               <Fingerprint size={13} aria-hidden="true"/> Amostra
             </div>
             <p className="mt-2 text-[13px] font-semibold leading-5 text-[#253b56]">

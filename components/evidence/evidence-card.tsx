@@ -27,7 +27,7 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
 
         <div className="mt-6 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-[#52677c]">
           <span className={"rounded-lg px-2.5 py-1.5 text-[12px] font-extrabold "+
-            (official?"bg-[#e6f9f3] text-[#0c8379]":"bg-[#e9efff] text-[#315fd8]")}>{record.id}</span>
+            (official?"bg-[#e6f9f3] text-[#096e67]":"bg-[#e9efff] text-[#315fd8]")}>{record.id}</span>
           <span>{yearName(record.year)}</span><span aria-hidden="true">·</span>
           <span>{designNames[record.design]}</span>
         </div>
@@ -45,7 +45,7 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
 
         <div className="mt-5 flex gap-2.5 rounded-2xl border border-[#e9edf4] bg-[#f8fafc] p-3.5">
           <ShieldAlert size={16} className="mt-0.5 shrink-0 text-[#b17d41]" aria-hidden="true"/>
-          <p className="text-[12px] leading-5 text-[#66758b]">
+          <p className="text-[12px] leading-5 text-[#52647b]">
             <strong className="font-extrabold text-[#3d4e64]">Limitação: </strong>
             {shortDescription(record.limitations,150)}
           </p>
@@ -63,7 +63,7 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
             </span>
           )}
         </div>
-        <p className="mt-4 text-[11px] font-medium text-[#8796a8]">
+        <p className="mt-4 text-[11px] font-medium text-[#52667d]">
           {priorityName(record.priority)} · {record.sourceIds.length} referência(s) de origem
         </p>
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#e9edf4] pt-5">

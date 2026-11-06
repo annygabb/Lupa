@@ -112,7 +112,7 @@ export function MuscleResearch() {
                         ?"border-[#a9c1f7] bg-[#eff4ff] text-[#254fbb]"
                         :"border-[#e8edf5] bg-white text-[#445a74] hover:bg-[#f7f9fe]")}>
                     <span className={"flex size-9 shrink-0 items-center justify-center rounded-xl text-xs font-extrabold "+
-                      (question===item.key?"bg-[#315ff4] text-white":"bg-[#f0f3f9] text-[#6d84a0]")}>
+                      (question===item.key?"bg-[#315ff4] text-white":"bg-[#f0f3f9] text-[#4c627d]")}>
                       {String(i+1).padStart(2,"0")}
                     </span>
                     <span className="text-[14px] font-bold leading-5">{item.title}</span>

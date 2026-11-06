@@ -153,18 +153,18 @@ export function MethodologyPage(){
                   </div>
                 ))}
               </div>
-              <p className="mt-5 text-xs leading-6 text-[#6e8093]">
+              <p className="mt-5 text-xs leading-6 text-[#50657c]">
                 As taxas são fornecidas em porcentagem, convertidas em fração no cálculo. Saídas não significam evento adverso ou morte; entradas acumuladas são eventos e podem contar reinícios.
               </p>
             </article>
             <article className="lupa-dashboard-card p-5 sm:p-7">
               <div className="flex items-center gap-2"><Gauge size={20} className="text-[#0d958a]"/><h3 className="text-lg font-extrabold text-[#233b58]">Presets ilustrativos</h3></div>
-              <p className="mt-2 text-xs leading-6 text-[#6e8199]">Nenhum preset é estimativa brasileira. São exemplos modificáveis.</p>
+              <p className="mt-2 text-xs leading-6 text-[#50647d]">Nenhum preset é estimativa brasileira. São exemplos modificáveis.</p>
               <div className="mt-5 space-y-3">
                 {Object.values(SCENARIO_PRESETS).map(p=>(
                   <div key={p.label} className="rounded-2xl border border-[#e4eaf3] bg-[#f8fafd] p-4">
                     <p className="text-sm font-extrabold text-[#345472]">{p.label}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#6c8094]">{p.note}</p>
+                    <p className="mt-1 text-xs leading-5 text-[#51667d]">{p.note}</p>
                     <p className="mt-2 text-xs font-semibold text-[#315dc4]">
                       Início {p.input.annualStartPct}% · continuidade {p.input.annualRetentionPct}% · incremento {p.input.annualAccessIncreasePp} p.p./ano
                     </p>
