@@ -109,6 +109,7 @@ jobs:
       - name: Analisar projeto com Graphify
         run: |
           GRAPHIFY_BACKEND=none graphify . --code-only
+          GRAPHIFY_BACKEND=none graphify cluster-only .
           test -s graphify-out/graph.json
           test -s graphify-out/GRAPH_REPORT.md
       - name: Publicar grafo e relatório
