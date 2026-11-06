@@ -3,7 +3,7 @@ import {
   ArrowRight, ArrowUpRight, BookOpen, BookOpenCheck, ChartNoAxesCombined,
   FlaskConical, HeartPulse, Layers3, LockKeyhole, ShieldCheck,
 } from "lucide-react";
-import { EvidenceOrbit } from "@/components/comparison/evidence-orbit";
+import { SourceSpotlight } from "@/components/home/source-spotlight";
 
 const available=[
   {href:"/evidencias",title:"Explorar evidências",number:"01",icon:BookOpen,
@@ -28,14 +28,12 @@ export default function Home() {
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(370px,.85fr)]">
             <div className="flex flex-col justify-center px-4 py-8 sm:px-8 sm:py-12">
               <p className="lupa-premium-kicker">LUPA Saúde / Evidence intelligence</p>
-              <h1 className="lupa-premium-text mt-4 max-w-3xl text-[clamp(2.55rem,4.5vw,4.5rem)] font-extrabold leading-[1.04]">
-                Ciência em saúde.
-                <span className="block text-[#315ff4]">Sem perder o contexto.</span>
+              <h1 className="lupa-premium-text mt-4 max-w-3xl text-[clamp(2.2rem,4.1vw,4rem)] font-extrabold leading-[1.04]">
+                Evidência antes da conclusão.
+                <span className="block text-[#315ff4]">Veja o que os estudos realmente mediram.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#5f728a] sm:text-[16px]">
-                Explore pesquisas sobre medicamentos para emagrecimento, saúde mental
-                e composição muscular. Compare as fontes e reconheça onde a evidência termina
-                e onde começam as hipóteses.
+                Consulte 50 registros científicos em curadoria, compare métodos e examine cinco indicadores conferidos nas publicações. O LUPA separa resultados observados de hipóteses sobre o futuro.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link href="/evidencias" className="lupa-premium-button lupa-premium-button-primary">
@@ -50,14 +48,14 @@ export default function Home() {
                 MVP científico · Sem diagnósticos ou extrapolações automáticas
               </p>
             </div>
-            <EvidenceOrbit leftId="E04" rightId="E12"/>
+            <SourceSpotlight/>
           </div>
         </section>
 
         <section className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Panorama do acervo">
           {[
             {value:"50",label:"Referências únicas",icon:BookOpen,color:"bg-[#edf2ff] text-[#315ff4]"},
-            {value:"55",label:"Fontes de origem",icon:BookOpenCheck,color:"bg-[#e6f9f4] text-[#0b8f84]"},
+            {value:"55",label:"IDs de origem, incluindo aliases",icon:BookOpenCheck,color:"bg-[#e6f9f4] text-[#0b8f84]"},
             {value:"05",label:"Indicadores conferidos",icon:FlaskConical,color:"bg-[#f1efff] text-[#7654bc]"},
             {value:"00",label:"Projeções clínicas liberadas",icon:LockKeyhole,color:"bg-[#fff4e6] text-[#b77b35]"},
           ].map(card=>{

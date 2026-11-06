@@ -1,0 +1,112 @@
+name: Design Skills, Agent Browser e Graphify
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/setup-design-stack.ps1"
+      - ".vscode/mcp.json"
+      - "AGENTS.md"
+      - "components/home/**"
+      - "app/page.tsx"
+      - "docs/DESIGN_LUPA_2026.md"
+      - "docs/PROMPT_MESTRE_SKILLS_LUPA.md"
+      - ".github/workflows/design-skills-graph.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  design-browser:
+    name: Instalação temporária e inspeção por agent-browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar o frontend
+        run: pnpm install --no-frozen-lockfile
+      - name: Instalar skills oficiais na sessão de CI
+        env:
+          DISABLE_TELEMETRY: "1"
+        run: |
+          npx --yes skills add Leonxlnx/taste-skill --skill design-taste-frontend -a codex -y
+          npx --yes skills add emilkowalski/skills --skill emil-design-eng -a codex -y
+          npx --yes skills add pbakaus/impeccable --skill impeccable -a codex -y
+          npx --yes skills add mattpocock/skills --skill grilling -a codex -y
+          npx --yes skills add vercel-labs/agent-browser -a codex -y
+          npx --yes skills add coreyhaines31/marketingskills --skill copywriting -a codex -y
+          npx --yes skills add fabricioctelles/skills --skill humanizar -a codex -y
+          npx --yes skills list -a codex
+      - name: Verificar pacote oficial do Playwright MCP
+        run: npx --yes @playwright/mcp@latest --version
+      - name: Compilar aplicação
+        run: pnpm build
+      - name: Instalar agent-browser
+        run: |
+          npm install -g agent-browser
+          agent-browser install --with-deps
+          agent-browser skills get core > /tmp/agent-browser-skill.txt
+      - name: Abrir e capturar o LUPA com agent-browser
+        run: |
+          mkdir -p design-browser-out
+          PORT=3101 pnpm start > design-browser-out/server.log 2>&1 &
+          APP_PID=$!
+          trap 'kill $APP_PID || true' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:3101 >/dev/null; then break; fi
+            sleep 1
+          done
+          agent-browser open http://127.0.0.1:3101/
+          agent-browser snapshot > design-browser-out/home-snapshot.txt
+          agent-browser screenshot design-browser-out/home.png
+          agent-browser open http://127.0.0.1:3101/comparar
+          agent-browser snapshot > design-browser-out/comparador-snapshot.txt
+          agent-browser screenshot design-browser-out/comparador.png
+          agent-browser errors > design-browser-out/console-errors.txt || true
+          agent-browser close
+      - name: Publicar evidências de navegação
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lupa-agent-browser
+          path: design-browser-out/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  knowledge-graph:
+    name: Graphify-Labs — mapa de código e documentos
+    needs: [design-browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar Graphify-Labs oficial
+        run: |
+          python -m pip install "graphifyy[mcp]"
+          graphify --help > graphify-help.txt
+      - name: Analisar projeto com Graphify
+        run: |
+          graphify .
+          test -s graphify-out/graph.json
+          test -s graphify-out/GRAPH_REPORT.md
+      - name: Publicar grafo e relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lupa-graphify-knowledge-map
+          path: |
+            graphify-out/
+            graphify-help.txt
+          if-no-files-found: ignore
+          retention-days: 7

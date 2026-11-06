@@ -2,7 +2,7 @@
 // Não é teste de navegador; é verificação das rotas de usuário e das páginas SSR/SSG.
 const base=process.argv[2]??"http://127.0.0.1:3010";
 const checks=[
-  {path:"/",contains:["Ciência em saúde","Músculos e UTI","Cenários para 2031"]},
+  {path:"/",contains:["Evidência antes da conclusão","Músculos e UTI","Cenários para 2031"]},
   {path:"/evidencias",contains:["Explore os estudos","Em curadoria"]},
   {path:"/evidencias/E04",contains:["SURMOUNT-1","Limitações"]},
   {path:"/comparar",contains:["Enxergue além dos números","Cálculo combinado"]},

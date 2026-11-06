@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const mainRoutes = [
-  {path:"/", title:/Ciência em saúde/i},
+  {path:"/", title:/Evidência antes da conclusão/i},
   {path:"/evidencias", title:/Ciência para investigar/i},
   {path:"/comparar", title:/Compare estudos/i},
   {path:"/musculos-uti", title:/Além do peso/i},

@@ -80,3 +80,26 @@
   .lupa-dash-hover:hover, .lupa-premium-button:hover {transform: none}
   .lupa-fade-up, .lupa-orbit-ring {animation: none}
 }
+
+/* Etapa Taste / Emil / Impeccable: informação verificável, não animação decorativa. */
+.lupa-spotlight {
+  background:
+    radial-gradient(circle at 96% 0%, rgba(74,111,217,.22), transparent 46%),
+    #152b51;
+  box-shadow: 0 20px 50px rgba(17,42,82,.15);
+}
+.lupa-premium-button:active {
+  transform: scale(.98);
+  box-shadow: none;
+}
+.lupa-premium-button:focus-visible {
+  outline: 3px solid #8bb5ff;
+  outline-offset: 3px;
+}
+@media (hover:none) {
+  .lupa-dash-hover:hover {transform:none}
+}
+@media (prefers-reduced-motion:reduce) {
+  .lupa-premium-button:active {transform:none}
+  .lupa-orbit-ring,.lupa-orbit-ring-reverse {animation:none}
+}

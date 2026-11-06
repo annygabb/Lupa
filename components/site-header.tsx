@@ -48,7 +48,7 @@ export function SiteHeader() {
 
         <span className="hidden items-center gap-2 rounded-full border border-[#dce7f4] bg-[#f9fbff] px-3.5 py-2 text-[12px] font-bold text-[#546c8d] xl:inline-flex">
           <ShieldCheck size={15} className="text-[#0e978c]" aria-hidden="true"/>
-          Ciência com contexto
+          Fontes em curadoria
           <ArrowUpRight size={14} className="text-[#8ba1c0]" aria-hidden="true"/>
         </span>
       </div>
