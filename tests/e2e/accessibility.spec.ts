@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia"];
 
-test.describe("WCAG automatizado — violações críticas e graves",()=>{
+test.describe("WCAG automatizado — regras A e AA verificáveis",()=>{
   for(const route of auditedRoutes){
     test("axe na rota "+route,async({page})=>{
       await page.goto(route);
@@ -18,8 +18,7 @@ test.describe("WCAG automatizado — violações críticas e graves",()=>{
         ))];
         console.log("AUDITORIA_CONTRASTE "+route+" "+JSON.stringify(pairs));
       }
-      const severe=results.violations.filter(v=>v.impact==="critical"||v.impact==="serious");
-      expect(severe.map(v=>({
+      expect(results.violations.map(v=>({
         id:v.id,impact:v.impact,help:v.help,
         nodes:v.nodes.slice(0,3).map(n=>({target:n.target,summary:n.failureSummary})),
       }))).toEqual([]);

@@ -1,4 +1,4 @@
-# Estado do LUPA Saúde — núcleo funcional do MVP (05/11/2026)
+# Estado do LUPA Saúde — núcleo funcional e QA automatizado (06/11/2026)
 
 ## Implementação
 
@@ -17,9 +17,11 @@
 | Smoke HTTP | Acrescentado ao pipeline da CI; verificar execução |
 | Revisão clínica independente | PENDENTE |
 | Projeções clínicas aptas/validadas | NENHUMA |
-| Testes E2E reais em Chrome/Safari e WCAG | PENDENTES |
+| Testes Playwright em Chromium desktop/mobile | 36 aprovados em 1280/390px; ampliados para 360/768px na CI seguinte |
+| Acessibilidade automatizada | Axe A/AA sem erros graves/críticos; nova auditoria completa em CI |
+| Safari/iOS/Android físico e leitores de tela | PENDENTES |
 | Supabase, SQL e migrações | NÃO UTILIZADOS |
-| Deploy do commit atual | Depende da sincronização Git/Vercel; confirmar READY |
+| Deploy do MVP | Commit 179f9d8 confirmado READY no projeto lupaa; cada mudança posterior exige confirmação |
 
 ## Cautelas que não podem ser removidas
 
@@ -39,3 +41,7 @@
 6. Gravar demo, roteiro de até três minutos e preparar submissão.
 
 [Etapas 5–7: documentação](ETAPA5_6_7_MVP_FUNCIONAL.md) | [Etapa 4C: design](ETAPA4C_DASHBOARD_PREMIUM.md)
+
+## QA automatizado de 06/11/2026
+
+[Relatório técnico, comandos PowerShell e limites](QA_TESTES_BROWSER_ACESSIBILIDADE.md).

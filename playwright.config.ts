@@ -23,9 +23,17 @@ export default defineConfig({
       browserName: "chromium",viewport:{width:1280,height:800},
       deviceScaleFactor:1,
     }},
+    { name: "mobile-small-chromium", use: {
+      browserName:"chromium",viewport:{width:360,height:780},
+      deviceScaleFactor:2,isMobile:true,hasTouch:true,
+    }},
     { name: "mobile-chromium", use: {
       browserName:"chromium",viewport:{width:390,height:844},
       deviceScaleFactor:2,isMobile:true,hasTouch:true,
+    }},
+    { name: "tablet-chromium", use: {
+      browserName:"chromium",viewport:{width:768,height:1024},
+      deviceScaleFactor:1,hasTouch:true,
     }},
   ],
   webServer:{
