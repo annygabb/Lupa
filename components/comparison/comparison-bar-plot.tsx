@@ -31,7 +31,7 @@ export function ComparisonBarPlot({metric}:{metric:ReviewedMetric}) {
             <line x1="98" x2="620" y1={yp} y2={yp}
               stroke={v===0?"#8194b2":"#dde5f1"} strokeWidth={v===0?2:1}
               strokeDasharray={v===0?undefined:"5 8"}/>
-            <text x="83" y={yp+5} textAnchor="end" fill="#70839a" fontSize="15" fontWeight={v===0?700:500}>
+            <text x="83" y={yp+5} textAnchor="end" fill="#4c6078" fontSize="15" fontWeight={v===0?700:500}>
               {v===0?"0%":(proportion?"":v>0?"+":"")+Number(v.toFixed(1)).toLocaleString("pt-BR")+"%"}
             </text>
           </g>

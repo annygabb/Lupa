@@ -20,12 +20,12 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
             </span>
             {sourceKindName(record.sourceKind)}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e6ebf2] bg-[#f9fafc] px-2.5 py-1.5 text-[11px] font-semibold text-[#6b7a8c]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e6ebf2] bg-[#f9fafc] px-2.5 py-1.5 text-[11px] font-semibold text-[#516276]">
             <span className="size-1.5 rounded-full bg-[#c99a53]"/> Em curadoria
           </span>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-[#7b8da3]">
+        <div className="mt-6 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-[#52677c]">
           <span className={"rounded-lg px-2.5 py-1.5 text-[12px] font-extrabold "+
             (official?"bg-[#e6f9f3] text-[#0c8379]":"bg-[#e9efff] text-[#315fd8]")}>{record.id}</span>
           <span>{yearName(record.year)}</span><span aria-hidden="true">·</span>
@@ -73,7 +73,7 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
           </Link>
           <a href={record.url} target="_blank" rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center gap-1.5 rounded-lg text-[12px] font-semibold text-[#62788f] hover:text-[#315bd7] hover:underline"
-            aria-label={"Abrir fonte de "+record.id+" em nova aba"}>
+            aria-label={"Fonte original de "+record.id+" (abre em nova aba)"}>
             Fonte original <ArrowUpRight size={16} aria-hidden="true"/>
           </a>
         </div>

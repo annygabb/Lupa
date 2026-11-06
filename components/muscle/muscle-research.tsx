@@ -87,7 +87,7 @@ export function MuscleResearch() {
               <div>
                 <p className="lupa-metric-ink text-3xl font-extrabold text-[#1d3653]">{item.number}</p>
                 <p className="text-xs font-bold leading-5 text-[#3b526b]">{item.label}</p>
-                <p className="mt-0.5 text-[11px] leading-5 text-[#788ba1]">{item.detail}</p>
+                <p className="mt-0.5 text-[11px] leading-5 text-[#52657b]">{item.detail}</p>
               </div>
             </div>;
           })}

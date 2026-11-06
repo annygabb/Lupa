@@ -83,7 +83,7 @@ export function MethodologyPage(){
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#315ff4]"><Icon size={20}/></span>
               <div><p className="lupa-metric-ink text-3xl font-extrabold text-[#1d3653]">{item.value}</p>
                 <p className="mt-1 text-xs font-bold text-[#3c536d]">{item.title}</p>
-                <p className="mt-1 text-[11px] leading-5 text-[#70829a]">{item.label}</p>
+                <p className="mt-1 text-[11px] leading-5 text-[#50647c]">{item.label}</p>
               </div>
             </div>;
           })}

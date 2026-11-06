@@ -157,7 +157,7 @@ export function ScenarioDashboard(){
                 <RotateCcw size={15}/> Redefinir
               </button>
             </div>
-            <p className="mt-2 text-xs leading-6 text-[#6b7e93]">Escolha um ponto de partida ilustrativo ou edite os valores. Nada é enviado a servidores.</p>
+            <p className="mt-2 text-xs leading-6 text-[#4e6479]">Escolha um ponto de partida ilustrativo ou edite os valores. Nada é enviado a servidores.</p>
 
             <div className="mt-5 grid gap-2" role="group" aria-label="Cenários pré-configurados">
               {(Object.entries(SCENARIO_PRESETS) as [ScenarioPresetId,(typeof SCENARIO_PRESETS)[ScenarioPresetId]][]).map(([key,value])=>(
@@ -165,7 +165,7 @@ export function ScenarioDashboard(){
                   className={"rounded-xl border px-4 py-3 text-left transition-colors "+
                     (preset===key?"border-[#92b4fa] bg-[#eef3ff]":"border-[#e0e7f0] bg-white hover:bg-[#f8fafd]")}>
                   <span className={"block text-sm font-extrabold "+(preset===key?"text-[#315bd3]":"text-[#334963]")}>{value.label}</span>
-                  <span className="mt-1 block text-xs leading-5 text-[#657a92]">{value.note}</span>
+                  <span className="mt-1 block text-xs leading-5 text-[#4c637b]">{value.note}</span>
                 </button>
               ))}
             </div>
@@ -250,7 +250,7 @@ export function ScenarioDashboard(){
                       </button>
                     </div>
                   </div>
-                  <div className="mt-5 overflow-x-auto rounded-xl border border-[#e1e8f1]">
+                  <div className="mt-5 overflow-x-auto rounded-xl border border-[#e1e8f1] focus-visible:outline-3 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label="Tabela anual da simulação; use as setas para rolar horizontalmente">
                     <table className="w-full min-w-[720px] text-left text-xs">
                       <caption className="sr-only">Simulação anual editável de 2026 a 2036</caption>
                       <thead className="bg-[#f0f4fb] text-[#536984]">

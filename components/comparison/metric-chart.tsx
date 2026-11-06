@@ -92,9 +92,9 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
         <section className="mt-6" aria-labelledby="data-table-title">
           <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
             <h4 id="data-table-title" className="text-base font-extrabold text-[#233955]">Tabela de dados</h4>
-            <p className="text-xs text-[#70829a]">Base observada: resultado, n e IC 95%</p>
+            <p className="text-xs text-[#50647c]">Base observada: resultado, n e IC 95%</p>
           </div>
-          <div className="overflow-x-auto rounded-[18px] border border-[#dce5f0]">
+          <div className="overflow-x-auto rounded-[18px] border border-[#dce5f0] focus-visible:outline-3 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label={"Tabela de dados do indicador "+metric.id+"; use as setas para rolar horizontalmente"}>
             <table className="w-full min-w-[570px] border-collapse text-left text-sm">
               <caption className="sr-only">Resultados numéricos conferidos do indicador {metric.id}</caption>
               <thead className="bg-[#f2f5fb]">

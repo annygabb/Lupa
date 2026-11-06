@@ -45,7 +45,7 @@ export default function Home() {
                   Abrir Research Studio <ArrowUpRight size={17} aria-hidden="true"/>
                 </Link>
               </div>
-              <p className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-[#6a829c]">
+              <p className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-[#4b647e]">
                 <ShieldCheck size={16} className="text-[#0e998d]" aria-hidden="true"/>
                 MVP científico · Sem diagnósticos ou extrapolações automáticas
               </p>
@@ -69,7 +69,7 @@ export default function Home() {
                 </span>
                 <div>
                   <p className="lupa-metric-ink text-[31px] font-extrabold text-[#203653]">{card.value}</p>
-                  <p className="text-xs font-semibold text-[#6b8199]">{card.label}</p>
+                  <p className="text-xs font-semibold text-[#4f657e]">{card.label}</p>
                 </div>
               </div>
             );

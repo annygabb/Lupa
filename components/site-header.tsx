@@ -23,7 +23,7 @@ export function SiteHeader() {
             <Activity size={22} strokeWidth={2.4} aria-hidden="true"/>
           </span>
           <span className="text-[16px] font-extrabold tracking-[-.055em] text-[#1b2d4b]">
-            LUPA <span className="font-medium tracking-[-.04em] text-[#70839a]">Saúde</span>
+            LUPA <span className="font-medium tracking-[-.04em] text-[#4c6078]">Saúde</span>
           </span>
         </Link>
 

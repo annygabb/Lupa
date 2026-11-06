@@ -57,7 +57,7 @@ export function StudyComparator() {
                   Explorar indicadores <ChartNoAxesCombined size={17} aria-hidden="true"/>
                 </a>
               </div>
-              <p className="mt-6 flex items-center gap-2 text-[12px] font-semibold text-[#69829e]">
+              <p className="mt-6 flex items-center gap-2 text-[12px] font-semibold text-[#4c6682]">
                 <ShieldCheck size={16} className="text-[#0d9488]" aria-hidden="true"/>
                 Resultados rastreáveis. Sem diagnósticos ou projeções não validadas.
               </p>
@@ -73,7 +73,7 @@ export function StudyComparator() {
             </span>
             <div>
               <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">50</p>
-              <p className="text-[12px] font-semibold text-[#71839a]">Referências catalogadas</p>
+              <p className="text-[12px] font-semibold text-[#51657e]">Referências catalogadas</p>
             </div>
           </div>
           <div className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
@@ -82,7 +82,7 @@ export function StudyComparator() {
             </span>
             <div>
               <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">{reviewedMetrics.length}</p>
-              <p className="text-[12px] font-semibold text-[#71839a]">Indicadores conferidos</p>
+              <p className="text-[12px] font-semibold text-[#51657e]">Indicadores conferidos</p>
             </div>
           </div>
           <div className="lupa-dashboard-card lupa-dash-hover flex items-center gap-4 p-5">
@@ -91,7 +91,7 @@ export function StudyComparator() {
             </span>
             <div>
               <p className="lupa-metric-ink text-3xl font-extrabold text-[#213755]">0</p>
-              <p className="text-[12px] font-semibold text-[#71839a]">Projeções autorizadas</p>
+              <p className="text-[12px] font-semibold text-[#51657e]">Projeções autorizadas</p>
             </div>
           </div>
           <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#1b2a51] to-[#263d78] p-5 text-white shadow-[0_12px_32px_rgba(22,42,81,.13)]">
