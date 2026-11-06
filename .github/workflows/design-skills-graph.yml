@@ -72,6 +72,17 @@ jobs:
           agent-browser screenshot design-browser-out/comparador.png
           agent-browser errors > design-browser-out/console-errors.txt || true
           agent-browser close
+      - name: Conectar Playwright MCP e navegar via protocolo
+        run: |
+          PORT=3101 pnpm start > /tmp/lupa-mcp-server.log 2>&1 &
+          APP_PID=$!
+          trap 'kill $APP_PID || true' EXIT
+          for i in $(seq 1 35); do
+            if curl -fsS http://127.0.0.1:3101 >/dev/null; then break; fi
+            sleep 1
+          done
+          npx --yes playwright@latest install chromium
+          node scripts/probe-playwright-mcp.mjs http://127.0.0.1:3101/
       - name: Publicar evidências de navegação
         if: always()
         uses: actions/upload-artifact@v4
