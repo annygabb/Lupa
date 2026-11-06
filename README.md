@@ -2,7 +2,7 @@
 
 Plataforma de pesquisa sobre medicamentos para emagrecimento, composição corporal, saúde mental, sarcopenia e cuidados críticos. O sistema separa **dado observado, associação e cenário hipotético**, preservando as fontes e os limites científicos.
 
-> **Estado em 05/11/2026:** os cinco módulos principais estão implementados em código e aguardam os testes finais/validação no navegador. O simulador é matemático e hipotético; não prevê efeitos clínicos. Revisão clínica independente do catálogo **ainda está pendente**.
+> **Estado em 06/11/2026:** módulos principais implementados, **93 testes unitários + 100 execuções Playwright aprovadas** em quatro larguras (360/390/768/1280 px), implantação `lupaa` confirmada `READY` no commit `11c7ca8`. O simulador é matemático e hipotético; não prevê efeitos clínicos. Revisão clínica independente do catálogo **ainda está pendente**.
 
 ## Onde acessar
 
@@ -41,7 +41,7 @@ pnpm test
 pnpm run build
 ```
 
-A CI executa essas quatro verificações e um **smoke HTTP** das rotas compiladas.
+A CI executa essas quatro verificações, **smoke HTTP das oito rotas**, auditoria de dependências e **Playwright E2E com axe-core**, em 360/390/768/1280 px. Relatórios, screenshots e traces são anexados ao workflow. Para executar localmente: `pnpm exec playwright install chromium` e `pnpm run test:e2e` **após** `pnpm run build`.
 
 ## Arquitetura
 
@@ -67,6 +67,8 @@ A CI executa essas quatro verificações e um **smoke HTTP** das rotas compilada
 
 - [Etapas 5–7: núcleo funcional, fórmulas, fontes e validação](docs/ETAPA5_6_7_MVP_FUNCIONAL.md)
 - [Estado real e pendências](docs/STATUS.md)
+- [QA de navegador, acessibilidade e screenshots](docs/QA_TESTES_BROWSER_ACESSIBILIDADE.md)
+- [Plano de revisão clínica prioritária](docs/PLANO_REVISAO_CLINICA_PRIORITARIA.md)
 - [Metodologia científica](docs/METHODOLOGY.md)
 - [Etapa 4: dados para comparação](docs/ETAPA4_COMPARADOR.md)
 - [Etapa 4C: dashboard premium](docs/ETAPA4C_DASHBOARD_PREMIUM.md)
@@ -75,4 +77,4 @@ A CI executa essas quatro verificações e um **smoke HTTP** das rotas compilada
 
 ## Antes da entrega do hackathon
 
-Verificar GitHub Actions e deploy do commit atual, executar testes no navegador e mobile, auditar acessibilidade/performance, conferir links científicos, fechar pendências de curadoria e gravar vídeo/pitch. A versão funcional do MVP **não deve ser confundida com validação científica total nem com aprovação clínica**.
+CI, Chromium E2E e deploy `lupaa` foram conferidos em 06/11/2026. Restam testes em aparelhos reais (iOS/Android), auditoria de performance Lighthouse, lockfile de dependências, curadoria clínica independente, conferência dos links científicos e vídeo/pitch. A versão funcional do MVP **não deve ser confundida com validação científica total nem com aprovação clínica**.
