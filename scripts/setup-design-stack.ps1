@@ -59,8 +59,9 @@ if (Get-Command uv -ErrorAction SilentlyContinue) {
 if (Get-Command graphify -ErrorAction SilentlyContinue) {
   & graphify install --project --platform $Agent
   if ($LASTEXITCODE -ne 0) { throw "Falha ao registrar skill Graphify." }
-  & graphify .
+  $env:GRAPHIFY_BACKEND='none'
+  & graphify . --code-only
   if ($LASTEXITCODE -ne 0) { throw "Falha ao gerar knowledge graph." }
-  Write-Host "Knowledge graph em graphify-out/ (graph.json, GRAPH_REPORT.md e visualização HTML)." -ForegroundColor Green
+  Write-Host "Mapa estrutural de codigo em graphify-out/; documentos exigem backend semantico autorizado." -ForegroundColor Green
 }
 Write-Host "Fim. Reinicie o agente no VS Code e inicie o MCP do Playwright quando solicitado." -ForegroundColor Green

@@ -97,7 +97,7 @@ jobs:
           graphify --help > graphify-help.txt
       - name: Analisar projeto com Graphify
         run: |
-          graphify .
+          GRAPHIFY_BACKEND=none graphify . --code-only
           test -s graphify-out/graph.json
           test -s graphify-out/GRAPH_REPORT.md
       - name: Publicar grafo e relatório
