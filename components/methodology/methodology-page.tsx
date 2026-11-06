@@ -224,9 +224,9 @@ export function MethodologyPage(){
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#315fd2]"><FlaskConical size={18}/></span>
                   <div className="min-w-0 flex-1">
                     <p className="text-[13px] font-extrabold text-[#234461]">{source.label}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#647a91]">{source.role}</p>
+                    <p className="mt-1 text-xs leading-5 text-[#4c647c]">{source.role}</p>
                   </div>
-                  <span className="rounded-full border border-[#dce5f2] px-2.5 py-1 text-[11px] font-bold text-[#71839b]">{source.type}</span>
+                  <span className="rounded-full border border-[#dce5f2] px-2.5 py-1 text-[11px] font-bold text-[#4d637f]">{source.type}</span>
                   <ArrowUpRight size={17} className="text-[#315bd6]" aria-hidden="true"/>
                 </a>
               ))}

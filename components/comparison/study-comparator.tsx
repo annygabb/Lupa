@@ -259,7 +259,7 @@ export function StudyComparator() {
                   </select>
                 </div>
 
-                <p className="mt-4 flex items-start gap-2 rounded-[13px] bg-[#f3f6fc] px-4 py-3 text-[12px] leading-6 text-[#627891]">
+                <p className="mt-4 flex items-start gap-2 rounded-[13px] bg-[#f3f6fc] px-4 py-3 text-[12px] leading-6 text-[#4d637e]">
                   <ShieldCheck size={16} className="mt-1 shrink-0 text-[#3768de]" aria-hidden="true"/>
                   <span><strong>{activeGroup.label}:</strong> {activeGroup.detail}. Dados conferidos na publicação, mas ainda sem revisão clínica independente.</span>
                 </p>
@@ -311,7 +311,7 @@ export function StudyComparator() {
                   <p className="flex items-center gap-2 text-sm font-extrabold text-[#294c85]">
                     <Sparkles size={18} aria-hidden="true"/> A fonte importa tanto quanto o dado.
                   </p>
-                  <p className="mt-1 text-[13px] leading-6 text-[#627891]">
+                  <p className="mt-1 text-[13px] leading-6 text-[#4d637e]">
                     Consulte os artigos, a população e as limitações antes de interpretar qualquer número.
                   </p>
                 </div>

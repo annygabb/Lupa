@@ -78,7 +78,7 @@ export function CompatibilityPanel({assessment}:{
 
         <div className="mt-7 flex flex-wrap items-center justify-between gap-2">
           <h4 className="text-sm font-extrabold text-[#233751]">Pontos de atenção</h4>
-          <span className="text-[12px] font-semibold text-[#718297]">{warnings.length} observações</span>
+          <span className="text-[12px] font-semibold text-[#52667d]">{warnings.length} observações</span>
         </div>
 
         {featured ? (
@@ -98,19 +98,19 @@ export function CompatibilityPanel({assessment}:{
                   <span className="size-2 shrink-0 rounded-full bg-[#6f8fe9]"/>
                   <div>
                     <p className="text-[13px] font-bold text-[#334761]">{item.title}</p>
-                    <p className="mt-0.5 text-[12px] leading-5 text-[#68798b]">{item.summary}</p>
+                    <p className="mt-0.5 text-[12px] leading-5 text-[#4c6076]">{item.summary}</p>
                   </div>
                 </div>
               ))}
               {rest.length===0&&(
-                <p className="rounded-xl bg-[#f6f9fe] p-4 text-[13px] text-[#68798b]">
+                <p className="rounded-xl bg-[#f6f9fe] p-4 text-[13px] text-[#4c6076]">
                   Nenhuma outra divergência temática foi identificada. A combinação numérica permanece bloqueada.
                 </p>
               )}
             </div>
           </div>
         ) : (
-          <p className="mt-3 rounded-xl bg-[#f6f9fe] p-4 text-sm text-[#68798b]">
+          <p className="mt-3 rounded-xl bg-[#f6f9fe] p-4 text-sm text-[#4c6076]">
             Nenhum conflito temático adicional foi identificado. Isso não habilita cálculos combinados.
           </p>
         )}

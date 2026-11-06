@@ -17,7 +17,7 @@ const colors={
   observed:"bg-[#edf2ff] text-[#365fd1] border-[#dbe5fa]",
   consensus:"bg-[#e9f8f3] text-[#0c776c] border-[#d0ece4]",
   association:"bg-[#f1f0ff] text-[#6858a1] border-[#e0dcf6]",
-  unsupported:"bg-[#fff6eb] text-[#a06d32] border-[#f1dfc8]",
+  unsupported:"bg-[#fff6eb] text-[#81521c] border-[#f1dfc8]",
 } as const;
 
 export function MuscleResearch() {
@@ -137,7 +137,7 @@ export function MuscleResearch() {
                 </div>
               </div>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#e8edf5] pt-5">
-                <span className="text-xs font-semibold text-[#6d8096]">Fontes catalogadas: {current.evidenceIds.join(", ")}</span>
+                <span className="text-xs font-semibold text-[#52667d]">Fontes catalogadas: {current.evidenceIds.join(", ")}</span>
                 <a href={current.url} target="_blank" rel="noopener noreferrer"
                   className="lupa-premium-button lupa-premium-button-outline">
                   Abrir publicação <ArrowUpRight size={16} aria-hidden="true"/>
@@ -158,23 +158,23 @@ export function MuscleResearch() {
               <div className="rounded-2xl bg-[#edf2ff] p-5">
                 <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#4265b3]">E04</span>
                 <h3 className="mt-2 text-base font-extrabold text-[#284884]">Tratamento e DXA</h3>
-                <p className="mt-2 text-xs leading-6 text-[#567194]">Composição corporal observada no SURMOUNT-1.</p>
+                <p className="mt-2 text-xs leading-6 text-[#3a587a]">Composição corporal observada no SURMOUNT-1.</p>
               </div>
               <div className="flex items-center justify-center text-[#bd9258]">
                 <span className="rounded-full bg-[#fff6e7] p-2"><CircleAlert size={21} aria-label="Ligação ainda não demonstrada"/></span>
               </div>
               <div className="rounded-2xl bg-[#fff8ee] p-5">
-                <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#a47a3b]">Lacuna</span>
+                <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#845820]">Lacuna</span>
                 <h3 className="mt-2 text-base font-extrabold text-[#6a543b]">Força, função e causalidade</h3>
-                <p className="mt-2 text-xs leading-6 text-[#87735a]">Medições e seguimento necessários para ligar os desfechos.</p>
+                <p className="mt-2 text-xs leading-6 text-[#69543c]">Medições e seguimento necessários para ligar os desfechos.</p>
               </div>
               <div className="flex items-center justify-center text-[#bd9258]">
                 <span className="rounded-full bg-[#fff6e7] p-2"><CircleAlert size={21} aria-label="Ligação ainda não demonstrada"/></span>
               </div>
               <div className="rounded-2xl bg-[#eaf8f4] p-5">
-                <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#248a7e]">E12</span>
+                <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#166c65]">E12</span>
                 <h3 className="mt-2 text-base font-extrabold text-[#246b64]">UTI e mortalidade</h3>
-                <p className="mt-2 text-xs leading-6 text-[#527971]">Associação de massa muscular por TC em pacientes críticos.</p>
+                <p className="mt-2 text-xs leading-6 text-[#3d655e]">Associação de massa muscular por TC em pacientes críticos.</p>
               </div>
             </div>
             <div className="mt-5 flex gap-3 rounded-2xl border border-[#e5d9bb] bg-[#fffaef] p-4">
@@ -219,7 +219,7 @@ export function MuscleResearch() {
               <h3 className="mt-2 text-xl font-extrabold text-[#23405d]">Associação observada em pacientes críticos</h3>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="rounded-xl bg-[#edf2ff] px-3 py-2 text-sm font-extrabold text-[#365cc1]">OR 2,33 · curto prazo</span>
-                <span className="rounded-xl bg-[#e9f8f4] px-3 py-2 text-sm font-extrabold text-[#0a8479]">OR 2,67 · longo prazo</span>
+                <span className="rounded-xl bg-[#e9f8f4] px-3 py-2 text-sm font-extrabold text-[#086b63]">OR 2,67 · longo prazo</span>
               </div>
               <p className="mt-3 text-sm leading-7 text-[#61778c]">Metanálise de 35 estudos e 9.366 pacientes. OR significa razão de chances, não porcentagem absoluta de mortalidade. A exposição a medicamentos para emagrecimento não foi o objeto deste estudo.</p>
               <a href="https://pubmed.ncbi.nlm.nih.gov/40462133/" target="_blank" rel="noopener noreferrer"
@@ -235,7 +235,7 @@ export function MuscleResearch() {
             <Stethoscope size={22} className="mt-0.5 shrink-0 text-[#315ed1]" aria-hidden="true"/>
             <div>
               <h3 className="text-sm font-extrabold text-[#2c4b7e]">Compare as publicações sem combinar resultados</h3>
-              <p className="mt-1 text-xs leading-6 text-[#637b9a]">O Comparador abre por padrão E04 e E12 e mostra as incompatibilidades.</p>
+              <p className="mt-1 text-xs leading-6 text-[#435f83]">O Comparador abre por padrão E04 e E12 e mostra as incompatibilidades.</p>
             </div>
           </div>
           <Link href="/comparar" className="lupa-premium-button lupa-premium-button-primary">

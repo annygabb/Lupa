@@ -45,7 +45,7 @@ export function StudioStudyCard({record,side}:{
               <Layers3 size={13} aria-hidden="true"/> Desenho
             </div>
             <p className="mt-2 text-sm font-bold leading-5 text-[#253b56]">{designNames[record.design]}</p>
-            <p className="mt-1 text-xs text-[#6b7c8e]">{sourceKindName(record.sourceKind)}</p>
+            <p className="mt-1 text-xs text-[#50667a]">{sourceKindName(record.sourceKind)}</p>
           </div>
           <div className="lupa-editorial-card px-4 py-3.5">
             <div className="flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#50627c]">
@@ -58,7 +58,7 @@ export function StudioStudyCard({record,side}:{
         </div>
 
         <div className="mt-5 flex-1">
-          <p className="text-[11px] font-extrabold uppercase tracking-[.105em] text-[#657b96]">
+          <p className="text-[11px] font-extrabold uppercase tracking-[.105em] text-[#4c627e]">
             Leitura do resultado
           </p>
           <p className="mt-2 text-sm leading-6 text-[#435770]">

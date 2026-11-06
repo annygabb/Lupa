@@ -211,10 +211,10 @@ export function ScenarioDashboard(){
                   {[result.last2031,result.last2036].map((row,i)=>(
                     <div key={row.year} className={"relative overflow-hidden rounded-[25px] p-6 "+
                       (i===0?"bg-gradient-to-br from-[#2456dc] to-[#1c3d98] text-white":"border border-[#cce9e1] bg-[#eafaf5] text-[#164b54]")}>
-                      <p className={"text-xs font-extrabold uppercase tracking-[.13em] "+(i===0?"text-[#c6d9ff]":"text-[#4e8987]")}>Horizonte {row.year}</p>
+                      <p className={"text-xs font-extrabold uppercase tracking-[.13em] "+(i===0?"text-[#c6d9ff]":"text-[#286c69]")}>Horizonte {row.year}</p>
                       <p className="lupa-metric-ink mt-3 text-4xl font-extrabold sm:text-[43px]">{compact.format(row.active)}</p>
                       <p className="mt-2 text-sm font-semibold">pessoas ativas simuladas</p>
-                      <p className={"mt-3 text-xs leading-6 "+(i===0?"text-[#cfdefa]":"text-[#4d7b7b]")}>
+                      <p className={"mt-3 text-xs leading-6 "+(i===0?"text-[#cfdefa]":"text-[#376763]")}>
                         {pct(row.activeSharePct)} do grupo hipotético · {compact.format(row.started)} novas entradas no ano
                       </p>
                     </div>
@@ -273,7 +273,7 @@ export function ScenarioDashboard(){
                       </tbody>
                     </table>
                   </div>
-                  <p className="mt-2 text-xs text-[#70849a] sm:hidden">Deslize a tabela para visualizar todas as colunas.</p>
+                  <p className="mt-2 text-xs text-[#4e657e] sm:hidden">Deslize a tabela para visualizar todas as colunas.</p>
                 </section>
                 <section className="lupa-dashboard-card p-5 sm:p-6" aria-labelledby="scenario-warnings">
                   <h3 id="scenario-warnings" className="flex items-center gap-2 text-lg font-extrabold text-[#233b58]">
@@ -303,7 +303,7 @@ export function ScenarioDashboard(){
               </a>
             ))}
           </div>
-          <p className="mt-5 text-xs leading-6 text-[#667c91]">
+          <p className="mt-5 text-xs leading-6 text-[#4e6279]">
             Este modelo não transforma ensaios clínicos em estatísticas nacionais. Consulte também a{" "}
             <Link href="/metodologia" className="font-extrabold text-[#315fd8] hover:underline">metodologia completa</Link>.
           </p>

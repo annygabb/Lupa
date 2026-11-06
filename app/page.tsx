@@ -14,7 +14,7 @@ const available=[
    color:"from-[#edfaf7] to-white",accent:"#087468"},
   {href:"/musculos-uti",title:"Músculos e UTI",number:"03",icon:HeartPulse,
    summary:"Investigação guiada de composição corporal, sarcopenia e lacunas de causalidade.",tag:"Investigação crítica",
-   color:"from-[#fff8ec] to-white",accent:"#b17827"},
+   color:"from-[#fff8ec] to-white",accent:"#865419"},
   {href:"/projecoes",title:"Cenários para 2031 e 2036",number:"04",icon:ChartNoAxesCombined,
    summary:"Simule taxas hipotéticas de acesso e continuidade; exporte premissas e resultados.",tag:"Simulador reproduzível",
    color:"from-[#f2f0ff] to-white",accent:"#755abd"},

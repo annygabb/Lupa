@@ -118,7 +118,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-xs text-[#667d93] sm:hidden">
+          <p className="mt-2 text-xs text-[#4b6279] sm:hidden">
             Deslize a tabela horizontalmente para visualizar todas as colunas.
           </p>
         </section>
@@ -144,7 +144,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
               <BookOpenCheck size={18} className="text-[#3564d8]" aria-hidden="true"/>
               Fonte e rastreabilidade
             </p>
-            <p className="mt-1 text-[12px] leading-6 text-[#647992]">
+            <p className="mt-1 text-[12px] leading-6 text-[#4d647f]">
               {metric.sourceLocator}. Conferência documental em {date}.
               {" "}Não houve revisão clínica independente ou liberação para projeções populacionais.
             </p>

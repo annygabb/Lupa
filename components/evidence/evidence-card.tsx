@@ -58,7 +58,7 @@ export function EvidenceCard({record}:{record:UnifiedEvidenceRecord}) {
             </span>
           ))}
           {record.topics.length>2&&(
-            <span className="rounded-lg bg-[#f1f4f8] px-2.5 py-1.5 text-[11px] font-bold text-[#74869c]">
+            <span className="rounded-lg bg-[#f1f4f8] px-2.5 py-1.5 text-[11px] font-bold text-[#50677f]">
               +{record.topics.length-2}
             </span>
           )}
