@@ -31,3 +31,10 @@ Direção: plataforma que explica pesquisas sobre canetas emagrecedoras para pro
 Auditoria: barra lateral removida conforme pedido; cabeçalho quieto, sem sombra; uma imagem concentra a expressão visual; legenda e painel explicam números. Sem crescimento decorativo, curvas suavizadas ou animação contínua. Tipografia pequena dos eixos substituída por legendas HTML no celular. Fontes e limitações progressivas. Crédito de acabamento: Unslop, Damir Sokolovsky, CC BY 4.0, https://github.com/heydamir/unslop.
 
 Limitações do ambiente: prévia gerenciada retornou conexão recusada; servidor local de E2E retornou uv_interface_addresses. Usar a CI existente para navegador e axe. Playwright MCP/agent-browser não estão conectados nesta sessão; não alegar uso. A revisão de código e a suíte não substituem revisão clínica independente.
+
+## Regressões observadas
+| Verificação | Achado | Correção |
+|---|---|---|
+| Interação com pontos | Seletor de teste encontrava o ponto SVG e seu botão alternativo | Restringir o seletor ao conjunto de botões; preservar ambos para acessibilidade |
+| Axe no comparador | Animação de entrada tornava o texto temporariamente translúcido; três casos passaram na repetição | Remover a animação de entrada, preservando feedback de estado |
+| Capturas desktop/celular | Barra superior, imagem 3D e hierarquia sem cortes | Confirmado nas capturas da CI de 1440px e 390px |

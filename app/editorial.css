@@ -55,3 +55,5 @@ body{background:var(--paper);font-family:"Segoe UI",ui-sans-serif,system-ui,sans
 .lupa-studio [class*="bg-[#eef3ff]"],.lupa-studio [class*="bg-[#edf2ff]"],.lupa-studio [class*="bg-[#eaf9f3]"]{background-color:#e8eee3}
 .mobile-line-scale,.mobile-line-labels{display:none}
 @media(max-width:600px){.mobile-line-scale{display:block;font-size:13px;color:var(--secondary);margin-top:16px}.mobile-line-labels{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--secondary);margin:12px 0}.mobile-line-labels:has(>span:only-child){justify-content:center}.line-chart-canvas text{display:none}.line-chart-canvas{margin-left:0}.lupa-navigation nav a{white-space:nowrap;font-size:13px;gap:8px;padding:10px 8px}}
+/* Keep research text readable from the first frame, including during automated audits. */
+.lupa-fade-up{animation:none}
