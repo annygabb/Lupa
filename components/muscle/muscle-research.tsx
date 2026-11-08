@@ -7,6 +7,7 @@ import {
   Dna, FlaskConical, HeartPulse, Layers3, Network, ShieldCheck,
   Stethoscope, TrendingDown,
 } from "lucide-react";
+import { ClinicalChart } from "@/components/insights/clinical-chart";
 import { MetricChart } from "@/components/comparison/metric-chart";
 import { getReviewedMetric } from "@/features/comparison/reviewed-metrics";
 import {
@@ -93,12 +94,18 @@ export function MuscleResearch() {
           })}
         </section>
 
+        <section className="icu-context" aria-labelledby="icu-observed-title">
+          <div className="section-intro"><div><p className="eyebrow">Gravidade e perda muscular · observação real</p><h2 id="icu-observed-title">O músculo também importa quando a doença se agrava</h2></div><p>Uma coorte acompanhou pacientes críticos com falência de um ou de múltiplos órgãos. Esta comparação é observada, não uma projeção de quem usou medicamento para emagrecer.</p></div>
+          <ClinicalChart initial="icu" only={["icu"]}/>
+          <div className="gap-note mt-6"><strong>Por que não somamos as perdas?</strong> O SURMOUNT-1 mede massa magra corporal por DXA em 72 semanas. A coorte de UTI mede a área de um músculo por ultrassom em sete dias. Somar os percentuais produziria um resultado sem significado validado. A chance individual de recuperação não foi calculada.</div>
+        </section>
+
         <section id="perguntas" className="mt-12 scroll-mt-28" aria-labelledby="muscle-questions-heading">
           <p className="lupa-premium-kicker">01 / Interpretação guiada</p>
           <h2 id="muscle-questions-heading" className="lupa-premium-text mt-2 text-3xl font-extrabold">
             Que pergunta você quer responder?
           </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#647991]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53645b]">
             Selecione uma pergunta. O LUPA separa o que cada estudo mede do que ele não permite concluir.
           </p>
           <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(260px,.85fr)_minmax(0,1.15fr)]">
@@ -150,7 +157,7 @@ export function MuscleResearch() {
         <section className="mt-12" aria-labelledby="muscle-causal-heading">
           <p className="lupa-premium-kicker">02 / Limites entre estudos</p>
           <h2 id="muscle-causal-heading" className="lupa-premium-text mt-2 text-3xl font-extrabold">A lacuna causal do projeto</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#667a91]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53645b]">
             É possível estudar as partes separadamente. Isso não prova automaticamente a cadeia completa.
           </p>
           <div className="lupa-dashboard-card mt-5 p-5 sm:p-7">
@@ -198,7 +205,7 @@ export function MuscleResearch() {
         <section id="estudos" className="mt-12 scroll-mt-28" aria-labelledby="evidence-muscle-heading">
           <p className="lupa-premium-kicker">03 / Evidências originais</p>
           <h2 id="evidence-muscle-heading" className="lupa-premium-text mt-2 text-3xl font-extrabold">O que os estudos registraram</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#667a91]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-[#53645b]">
             O gráfico abaixo é exclusivamente do subestudo DXA (E04). As medidas em UTI são de uma população diferente.
           </p>
           <div className="mt-5">
@@ -242,7 +249,7 @@ export function MuscleResearch() {
             Abrir Comparador <ArrowRight size={17} aria-hidden="true"/>
           </Link>
         </div>
-        <p className="mt-8 flex items-center gap-2 text-xs leading-6 text-[#788ba0]"><Brain size={16} aria-hidden="true"/> Ferramenta educacional e de pesquisa; não oferece diagnóstico ou previsão de risco individual.</p>
+        <p className="mt-8 flex items-center gap-2 text-xs leading-6 text-[#53645b]"><Brain size={16} aria-hidden="true"/> Ferramenta educacional e de pesquisa; não oferece diagnóstico ou previsão de risco individual.</p>
       </div>
     </div>
   );

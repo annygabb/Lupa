@@ -2,12 +2,13 @@
 // Não é teste de navegador; é verificação das rotas de usuário e das páginas SSR/SSG.
 const base=process.argv[2]??"http://127.0.0.1:3010";
 const checks=[
-  {path:"/",contains:["Evidência antes da conclusão","Músculos e UTI","Cenários para 2031"]},
-  {path:"/evidencias",contains:["Explore os estudos","Em curadoria"]},
+  {path:"/",contains:["Canetas para emagrecer","Por que o LUPA existe","benefícios, riscos"]},
+  {path:"/evidencias",contains:["Estudos sobre medicamentos para emagrecer","Em curadoria"]},
   {path:"/evidencias/E04",contains:["SURMOUNT-1","Limitações"]},
   {path:"/comparar",contains:["Enxergue além dos números","Cálculo combinado"]},
   {path:"/musculos-uti",contains:["Além do peso","Que pergunta você quer responder?","A lacuna causal"]},
   {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
+  {path:"/saude-mental",contains:["Emagrecer não resume","PHQ-9","41537305"]},
   {path:"/metodologia",contains:["Como analisamos uma evidência","cenários","Fontes auditáveis"]},
 ];
 

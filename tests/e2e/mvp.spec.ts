@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 const mainRoutes = [
-  {path:"/", title:/Evidência antes da conclusão/i},
-  {path:"/evidencias", title:/Ciência para investigar/i},
+  {path:"/", title:/Canetas para emagrecer/i},
+  {path:"/evidencias", title:/Estudos sobre medicamentos para emagrecer/i},
   {path:"/comparar", title:/Compare estudos/i},
   {path:"/musculos-uti", title:/Além do peso/i},
-  {path:"/projecoes", title:/Projete hipóteses/i},
+  {path:"/projecoes", title:/O futuro do tratamento/i},
   {path:"/metodologia", title:/Cada conclusão precisa/i},
 ] as const;
 
@@ -27,10 +27,12 @@ test.describe("LUPA — navegação e estabilidade",()=>{
   test("menu abre a metodologia e marca a rota atual",async({page})=>{
     await page.goto("/");
     const menu=page.getByRole("navigation",{name:"Navegação principal"});
+    const menuButton=page.getByRole("button",{name:"Abrir menu"});
+    if(await menuButton.isVisible()) await menuButton.click();
     const link=menu.getByRole("link",{name:"Metodologia"});
     await link.click();
     await expect(page).toHaveURL(/\/metodologia$/);
-    await expect(link).toHaveAttribute("aria-current","page");
+    await expect(page.locator('#main-navigation a[href="/metodologia"]')).toHaveAttribute("aria-current","page");
     await expect(page.getByRole("heading",{name:/Como analisamos uma evidência/})).toBeVisible();
   });
 });
@@ -113,11 +115,11 @@ test.describe("LUPA — fluxos reais",()=>{
       page.waitForEvent("download"),
       page.getByRole("button",{name:"Exportar CSV"}).click(),
     ]);
-    expect(csv.suggestedFilename()).toBe("lupa-cenario-2026-2036.csv");
+    expect(csv.suggestedFilename()).toBe("lupa-cenario-2026-2041.csv");
     const [json]=await Promise.all([
       page.waitForEvent("download"),
       page.getByRole("button",{name:"Exportar JSON"}).click(),
     ]);
-    expect(json.suggestedFilename()).toBe("lupa-cenario-2026-2036.json");
+    expect(json.suggestedFilename()).toBe("lupa-cenario-2026-2041.json");
   });
 });

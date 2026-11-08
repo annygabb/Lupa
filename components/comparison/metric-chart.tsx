@@ -36,7 +36,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
           <figure className="flex min-w-0 flex-col overflow-hidden rounded-[23px] border border-[#dce6f3] bg-gradient-to-br from-white to-[#f5f8ff] p-4 sm:p-5">
             <figcaption className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#7488a2]">Visualização comparativa</p>
+                <p className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[#53645b]">Visualização comparativa</p>
                 <h4 className="mt-1 text-lg font-extrabold text-[#203656]">Leitura dos resultados</h4>
               </div>
               <span className="rounded-full bg-[#eaf0ff] px-2.5 py-1.5 text-[11px] font-bold text-[#4267bf]">
@@ -46,7 +46,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
             <div className="mt-4 flex-1">
               <ComparisonBarPlot metric={metric}/>
             </div>
-            <p className="border-t border-[#e2e9f4] pt-3 text-[12px] leading-5 text-[#657b93]">
+            <p className="border-t border-[#e2e9f4] pt-3 text-[12px] leading-5 text-[#53645b]">
               {proportion
                 ?"Cada barra mostra uma proporção reportada no estudo. Não é uma estimativa para toda a população."
                 :"À esquerda/abaixo do zero: redução; acima: aumento. Valores relativos ao próprio basal de cada grupo."}
@@ -64,7 +64,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
                   (i===0?"border-white/10":"border-[#49c9b7]/10")} aria-hidden="true"/>
                 <div className="relative flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className={"text-[11px] font-extrabold uppercase tracking-[.12em] "+(i===0?"text-[#c8d9ff]":"text-[#49807e]")}>
+                    <p className={"text-[11px] font-extrabold uppercase tracking-[.12em] "+(i===0?"text-[#c8d9ff]":"text-[#53645b]")}>
                       Grupo {i+1}
                     </p>
                     <h5 className="mt-1 text-sm font-bold leading-5">{arm.label}</h5>
@@ -78,7 +78,7 @@ export function MetricChart({metric}:{metric:ReviewedMetric}) {
                   <p className="lupa-metric-ink text-[40px] font-extrabold leading-none sm:text-[46px]">
                     {formatMetricValue(arm.value,metric.unit)}
                   </p>
-                  <p className={"mt-2 text-[12px] font-medium "+(i===0?"text-[#d8e5ff]":"text-[#567e7e]")}>
+                  <p className={"mt-2 text-[12px] font-medium "+(i===0?"text-[#d8e5ff]":"text-[#53645b]")}>
                     {arm.sampleN===null?"N por braço não conferido no resumo":"n="+arm.sampleN.toLocaleString("pt-BR")}
                     {arm.ciLower!==null&&arm.ciUpper!==null?
                       " · IC 95%: "+formatMetricValue(arm.ciLower,"%")+" a "+formatMetricValue(arm.ciUpper,"%"):""}

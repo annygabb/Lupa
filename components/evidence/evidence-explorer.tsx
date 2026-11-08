@@ -81,7 +81,7 @@ export function EvidenceExplorer() {
         <div className="mt-4 flex flex-wrap items-start justify-between gap-6">
           <div className="max-w-[720px]">
             <h1 className="lupa-premium-text text-[clamp(2.2rem,4vw,3.9rem)] font-extrabold leading-[1.08]">
-              Ciência para investigar. <span className="text-[#315ff4]">Dados para compreender.</span>
+              Estudos sobre medicamentos para emagrecer. <span className="text-[#315ff4]">Com contexto para interpretar.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
               Encontre pesquisas sobre medicamentos para emagrecimento, saúde mental, músculos,

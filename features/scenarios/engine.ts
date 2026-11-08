@@ -57,20 +57,21 @@ export interface ScenarioYear {
 }
 
 export interface ScenarioResult {
-  modelVersion: "lupa-flow-v1";
+  modelVersion: "lupa-flow-v2";
   kind: "hypothetical_illustration";
   input: ScenarioInput;
   rows: readonly ScenarioYear[];
   last2031: ScenarioYear;
   last2036: ScenarioYear;
+  last2041: ScenarioYear;
   sources: readonly {name:string;url:string;role:"context_only"}[];
   warnings: readonly string[];
 }
 
 const contextSources=[
-  {name:"IBGE — projeções da população (revisão 2024)",url:"https://www.ibge.gov.br/estatisticas/sociais/populacao/9109-proje%C3%A7%C3%A3o-da-populacao.html",role:"context_only" as const},
-  {name:"Vigitel Brasil 2006–2024 — capitais e DF",url:"https://www.gov.br/saude/pt-br/centrais-de-conteudo/publicacoes/svsa/vigitel/",role:"context_only" as const},
-  {name:"Ministério da Saúde — pedido de avaliação na Conitec (24/09/2026)",url:"https://www.gov.br/saude/pt-br/assuntos/noticias/2026/setembro/ministerio-da-saude-protocola-na-conitec-pedido-de-analise-para-incorporacao-de-canetas-emagrecedoras-no-sus",role:"context_only" as const},
+  {name:"PubMed — consumo e vigilância de GLP-1 no Brasil",url:"https://pubmed.ncbi.nlm.nih.gov/41796096/",role:"context_only" as const},
+  {name:"PubMed — uso atual/passado nos EUA (preprint; não é uso ativo)",url:"https://pubmed.ncbi.nlm.nih.gov/42922826/",role:"context_only" as const},
+  {name:"PubMed — retirada de tirzepatida, SURMOUNT-4",url:"https://pubmed.ncbi.nlm.nih.gov/38078870/",role:"context_only" as const},
 ];
 
 export function runScenario(untrusted: ScenarioInput): ScenarioResult {
@@ -79,7 +80,7 @@ export function runScenario(untrusted: ScenarioInput): ScenarioResult {
   let priorActive=Math.round(input.populationBase*input.initialActivePct/100);
   let cumulativeStarts=0;
 
-  for(let year=input.referenceYear;year<=2036;year++) {
+  for(let year=input.referenceYear;year<=2041;year++) {
     const elapsed=year-input.referenceYear;
     const population=Math.max(0,Math.round(input.populationBase*Math.pow(1+input.annualPopulationGrowthPct/100,elapsed)));
     const rate=Math.min(100,input.annualStartPct+input.annualAccessIncreasePp*elapsed);
@@ -112,17 +113,18 @@ export function runScenario(untrusted: ScenarioInput): ScenarioResult {
   }
   const last2031=rows.find(r=>r.year===2031);
   const last2036=rows.find(r=>r.year===2036);
-  if(!last2031||!last2036)throw new Error("Horizonte de projeção não calculado");
+  const last2041=rows.find(r=>r.year===2041);
+  if(!last2031||!last2036||!last2041)throw new Error("Horizonte de projeção não calculado");
 
   return {
-    modelVersion:"lupa-flow-v1",kind:"hypothetical_illustration",input,rows,last2031,last2036,
+    modelVersion:"lupa-flow-v2",kind:"hypothetical_illustration",input,rows,last2031,last2036,last2041,
     sources:contextSources,
     warnings:[
       "Simulação hipotética de entradas, continuidade e saída; não é previsão, incidência, eficácia clínica ou cobertura brasileira estimada.",
       "População de referência, taxas de início, continuidade, crescimento e custo foram definidos pelo usuário ou pelo preset ilustrativo; não são dados observados pelo LUPA.",
       "A saída de tratamento é diferença entre ativos anteriores e quem continua. Pessoas podem iniciar novamente em outro ano; entradas acumuladas não equivalem a indivíduos únicos.",
       "Não estima eventos adversos, mudanças de massa magra, mortalidade, internação em UTI nem resultados clínicos.",
-      "O pedido de avaliação à Conitec em 24/09/2026 não equivale à incorporação ou fornecimento universal pelo SUS.",
+      "A avaliação pela Conitec não equivale, por si só, a fornecimento universal pelo SUS. Este modelo não pressupõe incorporação, data ou cobertura.",
       "Valores monetários só aparecem quando se informa custo anual hipotético por pessoa; não incluem validação orçamentária ou preço oficial.",
     ],
   };

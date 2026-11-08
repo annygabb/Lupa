@@ -46,8 +46,8 @@ export function StudyComparator() {
                 <span className="block text-[#315ff4]">Enxergue além dos números.</span>
               </h1>
               <p className="mt-6 max-w-[580px] text-[15px] leading-[1.85] text-[#5a6f89] sm:text-[16px]">
-                Um espaço para investigar evidências científicas, confrontar métodos e entender
-                o que os resultados mostram — e o que ainda não demonstram.
+                Compare pesquisas sobre medicamentos para emagrecimento, massa magra e UTI.
+                Veja se elas estudam a mesma população e medem o mesmo resultado antes de relacionar as conclusões.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a href="#comparacao" className="lupa-premium-button lupa-premium-button-primary">
@@ -142,7 +142,7 @@ export function StudyComparator() {
                   <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
                     Estudos lado a lado
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-[#657993]">
+                  <p className="mt-2 text-sm leading-6 text-[#53645b]">
                     Comece selecionando duas referências. O LUPA explica o que pode e o que não pode ser comparado.
                   </p>
                 </div>
@@ -198,7 +198,7 @@ export function StudyComparator() {
                 <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
                   Evidência em perspectiva
                 </h2>
-                <p className="mt-2 max-w-[820px] text-sm leading-7 text-[#657993]">
+                <p className="mt-2 max-w-[820px] text-sm leading-7 text-[#53645b]">
                   Explore cinco indicadores extraídos de fontes primárias. Cada gráfico representa
                   somente os grupos internos do próprio estudo e é <strong>independente dos estudos A e B</strong> acima.
                 </p>

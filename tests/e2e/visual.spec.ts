@@ -12,6 +12,7 @@ const routes=[
   {path:"/musculos-uti",label:"musculos-uti"},
   {path:"/projecoes",label:"projecoes"},
   {path:"/metodologia",label:"metodologia"},
+  {path:"/saude-mental",label:"saude-mental"},
 ] as const;
 
 test.describe("Registros visuais para revisão de UX/UI",()=>{

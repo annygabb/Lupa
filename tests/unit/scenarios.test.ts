@@ -14,11 +14,11 @@ describe("Etapa 6 — motor de cenários hipotéticos",()=>{
       expect(scenarioInputSchema.safeParse(value.input).success).toBe(true);
       const res=runScenario(value.input);
       expect(res.kind).toBe("hypothetical_illustration");
-      expect(res.modelVersion).toBe("lupa-flow-v1");
-      expect(res.rows).toHaveLength(11);
+      expect(res.modelVersion).toBe("lupa-flow-v2");
+      expect(res.rows).toHaveLength(16);
     }
   });
-  it("calcula 2026–2036 com 2031 e 2036 presentes sem números clínicos",()=>{
+  it("calcula 2026–2041 com 2031 e 2036 presentes sem números clínicos",()=>{
     const out=runScenario(example);
     expect(out.rows[0].year).toBe(2026);
     expect(out.rows[10].year).toBe(2036);
@@ -95,13 +95,13 @@ describe("Etapa 6 — motor de cenários hipotéticos",()=>{
     const e=runScenario(SCENARIO_PRESETS.expansao.input).last2036.active;
     expect(c).toBeLessThan(m);expect(m).toBeLessThan(e);
   });
-  it("CSV possui BOM, onze linhas de dados e aviso obrigatório",()=>{
+  it("CSV possui BOM, dezesseis linhas de dados e aviso obrigatório",()=>{
     const csv=scenarioCsv(runScenario(example));
     expect(csv.startsWith("\uFEFF")).toBe(true);
     expect(csv).toContain("SIMULACAO HIPOTETICA");
     expect(csv).toContain("entradas_acumuladas nao equivale a pessoas unicas");
     expect(csv).toContain("ano;populacao_referencia");
-    expect(csv.split("\r\n").filter(line=>/^20(2[6-9]|3[0-6]);/.test(line))).toHaveLength(11);
+    expect(csv.split("\r\n").filter(line=>/^20(2[6-9]|3[0-9]|4[01]);/.test(line))).toHaveLength(16);
   });
   it("renderiza entradas, gráfico, 2031/2036, fontes, exportação e avisos",()=>{
     const html=renderToStaticMarkup(createElement(ScenarioDashboard));

@@ -85,7 +85,7 @@ export function CompatibilityPanel({assessment}:{
           <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_.95fr]">
             <div className="relative overflow-hidden rounded-[18px] border border-[#eadbc5] bg-gradient-to-r from-[#fff7eb] to-[#fffdf8] p-5">
               <span className="absolute left-0 top-0 h-full w-1 bg-[#e2a64d]" aria-hidden="true"/>
-              <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#9a6c32]">Principal ponto de atenção</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#785024]">Principal ponto de atenção</p>
               <h5 className="mt-2 flex items-center gap-2 text-[16px] font-extrabold tracking-[-.015em] text-[#4b3a2b]">
                 <AlertTriangle size={18} className="shrink-0 text-[#c28a3b]" aria-hidden="true"/>
                 {featured.title}
