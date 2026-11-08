@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
 const port = 3101;
-const url = "http://127.0.0.1:"+port;
+const url = process.env.LUPA_QA_URL ?? "http://127.0.0.1:"+port;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -19,6 +19,7 @@ export default defineConfig({
     actionTimeout: 10_000,
   },
   projects: [
+    { name: "desktop-wide-chromium", use: {browserName:"chromium",viewport:{width:1440,height:900},deviceScaleFactor:1}},
     { name: "desktop-chromium", use: {
       browserName: "chromium",viewport:{width:1280,height:800},
       deviceScaleFactor:1,
@@ -36,7 +37,7 @@ export default defineConfig({
       deviceScaleFactor:1,hasTouch:true,
     }},
   ],
-  webServer:{
+  webServer:process.env.LUPA_QA_URL?undefined:{
     command:"pnpm exec next start -p "+port,
     url,
     reuseExistingServer:!process.env.CI,

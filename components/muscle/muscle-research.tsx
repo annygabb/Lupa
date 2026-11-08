@@ -7,6 +7,7 @@ import {
   Dna, FlaskConical, HeartPulse, Layers3, Network, ShieldCheck,
   Stethoscope, TrendingDown,
 } from "lucide-react";
+import { ClinicalChart } from "@/components/insights/clinical-chart";
 import { MetricChart } from "@/components/comparison/metric-chart";
 import { getReviewedMetric } from "@/features/comparison/reviewed-metrics";
 import {
@@ -91,6 +92,12 @@ export function MuscleResearch() {
               </div>
             </div>;
           })}
+        </section>
+
+        <section className="icu-context" aria-labelledby="icu-observed-title">
+          <div className="section-intro"><div><p className="eyebrow">Gravidade e perda muscular · observação real</p><h2 id="icu-observed-title">O músculo também importa quando a doença se agrava</h2></div><p>Uma coorte acompanhou pacientes críticos com falência de um ou de múltiplos órgãos. Esta comparação é observada, não uma projeção de quem usou medicamento para emagrecer.</p></div>
+          <ClinicalChart initial="icu" only={["icu"]}/>
+          <div className="gap-note mt-6"><strong>Por que não somamos as perdas?</strong> O SURMOUNT-1 mede massa magra corporal por DXA em 72 semanas. A coorte de UTI mede a área de um músculo por ultrassom em sete dias. Somar os percentuais produziria um resultado sem significado validado. A chance individual de recuperação não foi calculada.</div>
         </section>
 
         <section id="perguntas" className="mt-12 scroll-mt-28" aria-labelledby="muscle-questions-heading">

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia"];
+const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia","/saude-mental"];
 
 test.describe("WCAG automatizado — regras A e AA verificáveis",()=>{
   for(const route of auditedRoutes){

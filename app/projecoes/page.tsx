@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { ScenarioDashboard } from "@/components/scenarios/scenario-dashboard";
-
-export const metadata: Metadata = {
-  title: "Cenários para 2031 e 2036",
-  description: "Simulador de cenários hipotéticos de acesso e continuidade do tratamento, com premissas editáveis, fórmulas reproduzíveis e exportação de resultados.",
-};
-export default function ProjecoesPage(){return <ScenarioDashboard/>;}
+import { CountryOutlook } from "@/components/insights/country-outlook";
+export const metadata: Metadata = {title:"Brasil × EUA: evidências e cenários até 2041",description:"Compare evidências de uso, saúde mental e massa magra. Horizontes 2026/2031/2036/2041 com lacunas explícitas e laboratório de cenários hipotéticos."};
+export default function ProjecoesPage(){return <><div className="lupa-editorial mental-page"><CountryOutlook/></div><ScenarioDashboard embedded/></>;}

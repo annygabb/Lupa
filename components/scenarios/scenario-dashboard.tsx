@@ -56,14 +56,14 @@ function ScenarioChart({result}:{result:ScenarioResult}) {
         <div>
           <p className="lupa-premium-kicker">Série anual calculada</p>
           <h3 className="mt-1 text-lg font-extrabold text-[#203653]">Pessoas ativas no cenário</h3>
-          <p className="mt-1 text-xs leading-5 text-[#63788e]">2026–2036 · curva ilustrativa, não previsão epidemiológica</p>
+          <p className="mt-1 text-xs leading-5 text-[#63788e]">2026–2041 · curva ilustrativa, não previsão epidemiológica</p>
         </div>
         <span className="rounded-full bg-[#edf2ff] px-3 py-2 text-xs font-bold text-[#315ec5]">
           Grupo definido pelo usuário
         </span>
       </figcaption>
       <svg viewBox="0 0 780 316" className="mt-5 w-full" role="img"
-        aria-label={"Linha hipotética de pessoas ativas: 2026 "+compact.format(rows[0].active)+", 2031 "+compact.format(result.last2031.active)+", 2036 "+compact.format(result.last2036.active)}>
+        aria-label={"Linha hipotética de pessoas ativas: 2026 "+compact.format(rows[0].active)+", 2031 "+compact.format(result.last2031.active)+", 2036 "+compact.format(result.last2036.active)+", 2041 "+compact.format(result.last2041.active)}>
         <defs>
           <linearGradient id="lupa-scenario-area" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor="#315ff4" stopOpacity=".23"/>
@@ -79,7 +79,7 @@ function ScenarioChart({result}:{result:ScenarioResult}) {
         })}
         <path d={area} fill="url(#lupa-scenario-area)"/>
         <path d={line} fill="none" stroke="#315ff4" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        {points.filter((_,i)=>i===0||i===5||i===10).map(p=>(
+        {points.filter((_,i)=>i===0||i===5||i===10||i===15).map(p=>(
           <g key={p.r.year}>
             <circle cx={p.x} cy={p.y} r="7" fill="white" stroke="#315ff4" strokeWidth="3"/>
             <text x={p.x} y={Math.max(14,p.y-14)} fill="#34529d" textAnchor="middle" fontSize="12" fontWeight="750">
@@ -95,7 +95,7 @@ function ScenarioChart({result}:{result:ScenarioResult}) {
   );
 }
 
-export function ScenarioDashboard(){
+export function ScenarioDashboard({embedded=false}:{embedded?:boolean}){
   const [input,setInput]=useState<ScenarioInput>({...SCENARIO_PRESETS.intermediario.input});
   const [preset,setPreset]=useState<ActivePreset>("intermediario");
   const [showAssumptions,setShowAssumptions]=useState(true);
@@ -111,23 +111,23 @@ export function ScenarioDashboard(){
   };
   const exportScenario=(type:"csv"|"json")=>{
     if(!result)return;
-    if(type==="csv") downloadFile("lupa-cenario-2026-2036.csv",scenarioCsv(result),"text/csv;charset=utf-8");
-    else downloadFile("lupa-cenario-2026-2036.json",JSON.stringify(result,null,2),"application/json;charset=utf-8");
+    if(type==="csv") downloadFile("lupa-cenario-2026-2041.csv",scenarioCsv(result),"text/csv;charset=utf-8");
+    else downloadFile("lupa-cenario-2026-2041.json",JSON.stringify(result,null,2),"application/json;charset=utf-8");
   };
 
   return (
-    <div className="lupa-studio min-h-screen">
+    <div className={embedded?"lupa-studio":"lupa-studio min-h-screen"}>
       <div className="mx-auto max-w-[1480px] px-4 pb-20 pt-6 sm:px-6 sm:pt-9 lg:px-9">
-        <header className="lupa-dashboard-card overflow-hidden">
+        <header className="lupa-dashboard-card overflow-hidden" id="laboratorio">
           <div className="grid lg:grid-cols-[1.35fr_.65fr]">
             <div className="p-6 sm:p-10">
-              <p className="lupa-premium-kicker">LUPA Saúde / Cenários 2026–2036</p>
-              <h1 className="lupa-premium-text mt-4 max-w-4xl text-4xl font-extrabold leading-[1.09] sm:text-[52px]">
+              <p className="lupa-premium-kicker">LUPA Saúde / Cenários 2026–2041</p>
+              <h2 className="lupa-premium-text mt-4 max-w-4xl text-4xl font-extrabold leading-[1.09] sm:text-[52px]">
                 Projete hipóteses. <span className="text-[#315ff4]">Não certezas.</span>
-              </h1>
+              </h2>
               <p className="mt-5 max-w-3xl text-[15px] leading-8 text-[#62768e]">
                 Simule trajetórias de início, continuidade e saída de tratamento em um grupo
-                de referência que você define. Compare 2031 e 2036 e exporte as premissas usadas.
+                de referência que você define. Compare 2031, 2036 e 2041 e exporte as premissas usadas.
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#eaf6f2] px-3 py-2 text-xs font-bold text-[#11796c]"><ShieldCheck size={15}/> Fórmula reproduzível</span>
@@ -208,7 +208,7 @@ export function ScenarioDashboard(){
             ):(
               <>
                 <section aria-label="Horizontes de simulação" className="grid gap-3 sm:grid-cols-2">
-                  {[result.last2031,result.last2036].map((row,i)=>(
+                  {[result.last2031,result.last2036,result.last2041].map((row,i)=>(
                     <div key={row.year} className={"relative overflow-hidden rounded-[25px] p-6 "+
                       (i===0?"bg-gradient-to-br from-[#2456dc] to-[#1c3d98] text-white":"border border-[#cce9e1] bg-[#eafaf5] text-[#164b54]")}>
                       <p className={"text-xs font-extrabold uppercase tracking-[.13em] "+(i===0?"text-[#c6d9ff]":"text-[#286c69]")}>Horizonte {row.year}</p>
@@ -252,7 +252,7 @@ export function ScenarioDashboard(){
                   </div>
                   <div className="mt-5 overflow-x-auto rounded-xl border border-[#e1e8f1] focus-visible:outline-3 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label="Tabela anual da simulação; use as setas para rolar horizontalmente">
                     <table className="w-full min-w-[720px] text-left text-xs">
-                      <caption className="sr-only">Simulação anual editável de 2026 a 2036</caption>
+                      <caption className="sr-only">Simulação anual editável de 2026 a 2041</caption>
                       <thead className="bg-[#f0f4fb] text-[#536984]">
                         <tr>
                           {["Ano","Grupo ref.","Continuaram","Iniciaram","Saíram","Ativos","% ativos"].map(label=>(
@@ -262,7 +262,7 @@ export function ScenarioDashboard(){
                       </thead>
                       <tbody>
                         {result.rows.map(row=>(
-                          <tr key={row.year} className={"border-t border-[#e7edf4] "+([2031,2036].includes(row.year)?"bg-[#f1f7ff] font-bold":"")}>
+                          <tr key={row.year} className={"border-t border-[#e7edf4] "+([2031,2036,2041].includes(row.year)?"bg-[#f1f7ff] font-bold":"")}>
                             <th scope="row" className="px-3 py-3 font-extrabold text-[#254b82]">{row.year}</th>
                             {[row.referencePopulation,row.continued,row.started,row.exited,row.active].map((number,i)=>(
                               <td key={i} className="px-3 py-3 tabular-nums text-[#4e647c]">{compact.format(number)}</td>
@@ -293,8 +293,8 @@ export function ScenarioDashboard(){
         </div>
 
         <section className="lupa-dashboard-card mt-6 p-5 sm:p-7" aria-labelledby="scenario-sources">
-          <h2 id="scenario-sources" className="flex items-center gap-2 text-lg font-extrabold text-[#263d5b]"><BookOpenCheck size={20} className="text-[#315ff4]"/> Fontes de contexto brasileiro</h2>
-          <p className="mt-2 text-sm leading-6 text-[#61778e]">Estes documentos orientam a discussão demográfica e regulatória. <strong>Não fornecem automaticamente as taxas de entrada ou continuidade do simulador.</strong></p>
+          <h2 id="scenario-sources" className="flex items-center gap-2 text-lg font-extrabold text-[#263d5b]"><BookOpenCheck size={20} className="text-[#315ff4]"/> Fontes PubMed e limites do modelo</h2>
+          <p className="mt-2 text-sm leading-6 text-[#61778e]">Estes estudos ajudam a discutir uso, acesso e interrupção. <strong>Não fornecem automaticamente as taxas de entrada ou continuidade do simulador.</strong></p>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             {(result?.sources??runScenario(SCENARIO_PRESETS.intermediario.input).sources).map(source=>(
               <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer"

@@ -50,7 +50,7 @@ try {
   const snap=await call("tools/call",{name:"browser_snapshot",arguments:{}},60000);
   if(snap.isError)throw new Error("browser_snapshot falhou: "+JSON.stringify(snap).slice(0,1200));
   const full=JSON.stringify(snap);
-  if(!full.includes("Evidência antes da conclusão"))
+  if(!full.includes("Canetas para emagrecer"))
     throw new Error("Snapshot MCP não contém a homepage esperada: "+full.slice(0,650));
   await mkdir("design-browser-out",{recursive:true});
   await writeFile("design-browser-out/playwright-mcp-tools.json",JSON.stringify({

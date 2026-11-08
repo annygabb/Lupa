@@ -19,10 +19,12 @@ describe("Home editorial, dados científicos verificáveis e hierarquia de entra
  });
  it("página inicial comunica curadoria e substitui decoração repetitiva",()=>{
   const html=renderToStaticMarkup(createElement(Home));
-  expect(html).toContain("Evidência antes da conclusão");
-  expect(html).toContain("50 registros científicos em curadoria");
-  expect(html).toContain("IDs de origem, incluindo aliases");
-  expect(html).toContain("Quanto variou a massa magra?");
+  expect(html).toContain("Canetas para emagrecer");
+  expect(html).toContain("profissionais de saúde");
+  expect(html).toContain("Por que o LUPA existe");
+  expect(html).toContain("50 referências únicas em curadoria");
+  expect(html).toContain("benefícios, riscos e o que ainda não sabemos");
+  expect(html).toContain("não 25% dos músculos");
   expect(html).not.toContain("RESEARCH STUDIO");
  });
 });

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./lupa-premium.css";
+import "./editorial.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
   title: { default: "LUPA Saúde | Evidência que orienta", template: "%s | LUPA Saúde" },
-  description: "Pesquisa científica, saúde muscular e cenários populacionais: evidências, limites e hipóteses claramente identificados.",
+  description: "Entenda benefícios, riscos e lacunas dos medicamentos para emagrecimento. Evidências sobre semaglutida, tirzepatida, saúde mental e massa magra.",
   robots: { index: false, follow: false },
 };
 
@@ -20,7 +21,7 @@ export default function RootLayout({children}:Readonly<{children:React.ReactNode
         </a>
         <div className="flex min-h-screen flex-col">
           <SiteHeader/>
-          <main id="conteudo" className="flex-1">{children}</main>
+          <main id="conteudo" className="lupa-main flex-1">{children}</main>
           <SiteFooter/>
         </div>
       </body>

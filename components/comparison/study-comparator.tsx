@@ -46,8 +46,8 @@ export function StudyComparator() {
                 <span className="block text-[#315ff4]">Enxergue além dos números.</span>
               </h1>
               <p className="mt-6 max-w-[580px] text-[15px] leading-[1.85] text-[#5a6f89] sm:text-[16px]">
-                Um espaço para investigar evidências científicas, confrontar métodos e entender
-                o que os resultados mostram — e o que ainda não demonstram.
+                Compare pesquisas sobre medicamentos para emagrecimento, massa magra e UTI.
+                Veja se elas estudam a mesma população e medem o mesmo resultado antes de relacionar as conclusões.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a href="#comparacao" className="lupa-premium-button lupa-premium-button-primary">
