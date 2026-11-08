@@ -102,6 +102,8 @@ test.describe("LUPA — fluxos reais",()=>{
     await page.locator("#scenario-populationBase").fill("800000");
     await expect.poll(()=>horizon.innerText()).not.toBe(afterPreset);
     await page.locator("#scenario-annualRetentionPct").fill("120");
+    await expect(page.locator("#scenario-annualRetentionPct")).toHaveAttribute("aria-invalid","true");
+    await expect(page.locator("#scenario-annualRetentionPct-error")).toHaveText("Use um valor entre 0 e 100.");
     await expect(page.getByRole("heading",{name:"Corrija os parâmetros"})).toBeVisible();
     await expect(horizon).toHaveCount(0);
     await page.getByRole("button",{name:/Redefinir/}).click();
@@ -116,10 +118,12 @@ test.describe("LUPA — fluxos reais",()=>{
       page.getByRole("button",{name:"Exportar CSV"}).click(),
     ]);
     expect(csv.suggestedFilename()).toBe("lupa-cenario-2026-2041.csv");
+    await expect(page.getByText("Arquivo CSV preparado. Confira os downloads do navegador.",{exact:true})).toBeVisible();
     const [json]=await Promise.all([
       page.waitForEvent("download"),
       page.getByRole("button",{name:"Exportar JSON"}).click(),
     ]);
     expect(json.suggestedFilename()).toBe("lupa-cenario-2026-2041.json");
+    await expect(page.getByText("Arquivo JSON preparado. Confira os downloads do navegador.",{exact:true})).toBeVisible();
   });
 });

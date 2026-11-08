@@ -33,6 +33,13 @@ const fields=[
   key:Exclude<keyof ScenarioInput,"referenceYear">;label:string;min:number;max:number;step:number;help:string
 }>;
 
+const fieldGroups = [
+  {label:"Grupo de referência", keys:["populationBase","annualPopulationGrowthPct"]},
+  {label:"Entrada e continuidade do tratamento", keys:["initialActivePct","annualStartPct","annualRetentionPct","annualAccessIncreasePp"]},
+  {label:"Custo opcional", keys:["costPerActivePersonBRL"]},
+] as const;
+const fieldInstruction = (field:(typeof fields)[number]) => `Use ${field.key==="populationBase"?"um número inteiro":"um valor"} entre ${compact.format(field.min)} e ${compact.format(field.max)}.`;
+
 type ActivePreset=ScenarioPresetId|"personalizado";
 function downloadFile(filename:string,text:string,mime:string){
   const objectUrl=URL.createObjectURL(new Blob([text],{type:mime}));
@@ -99,20 +106,22 @@ export function ScenarioDashboard({embedded=false}:{embedded?:boolean}){
   const [input,setInput]=useState<ScenarioInput>({...SCENARIO_PRESETS.intermediario.input});
   const [preset,setPreset]=useState<ActivePreset>("intermediario");
   const [showAssumptions,setShowAssumptions]=useState(true);
+  const [exportFeedback,setExportFeedback]=useState("");
 
   const parsed=useMemo(()=>scenarioInputSchema.safeParse(input),[input]);
   const result=useMemo(()=>parsed.success?runScenario(parsed.data):null,[parsed]);
   const setField=(key:Exclude<keyof ScenarioInput,"referenceYear">,value:number)=>{
     setInput(prev=>({...prev,[key]:value}));
-    setPreset("personalizado");
+    setPreset("personalizado");setExportFeedback("");
   };
   const choosePreset=(id:ScenarioPresetId)=>{
-    setInput({...SCENARIO_PRESETS[id].input});setPreset(id);
+    setInput({...SCENARIO_PRESETS[id].input});setPreset(id);setExportFeedback("");
   };
   const exportScenario=(type:"csv"|"json")=>{
     if(!result)return;
     if(type==="csv") downloadFile("lupa-cenario-2026-2041.csv",scenarioCsv(result),"text/csv;charset=utf-8");
     else downloadFile("lupa-cenario-2026-2041.json",JSON.stringify(result,null,2),"application/json;charset=utf-8");
+    setExportFeedback(`Arquivo ${type.toUpperCase()} preparado. Confira os downloads do navegador.`);
   };
 
   return (
@@ -170,17 +179,23 @@ export function ScenarioDashboard({embedded=false}:{embedded?:boolean}){
               ))}
             </div>
 
-            <div className="mt-5 space-y-4">
-              {fields.map(field=>(
-                <div key={field.key}>
-                  <label htmlFor={"scenario-"+field.key} className="block text-[13px] font-bold leading-5 text-[#314864]">{field.label}</label>
-                  <input id={"scenario-"+field.key} type="number" inputMode="decimal"
-                    min={field.min} max={field.max} step={field.step}
-                    value={input[field.key]} onChange={e=>setField(field.key,Number(e.target.value))}
-                    className="lupa-input mt-1.5"/>
-                  <p className="mt-1 text-[11px] leading-5 text-[#50667b]">{field.help}</p>
-                </div>
-              ))}
+            <div className="scenario-field-groups">
+              {fieldGroups.map(group=><fieldset key={group.label}>
+                <legend>{group.label}</legend>
+                {fields.filter(field=>(group.keys as readonly string[]).includes(field.key)).map(field=>{
+                  const invalid=!parsed.success&&parsed.error.issues.some(issue=>issue.path[0]===field.key);
+                  const id="scenario-"+field.key;
+                  return <div key={field.key} className="scenario-field">
+                    <label htmlFor={id} className="block text-[13px] font-bold leading-5 text-[#314864]">{field.label}</label>
+                    <input id={id} type="number" inputMode="decimal" min={field.min} max={field.max} step={field.step}
+                      value={input[field.key]} onChange={e=>setField(field.key,Number(e.target.value))}
+                      aria-invalid={invalid||undefined} aria-describedby={id+"-help"+(invalid?" "+id+"-error":"")}
+                      className="lupa-input mt-1.5"/>
+                    <p id={id+"-help"} className="mt-1 text-xs leading-5 text-[#50667b]">{field.help}</p>
+                    {invalid&&<p id={id+"-error"} className="scenario-field-error">{fieldInstruction(field)}</p>}
+                  </div>;
+                })}
+              </fieldset>)}
             </div>
             <button type="button" onClick={()=>setShowAssumptions(s=>!s)}
               className="mt-5 min-h-11 w-full rounded-xl border border-[#dce5f2] bg-[#f8faff] text-xs font-bold text-[#315eaa]">
@@ -202,7 +217,10 @@ export function ScenarioDashboard({embedded=false}:{embedded?:boolean}){
                 <h2 className="text-lg font-extrabold text-[#964a31]">Corrija os parâmetros</h2>
                 <p className="mt-2 text-sm text-[#64758a]">As premissas precisam respeitar os limites descritos nos campos. Nenhum resultado será calculado enquanto houver valores inválidos.</p>
                 {!parsed.success&&<ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-[#885742]">
-                  {parsed.error.issues.map((issue,i)=><li key={i}>{String(issue.path[0])}: {issue.message}</li>)}
+                  {parsed.error.issues.map((issue,i)=>{
+                    const field=fields.find(item=>item.key===issue.path[0]);
+                    return <li key={i}>{field?`${field.label}: ${fieldInstruction(field)}`:"Revise os valores informados."}</li>;
+                  })}
                 </ul>}
               </section>
             ):(
@@ -250,6 +268,7 @@ export function ScenarioDashboard({embedded=false}:{embedded?:boolean}){
                       </button>
                     </div>
                   </div>
+                  <p className="export-feedback" role="status" aria-live="polite">{exportFeedback}</p>
                   <div className="mt-5 overflow-x-auto rounded-xl border border-[#e1e8f1] focus-visible:outline-3 focus-visible:outline-offset-2" tabIndex={0} role="region" aria-label="Tabela anual da simulação; use as setas para rolar horizontalmente">
                     <table className="w-full min-w-[720px] text-left text-xs">
                       <caption className="sr-only">Simulação anual editável de 2026 a 2041</caption>

@@ -46,6 +46,10 @@ test("navegação fica no topo e abre no celular",async({page})=>{
  if(await menu.isVisible()){
   await expect(page.getByRole("navigation")).not.toBeVisible();
   await menu.click();
+  await page.getByRole("button",{name:"Fechar menu"}).press("Escape");
+  await expect(menu).toHaveAttribute("aria-expanded","false");
+  await expect(menu).toBeFocused();
+  await menu.click();
   await page.getByRole("navigation").getByRole("link",{name:"Saúde mental",exact:true}).click();
   await expect(page).toHaveURL(/saude-mental$/);
   await expect(page.getByRole("button",{name:"Abrir menu"})).toHaveAttribute("aria-expanded","false");

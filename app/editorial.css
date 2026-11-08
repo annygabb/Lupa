@@ -102,3 +102,13 @@ body{color:var(--ink);background:var(--paper)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.scroll-reveal[data-reveal-state=out],.scroll-reveal[data-reveal-state=out][data-reveal-edge=top]{opacity:1;transform:none;transition:none}}
 .animated-number{display:inline-block;font-variant-numeric:tabular-nums;white-space:nowrap}
 .composition-values strong .animated-number,.composition-values strong .animated-number span{font-size:inherit}
+/* Permanent UX review: comfortable targets, contextual grouping and immediate feedback. */
+.lupa-main button,.lupa-main select,.lupa-main summary{min-height:44px}
+.scenario-field-groups{display:grid;gap:24px;margin-top:24px}
+.scenario-field-groups fieldset{border:0;border-top:1px solid var(--line);padding:20px 0 0;min-width:0}
+.scenario-field-groups legend{padding:0 12px 0 0;font-size:14px;font-weight:600;color:var(--ink)}
+.scenario-field+.scenario-field{margin-top:20px}
+.scenario-field input[aria-invalid=true]{border-color:#a33d3d;outline-color:#a33d3d}
+.scenario-field-error{font-size:13px;line-height:1.7;color:#a33d3d;margin:8px 0 0}
+.export-feedback{font-size:13px;line-height:1.7;color:var(--accent);margin:16px 0 0;min-height:22px}
+.lupa-main button{min-width:44px}
