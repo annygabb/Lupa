@@ -74,9 +74,9 @@ export function AtlasHero() {
       </div>
 
       <h1 id="hero-title" className="at-hero__title">
-        <span className="at-hero__line"><span>Canetas para</span></span>
-        <span className="at-hero__line"><span>emagrecer.</span></span>
-        <span className="at-hero__line at-hero__line--blue"><span>O que muda</span></span>
+        <span className="at-hero__line"><span>Canetas para</span></span>{" "}
+        <span className="at-hero__line"><span>emagrecer.</span></span>{" "}
+        <span className="at-hero__line at-hero__line--blue"><span>O que muda</span></span>{" "}
         <span className="at-hero__line at-hero__line--blue"><span>além do peso?</span></span>
       </h1>
 

@@ -24,15 +24,12 @@ test.describe("LUPA — navegação e estabilidade",()=>{
     });
   }
 
-  test("menu abre a metodologia e marca a rota atual",async({page})=>{
+  test("índice abre a metodologia e marca a rota atual",async({page})=>{
     await page.goto("/");
-    const menu=page.getByRole("navigation",{name:"Navegação principal"});
-    const menuButton=page.getByRole("button",{name:"Abrir menu"});
-    if(await menuButton.isVisible()) await menuButton.click();
-    const link=menu.getByRole("link",{name:"Metodologia"});
-    await link.click();
+    await page.getByRole("button",{name:"Índice"}).click();
+    await page.getByRole("dialog",{name:"Índice de pranchas"}).getByRole("link",{name:/Metodologia/}).click();
     await expect(page).toHaveURL(/\/metodologia$/);
-    await expect(page.locator('#main-navigation a[href="/metodologia"]')).toHaveAttribute("aria-current","page");
+    await expect(page.locator('#atlas-menu a[href="/metodologia"]')).toHaveAttribute("aria-current","page");
     await expect(page.getByRole("heading",{name:/Como analisamos uma evidência/})).toBeVisible();
   });
 });

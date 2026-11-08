@@ -50,12 +50,12 @@ export function ArchiveField() {
             <ul>
               {col.items.map(r => (
                 <li key={r.id}>
-                  <Link href={`/evidencias/${r.id}`} className="at-archive__spec" aria-label={`${r.id}: ${r.title} — ${designNames[r.design]}`}>
+                  <Link href={`/evidencias/${r.id}`} className="at-archive__spec">
                     <i className={`at-spec at-spec--${shapeFor[r.design] ?? "other"}`} aria-hidden="true"/>
-                    <span className="at-archive__tip" aria-hidden="true">
+                    <span className="at-archive__tip">
                       <b className="at-mono">{r.id} · {r.year ?? "s/ ano"}</b>
                       {r.title}
-                      <em>{r.topics.slice(0, 2).map(t => topicNames[t]).join(" · ")}</em>
+                      <em>{designNames[r.design]} · {r.topics.slice(0, 2).map(t => topicNames[t]).join(" · ")}</em>
                     </span>
                   </Link>
                 </li>

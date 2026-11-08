@@ -40,25 +40,23 @@ test("saúde mental tem fonte e não cria taxa de depressão brasileira",async({
  await expect(page.getByRole("heading",{name:"Não é uma taxa nacional"})).toBeVisible();
 });
 
-test("navegação fica no topo e abre no celular",async({page})=>{
+test("navegação fica no topo e o índice abre, fecha e navega",async({page})=>{
  await page.goto("/");
- const menu=page.getByRole("button",{name:"Abrir menu"});
- if(await menu.isVisible()){
-  await expect(page.getByRole("navigation")).not.toBeVisible();
-  await menu.click();
-  await page.getByRole("button",{name:"Fechar menu"}).press("Escape");
-  await expect(menu).toHaveAttribute("aria-expanded","false");
-  await expect(menu).toBeFocused();
-  await menu.click();
-  await page.getByRole("navigation").getByRole("link",{name:"Saúde mental",exact:true}).click();
-  await expect(page).toHaveURL(/saude-mental$/);
-  await expect(page.getByRole("button",{name:"Abrir menu"})).toHaveAttribute("aria-expanded","false");
- }else{
-  const box=await page.locator(".lupa-navigation").boundingBox();
-  expect(box?.x).toBe(0); expect(box?.y).toBe(0); expect(box?.width).toBeGreaterThan(1100); expect(box?.height).toBeLessThan(110);
-  await page.getByRole("navigation").getByRole("link",{name:"Brasil × EUA",exact:true}).click();
-  await expect(page).toHaveURL(/projecoes$/);
- }
+ const header=await page.locator(".at-header__bar").boundingBox();
+ expect(header?.y).toBe(0); expect(header?.height).toBeLessThan(110);
+ const toggle=page.getByRole("button",{name:"Índice"});
+ await expect(toggle).toHaveAttribute("aria-expanded","false");
+ await toggle.click();
+ const dialog=page.getByRole("dialog",{name:"Índice de pranchas"});
+ await expect(dialog.getByRole("link",{name:/Saúde mental/})).toBeVisible();
+ await page.keyboard.press("Escape");
+ const closed=page.getByRole("button",{name:"Índice"});
+ await expect(closed).toHaveAttribute("aria-expanded","false");
+ await expect(closed).toBeFocused();
+ await closed.click();
+ await dialog.getByRole("link",{name:/Saúde mental/}).click();
+ await expect(page).toHaveURL(/saude-mental$/);
+ await expect(page.getByRole("button",{name:"Índice"})).toHaveAttribute("aria-expanded","false");
 });
 
 test("cenários respondem às premissas e preservam o ano-base",async({page})=>{

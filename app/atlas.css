@@ -310,9 +310,10 @@ h1, h2, h3,
 }
 .at-scrolly[data-step="3"] .at-stamp { scale: 1; opacity: 1; }
 .at-scrolly__steps { list-style: none; margin: 0; padding: 0; }
-.at-scrolly__step { min-height: 72vh; padding: 10vh 0; opacity: .28; transition: opacity .5s var(--at-ease); }
+.at-scrolly__step { position: relative; min-height: 72vh; padding: 10vh 0 10vh 28px; border-left: 2px solid var(--at-line); transition: border-color .5s var(--at-ease); }
 .at-scrolly__step:first-child { padding-top: 0; min-height: 60vh; }
-.at-scrolly__step.is-active { opacity: 1; }
+.at-scrolly__step.is-active { border-left-color: var(--at-prussia-900); }
+.at-scrolly__step:not(.is-active) h3 { color: #3c5068; }
 .at-scrolly__step .at-mono { margin: 0 0 16px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--at-prussia-700); }
 .at-scrolly__step h3 { margin: 0; font-size: clamp(32px, 3.6vw, 56px); font-weight: 800; line-height: 1; letter-spacing: -.04em; color: var(--at-prussia-900); }
 .at-scrolly__step p:last-child { margin: 22px 0 0; max-width: 520px; font-size: 18px; line-height: 1.65; color: #34485f; }
@@ -428,14 +429,14 @@ h1, h2, h3,
 /* ---------- Footer ---------- */
 .at-footer { background: var(--at-prussia-950); color: #fff; border-top: 1px solid rgba(255,255,255,.1); }
 .at-footer__inner { max-width: var(--at-max); margin: 0 auto; padding: 70px var(--at-pad) 40px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr); gap: 40px; }
-.at-footer__word { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(80px, 12vw, 190px); line-height: .8; letter-spacing: -.07em; color: var(--at-prussia-700); }
+.at-footer__word { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(80px, 12vw, 190px); line-height: .8; letter-spacing: -.07em; color: var(--at-prussia-500); }
 .at-footer__claim { margin: 16px 0 0; font-size: 18px; font-weight: 600; }
 .at-footer__nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .at-footer__nav a { display: flex; align-items: center; gap: 12px; min-height: 40px; font-weight: 600; color: var(--at-prussia-150); }
-.at-footer__nav a span { font: 500 11px var(--font-mono); color: var(--at-prussia-500); }
+.at-footer__nav a span { font: 500 11px var(--font-mono); color: var(--at-prussia-300); }
 .at-footer__nav a:hover { color: #fff; }
 .at-footer__meta p { margin: 0 0 12px; font-size: 14px; line-height: 1.55; color: var(--at-prussia-150); }
-.at-footer__meta .at-mono { font-size: 11px; color: var(--at-prussia-500); }
+.at-footer__meta .at-mono { font-size: 11px; color: var(--at-prussia-300); }
 
 /* ---------- Capa das rotas internas ---------- */
 .at-plate { max-width: var(--at-max); margin: 0 auto; padding: 28px var(--at-pad) 10px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 32px; align-items: end; }
@@ -476,7 +477,7 @@ h1, h2, h3,
   .at-waffle { gap: 4px; }
   .at-scrolly__figure { inset: 0 8% auto; }
   .at-stamp { font-size: 12px; right: 0; }
-  .at-scrolly__step { min-height: 0; padding: 36px 0; opacity: 1; }
+  .at-scrolly__step { min-height: 0; padding: 30px 0 30px 20px; }
   .at-benefits__head { grid-template-columns: 1fr; }
   .at-benefits__fig { max-width: 300px; }
   .at-benefits__balance { grid-template-columns: 1fr; }

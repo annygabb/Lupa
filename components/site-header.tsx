@@ -76,8 +76,8 @@ export function SiteHeader() {
   return (
     <header className={"at-header" + (scrolled ? " is-scrolled" : "") + (open ? " is-open" : "")}>
       <div className="at-header__bar">
-        <Link href="/" className="at-brand" aria-label="LUPA Saúde — página inicial">
-          <LupaMark/><span>LUPA</span><em>Saúde</em>
+        <Link href="/" className="at-brand">
+          <LupaMark/><span>LUPA</span>{" "}<em>Saúde</em><span className="sr-only"> — página inicial</span>
         </Link>
         <nav className="at-header__quick" aria-label="Atalhos">
           <Link href="/evidencias" aria-current={pathname.startsWith("/evidencias") ? "page" : undefined}>Evidências</Link>
