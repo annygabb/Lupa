@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+import { Cutout, SplitTitle, motionAllowed } from "./motion";
 
 const nodes = [
   { n: "A", title: "Tratamento", img: "canetas-1", alt: "Cianotipia de duas canetas injetoras entre samambaias", body: "Tirzepatida por 72 semanas, em adultos com obesidade ou sobrepeso.", ref: null },
@@ -26,14 +27,14 @@ export function ConclusionChain() {
 
   useEffect(() => {
     const el = root.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || !motionAllowed()) return;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: ".at-chain__track", start: "top 80%", end: "top 20%", scrub: 0.8 } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: { trigger: ".at-chain__track", start: "top 78%", once: true } });
       gsap.utils.toArray<HTMLElement>(".at-chain__node").forEach((node, i) => {
-        tl.from(node, { y: 60, opacity: 0, rotate: i % 2 ? 2 : -2, duration: 0.6 }, i * 0.8);
+        tl.from(node, { y: 60, opacity: 0, rotate: i % 2 ? 2 : -2, duration: 0.8 }, i * 0.45);
         const link = el.querySelectorAll<HTMLElement>(".at-chain__link")[i];
-        if (link) tl.from(link.querySelector(".at-chain__wire"), { scaleX: 0, scaleY: 0, duration: 0.6, ease: "none" }, i * 0.8 + 0.35);
-        if (link?.dataset.kind === "broken") tl.from(link.querySelector(".at-chain__break"), { scale: 0, rotate: -40, opacity: 0, duration: 0.3, ease: "back.out(2)" }, i * 0.8 + 0.8);
+        if (link) tl.from(link.querySelector(".at-chain__wire"), { scaleX: 0, scaleY: 0, duration: 0.5, ease: "power2.inOut" }, i * 0.45 + 0.35);
+        if (link?.dataset.kind === "broken") tl.from(link.querySelector(".at-chain__break"), { scale: 0, rotate: -40, opacity: 0, duration: 0.3, ease: "back.out(2)" }, i * 0.45 + 0.75);
       });
     }, el);
     return () => ctx.revert();
@@ -41,9 +42,10 @@ export function ConclusionChain() {
 
   return (
     <section ref={root} className="at-chain" data-chapter="Onde a conclusão para" aria-labelledby="chain-title">
+      <Cutout name="folhas-soltas" depth={0.5} rotate={-8} width={200} className="at-chain__cut"/>
       <header className="at-sec-head">
-        <p className="at-kicker">Prancha 00.3 · A assinatura do LUPA</p>
-        <h2 id="chain-title">Onde a conclusão<br/>para.</h2>
+        <p className="at-kicker">Capítulo IV · A assinatura do LUPA</p>
+        <SplitTitle id="chain-title" lines={["Onde a conclusão", "para."]}/>
         <p>Uma manchete liga tudo numa linha só: caneta → perda de músculo → pior recuperação na UTI. A evidência mostra outra coisa: só o primeiro elo foi medido no mesmo estudo.</p>
       </header>
 

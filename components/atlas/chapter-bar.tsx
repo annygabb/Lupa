@@ -25,6 +25,7 @@ export function ChapterBar() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [hidden, setHidden] = useState(false);
   const motionOff = useSyncExternalStore(subscribe, getMotionOff, getServerMotionOff);
 
   useEffect(() => {
@@ -34,17 +35,20 @@ export function ChapterBar() {
       entries.forEach(e => { if (e.isIntersecting) setCurrent(els.indexOf(e.target as HTMLElement)); });
     }, { rootMargin: "-45% 0px -50% 0px" });
     els.forEach(el => io.observe(el));
+    const footer = document.querySelector(".at-footer");
+    const fo = new IntersectionObserver(entries => setHidden(entries.some(e => e.isIntersecting)), { threshold: 0 });
+    if (footer) fo.observe(footer);
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(max > 0 ? window.scrollY / max : 0);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => { cancelAnimationFrame(frame); io.disconnect(); window.removeEventListener("scroll", onScroll); };
+    return () => { cancelAnimationFrame(frame); io.disconnect(); fo.disconnect(); window.removeEventListener("scroll", onScroll); };
   }, []);
 
   if (!chapters.length) return null;
   return (
-    <div className="at-chapter" role="region" aria-label="Progresso da leitura">
+    <div className={"at-chapter" + (hidden ? " is-hidden" : "")} role="region" aria-label="Progresso da leitura">
       <span className="at-chapter__bar" style={{ transform: `scaleX(${progress})` }} aria-hidden="true"/>
       <span className="at-mono at-chapter__n">{String(current + 1).padStart(2, "0")}/{String(chapters.length).padStart(2, "0")}</span>
       <span className="at-chapter__label">{chapters[current]}</span>

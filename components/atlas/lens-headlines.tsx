@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { evidenceQuestions } from "@/features/insights/questions";
+import { Cutout, SplitTitle, motionAllowed } from "./motion";
 
 /**
  * "Passe a lupa na manchete": a manchete fica na camada de cima; a leitura do estudo,
@@ -31,6 +32,23 @@ export function LensHeadlines() {
     gsap.to(radius.current, { r, duration: reduce ? 0 : duration, ease: "power3.out", onUpdate: paint });
   };
 
+  // Demonstração: ao entrar na tela, a lupa aparece sozinha sobre a manchete e some.
+  useEffect(() => {
+    const el = stage.current;
+    if (!el || !motionAllowed()) return;
+    const io = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      pos.current = { x: 34, y: 62 };
+      const tl = gsap.timeline({ onUpdate: paint });
+      tl.to(radius.current, { r: 170, duration: 0.8, ease: "power3.out", delay: 0.4 })
+        .to(pos.current, { x: 66, y: 48, duration: 1.6, ease: "sine.inOut" })
+        .to(radius.current, { r: 0, duration: 0.5, ease: "power2.in" }, "+=0.3");
+    }, { threshold: 0.6 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const choose = (i: number) => {
     setIndex(i);
     setRevealed(false);
@@ -52,15 +70,24 @@ export function LensHeadlines() {
     pos.current = { x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 };
     paint();
   };
-  const onEnter = (e: React.PointerEvent) => { if (!revealed && e.pointerType !== "touch") animateRadius(130, 0.45); };
+  const onEnter = (e: React.PointerEvent) => { if (!revealed && e.pointerType !== "touch") animateRadius(170, 0.45); };
+  const onTap = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch" || revealed) return;
+    const r = stage.current!.getBoundingClientRect();
+    pos.current = { x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 };
+    paint();
+    gsap.killTweensOf(radius.current);
+    gsap.timeline({ onUpdate: paint }).to(radius.current, { r: 130, duration: 0.35, ease: "power3.out" }).to(radius.current, { r: 0, duration: 0.4 }, "+=1.6");
+  };
   const onLeave = () => { if (!revealed) animateRadius(0, 0.3); };
 
   return (
     <section id="lupa" className="at-lens-sec" data-chapter="Passe a lupa na manchete" aria-labelledby="lupa-title">
+      <Cutout name="samambaia-curta" white depth={0.6} rotate={-14} width={260} className="at-lens-sec__cut"/>
       <header className="at-sec-head at-sec-head--light">
-        <p className="at-kicker">Prancha 00.1 · Manchete × estudo</p>
-        <h2 id="lupa-title">Passe a lupa<br/>na manchete.</h2>
-        <p>Escolha uma frase que circula por aí. Passe o cursor para espiar o que o estudo mediu, ou abra a leitura completa.</p>
+        <p className="at-kicker">Capítulo I · Manchete × estudo</p>
+        <SplitTitle id="lupa-title" lines={["Passe a lupa", "na manchete."]}/>
+        <p>Escolha uma frase que circula por aí. Passe o cursor (ou toque) sobre a manchete para espiar o que o estudo mediu, ou abra a leitura completa.</p>
       </header>
 
       <div className="at-lens-sec__body">
@@ -76,7 +103,7 @@ export function LensHeadlines() {
 
         <div className="at-lens-sec__panel">
           <div ref={stage} className={"at-lens-stage" + (revealed ? " is-revealed" : "")}
-            onPointerMove={onMove} onPointerEnter={onEnter} onPointerLeave={onLeave}>
+            onPointerMove={onMove} onPointerEnter={onEnter} onPointerLeave={onLeave} onPointerDown={onTap}>
             <div className="at-lens-stage__headline">
               <p className="at-mono">Manchete {String(index + 1).padStart(2, "0")}</p>
               <p className="at-lens-stage__q">{q.question}</p>

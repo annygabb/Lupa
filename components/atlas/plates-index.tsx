@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { ViewTransition, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { plates } from "./plates";
+import { Cutout, SplitTitle } from "./motion";
 
 /** Índice de pranchas com prévia que segue o cursor (desktop) e miniatura fixa (toque). */
 export function PlatesIndex() {
@@ -19,7 +20,7 @@ export function PlatesIndex() {
     const yTo = gsap.quickTo(p, "y", { duration: 0.5, ease: "power3" });
     const move = (e: PointerEvent) => {
       const r = l.getBoundingClientRect();
-      xTo(e.clientX - r.left); yTo(e.clientY - r.top);
+      xTo(r.width * 0.6); yTo(e.clientY - r.top);
     };
     l.addEventListener("pointermove", move);
     return () => l.removeEventListener("pointermove", move);
@@ -27,9 +28,10 @@ export function PlatesIndex() {
 
   return (
     <section className="at-index" data-chapter="Por onde começar" aria-labelledby="index-title">
+      <Cutout name="comprimidos" depth={0.6} rotate={14} width={170} className="at-index__cut"/>
       <header className="at-sec-head">
-        <p className="at-kicker">Por onde começar</p>
-        <h2 id="index-title">Seis pranchas.<br/>Uma pergunta em cada.</h2>
+        <p className="at-kicker">Capítulo VI · Por onde começar</p>
+        <SplitTitle id="index-title" lines={["Seis pranchas.", "Uma pergunta em cada."]}/>
       </header>
 
       <div className="at-index__profiles">
@@ -54,9 +56,11 @@ export function PlatesIndex() {
         </ul>
         <div ref={preview} className={"at-index__preview" + (hover !== null ? " is-on" : "")} aria-hidden="true">
           {plates.map((p, i) => (
-            <div key={p.href} className={"at-index__preview-img" + (hover === i ? " is-active" : "")}>
-              <Image src={p.image} alt="" fill sizes="320px"/>
-            </div>
+            <ViewTransition key={p.href} name={hover === i ? `plate-${p.n}` : undefined}>
+              <div className={"at-index__preview-img" + (hover === i ? " is-active" : "")}>
+                <Image src={p.image} alt="" fill sizes="320px"/>
+              </div>
+            </ViewTransition>
           ))}
         </div>
       </div>

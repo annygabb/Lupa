@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+import { Cutout, SplitTitle } from "./motion";
 
 /** Dados do subestudo DXA do SURMOUNT-1 (E04 · M01–M03), conferidos na fonte. */
 const steps = [
@@ -44,7 +45,7 @@ export function CompositionScrolly() {
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>(".at-scrolly__step").forEach((step, i) => {
         ScrollTrigger.create({
-          trigger: step, start: "top 62%", end: "bottom 62%",
+          trigger: step, start: "top 78%", end: "bottom 78%",
           onToggle: self => { if (self.isActive) setActive(i); },
         });
       });
@@ -54,9 +55,10 @@ export function CompositionScrolly() {
 
   return (
     <section ref={root} className="at-scrolly" data-chapter="O que foi perdido?" aria-labelledby="scrolly-title" data-step={active}>
+      <Cutout name="eucalipto" depth={0.7} rotate={10} width={150} className="at-scrolly__cut"/>
       <header className="at-sec-head">
-        <p className="at-kicker">Prancha 00.2 · Composição corporal · E04</p>
-        <h2 id="scrolly-title">O peso caiu.<br/>O que foi perdido?</h2>
+        <p className="at-kicker">Capítulo II · Composição corporal · E04</p>
+        <SplitTitle id="scrolly-title" lines={["O peso caiu.", "O que foi perdido?"]}/>
       </header>
 
       <div className="at-scrolly__grid">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { unifiedEvidenceCatalog, type EvidenceTopic } from "@/features/evidence/unified-catalog";
 import { designNames, topicNames } from "@/lib/evidence-presentation";
+import { Cutout, SplitTitle, CountUp } from "./motion";
 
 /** Grupos editoriais: cada estudo entra uma vez, pelo primeiro tema que se encaixa. */
 const groups: { key: string; label: string; topics: EvidenceTopic[] }[] = [
@@ -28,9 +29,11 @@ export function ArchiveField() {
 
   return (
     <section className="at-archive" data-chapter="O acervo" aria-labelledby="archive-title">
+      <Cutout name="dente-de-leao" white depth={0.8} rotate={6} width={170} className="at-archive__cut"/>
+      <Cutout name="semente-alada" white depth={1.1} rotate={-20} width={120} className="at-archive__cut2"/>
       <header className="at-sec-head at-sec-head--light">
-        <p className="at-kicker">Prancha 00.4 · O acervo</p>
-        <h2 id="archive-title">50 estudos.<br/>Nenhum lido pela metade.</h2>
+        <p className="at-kicker">Capítulo V · O acervo</p>
+        <SplitTitle id="archive-title" lines={["50 estudos.", "Cada um com população,", "método e limite."]}/>
         <p>Cada marca é uma das 50 referências únicas em curadoria do catálogo, agrupada por tema. A forma indica o tipo de estudo. Todas seguem em curadoria, sem revisão clínica independente.</p>
       </header>
 
@@ -66,9 +69,9 @@ export function ArchiveField() {
       </div>
 
       <dl className="at-archive__counts">
-        <div><dt>Referências canônicas</dt><dd>50</dd></div>
-        <div><dt>Indicadores conferidos na fonte</dt><dd>5</dd></div>
-        <div><dt>Projeções clínicas autorizadas</dt><dd>0</dd></div>
+        <div><dt>Referências únicas no acervo</dt><dd><CountUp value={50}/></dd></div>
+        <div><dt>Indicadores conferidos no artigo original</dt><dd><CountUp value={5}/></dd></div>
+        <div><dt>Projeções clínicas feitas pelo LUPA</dt><dd>0</dd></div>
       </dl>
       <Link className="at-btn at-btn--light" href="/evidencias">Abrir o explorador de evidências</Link>
     </section>

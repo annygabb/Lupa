@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "lenis/dist/lenis.css";
 import "./globals.css";
-import "./lupa-premium.css";
-import "./editorial.css";
+import "./clinical-chart.css";
 import "./atlas.css";
+import "./atlas-system.css";
 import { display, body, mono } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";

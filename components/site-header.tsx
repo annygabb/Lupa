@@ -21,6 +21,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [peek, setPeek] = useState(0);
   const overlay = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const tl = useRef<gsap.core.Timeline | null>(null);
@@ -94,7 +95,7 @@ export function SiteHeader() {
           <span className="at-menu__panel"/><span className="at-menu__panel"/><span className="at-menu__panel"/><span className="at-menu__panel"/>
         </div>
         <div className="at-menu__inner">
-          <p className="at-kicker at-menu__kicker">Índice do atlas · 6 pranchas</p>
+          <p className="at-kicker at-menu__kicker">Índice do atlas · início e seis pranchas</p>
           <ul className="at-menu__list">
             <li className="at-menu__row-wrap">
               <Link className="at-menu__row" href="/" onClick={() => setOpen(false)} aria-current={pathname === "/" ? "page" : undefined}>
@@ -103,7 +104,7 @@ export function SiteHeader() {
             </li>
             {plates.map(p => (
               <li key={p.href} className="at-menu__row-wrap">
-                <Link className="at-menu__row" href={p.href} onClick={() => setOpen(false)} aria-current={pathname.startsWith(p.href) ? "page" : undefined}>
+                <Link className="at-menu__row" href={p.href} onClick={() => setOpen(false)} onPointerEnter={() => setPeek(plates.indexOf(p))} onFocus={() => setPeek(plates.indexOf(p))} aria-current={pathname.startsWith(p.href) ? "page" : undefined}>
                   <span className="at-menu__n">{p.n}</span>
                   <span className="at-menu__label">{p.label}</span>
                   <span className="at-menu__thumb" aria-hidden="true"><Image src={p.image} alt="" width={160} height={160} sizes="80px"/></span>
@@ -111,6 +112,14 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
+          <div className="at-menu__peek" aria-hidden="true">
+            {plates.map((p, i) => (
+              <figure key={p.href} className={"at-menu__peek-img" + (peek === i ? " is-active" : "")}>
+                <Image src={p.image} alt="" fill sizes="(max-width: 1100px) 0px, 34vw"/>
+                <figcaption className="at-mono">Prancha {p.n} · {p.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
           <p className="at-menu__foot">Ferramenta de pesquisa. Não oferece diagnóstico, prescrição nem estimativa de risco individual.</p>
         </div>
       </div>

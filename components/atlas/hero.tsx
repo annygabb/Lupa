@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { CyanotypePlate } from "./cyanotype-plate";
+import { Cutout, Magnetic, motionAllowed } from "./motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,17 +21,14 @@ const tags = [
 
 export function AtlasHero() {
   const root = useRef<HTMLElement>(null);
-  const plate = useRef<HTMLDivElement>(null);
-  const lens = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
-      if (!reduce) {
+      if (motionAllowed()) {
         gsap.from(".at-hero__line > span", { yPercent: 115, rotate: 2.5, duration: 1.1, ease: "power4.out", stagger: 0.09, delay: 0.1 });
-        gsap.from(".at-hero__plate", { clipPath: "inset(12% 12% 12% 12% round 6px)", scale: 1.08, opacity: 0, duration: 1.4, ease: "power3.out", delay: 0.25 });
+        gsap.from(".at-hero__plate", { y: 60, rotate: 6, scale: 0.94, duration: 1.6, ease: "power3.out", delay: 0.15 });
         gsap.from(".at-tag", { y: 40, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.12, delay: 0.75 });
         gsap.from(".at-hero__lead > *", { y: 18, opacity: 0, duration: 0.8, ease: "power2.out", stagger: 0.08, delay: 0.6 });
         // Parallax em camadas: cada etiqueta tem sua profundidade.
@@ -42,29 +41,6 @@ export function AtlasHero() {
       }
     }, el);
     return () => ctx.revert();
-  }, []);
-
-  // Lupa sobre a prancha: amplia 2,2x o ponto sob o cursor.
-  useEffect(() => {
-    const p = plate.current, l = lens.current;
-    if (!p || !l || window.matchMedia("(hover: none)").matches) return;
-    const zoom = 2.2;
-    const xTo = gsap.quickTo(l, "x", { duration: 0.35, ease: "power3" });
-    const yTo = gsap.quickTo(l, "y", { duration: 0.35, ease: "power3" });
-    const move = (e: PointerEvent) => {
-      const r = p.getBoundingClientRect();
-      const x = e.clientX - r.left, y = e.clientY - r.top;
-      const size = l.offsetWidth;
-      xTo(x - size / 2); yTo(y - size / 2);
-      l.style.backgroundSize = `${r.width * zoom}px ${r.height * zoom}px`;
-      l.style.backgroundPosition = `${-(x * zoom - size / 2)}px ${-(y * zoom - size / 2)}px`;
-    };
-    const enter = () => gsap.to(l, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.6)" });
-    const leave = () => gsap.to(l, { scale: 0.4, opacity: 0, duration: 0.25 });
-    p.addEventListener("pointermove", move);
-    p.addEventListener("pointerenter", enter);
-    p.addEventListener("pointerleave", leave);
-    return () => { p.removeEventListener("pointermove", move); p.removeEventListener("pointerenter", enter); p.removeEventListener("pointerleave", leave); };
   }, []);
 
   return (
@@ -80,13 +56,15 @@ export function AtlasHero() {
         <span className="at-hero__line at-hero__line--blue"><span>além do peso?</span></span>
       </h1>
 
+      <Cutout name="samambaia-alta" depth={0.9} rotate={-10} width={170} className="at-hero__cut at-hero__cut--a"/>
+      <Cutout name="dente-de-leao" depth={0.6} rotate={8} width={120} className="at-hero__cut at-hero__cut--b"/>
       <div className="at-hero__stage">
         <div className="at-hero__plate-wrap">
-          <div ref={plate} className="at-hero__plate">
-            <Image src={HERO_IMG} alt="Cianotipia de uma lupa cujo cabo é uma caneta injetora graduada, entre folhas de samambaia e comprimidos" fill priority sizes="(max-width: 900px) 90vw, 46vw"/>
-            <div ref={lens} className="at-hero__lens" aria-hidden="true" style={{ backgroundImage: `url(${HERO_IMG})` }}/>
+          <div className="at-hero__plate">
+            <CyanotypePlate src={HERO_IMG} priority sizes="(max-width: 900px) 90vw, 46vw"
+              alt="Cianotipia de uma lupa cujo cabo é uma caneta injetora graduada, entre folhas de samambaia e comprimidos"/>
           </div>
-          <p className="at-hero__caption at-mono">Fig. 1 — A lupa e a caneta. Cianotipia digital.</p>
+          <p className="at-hero__caption at-mono">Fig. 0 — A lupa e a caneta. Passe o cursor sobre a prancha.</p>
         </div>
         {tags.map(t => (
           <Link key={t.id} href={t.href} className={`at-tag at-tag--${t.pos}`} data-depth={t.depth}>
@@ -101,8 +79,8 @@ export function AtlasHero() {
       <div className="at-hero__lead">
         <p>Pesquisas sobre <strong>semaglutida</strong> e <strong>tirzepatida</strong>, explicadas para entender benefícios, riscos e o que ainda não sabemos. Para profissionais de saúde, estudantes e pessoas que querem compreender o tratamento.</p>
         <div className="at-hero__actions">
-          <a className="at-btn at-btn--solid" href="#lupa">Passe a lupa nas manchetes <span aria-hidden="true">↓</span></a>
-          <Link className="at-btn at-btn--line" href="/evidencias">Consultar os 50 estudos</Link>
+          <Magnetic><a className="at-btn at-btn--solid" href="#lupa">Passe a lupa nas manchetes <span aria-hidden="true">↓</span></a></Magnetic>
+          <Magnetic><Link className="at-btn at-btn--line" href="/evidencias">Consultar os 50 estudos</Link></Magnetic>
         </div>
       </div>
     </section>
