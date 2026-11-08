@@ -5,7 +5,7 @@ const mainRoutes = [
   {path:"/evidencias", title:/Estudos sobre medicamentos para emagrecer/i},
   {path:"/comparar", title:/Compare estudos/i},
   {path:"/musculos-uti", title:/Além do peso/i},
-  {path:"/projecoes", title:/O futuro do tratamento/i},
+  {path:"/projecoes", title:/O que sabemos hoje/i},
   {path:"/metodologia", title:/Cada conclusão precisa/i},
 ] as const;
 

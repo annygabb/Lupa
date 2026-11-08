@@ -94,6 +94,10 @@ export function MuscleResearch() {
           })}
         </section>
 
+        <section className="icu-context" aria-label="Medicamentos e cuidados críticos">
+          <div className="section-intro"><div><p className="eyebrow">O medicamento foi avaliado?</p><h2>GLP-1 antes da UTI: o que foi observado</h2></div><p>Uma comparação direta de pacientes com e sem prescrição anterior. A exposição não era exclusivamente para emagrecimento.</p></div>
+          <ClinicalChart initial="icu-glp1" only={["icu-glp1"]}/>
+        </section>
         <section className="icu-context" aria-labelledby="icu-observed-title">
           <div className="section-intro"><div><p className="eyebrow">Gravidade e perda muscular · observação real</p><h2 id="icu-observed-title">O músculo também importa quando a doença se agrava</h2></div><p>Uma coorte acompanhou pacientes críticos com falência de um ou de múltiplos órgãos. Esta comparação é observada, não uma projeção de quem usou medicamento para emagrecer.</p></div>
           <ClinicalChart initial="icu" only={["icu"]}/>

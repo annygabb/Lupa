@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { WeightComposition } from "@/components/home/weight-composition";
 import { ClinicalChart } from "@/components/insights/clinical-chart";
@@ -20,9 +21,10 @@ export default function Home(){
     <p className="hero-audience">Para profissionais de saúde, estudantes e pessoas que querem compreender o tratamento.</p>
     <div className="hero-actions"><a className="editorial-button" href="#beneficios">Entender benefícios e cuidados <ArrowRight size={18} aria-hidden="true"/></a><Link className="text-link" href="/evidencias">Consultar estudos <ArrowUpRight size={16} aria-hidden="true"/></Link></div>
    </div>
-   <WeightComposition/>
+   <figure className="injection-visual"><Image src="/images/canetas-3d.webp" alt="Ilustração 3D de duas canetas injetoras genéricas, nas cores branco e verde sálvia" width={1200} height={800} priority sizes="(max-width: 600px) 100vw, 48vw"/><figcaption>O tratamento vai além da aplicação.<br/><span>Ilustração de canetas genéricas, sem marca.</span></figcaption></figure>
   </section>
   <div className="editorial-purpose"><p>Por que o LUPA existe</p><h2>Entre a promessa de emagrecer e a decisão de cuidar, falta contexto.</h2><p>Uma notícia pode falar de redução de peso. Outra, de perda muscular ou saúde mental. Reunimos essas perguntas, explicamos os resultados e mostramos a fonte — para apoiar uma leitura crítica e uma conversa mais informada com a equipe de saúde.</p></div>
+  <section className="composition-section" aria-label="Composição do peso perdido"><WeightComposition/><div><p className="eyebrow">Uma pergunta que a balança não responde</p><h2>O peso diminuiu.<br/>O que foi perdido?</h2><p>Gordura e massa magra são partes diferentes do resultado. O acompanhamento precisa olhar para além do número na balança.</p><Link className="text-link" href="/musculos-uti">Entender a saúde muscular <ArrowRight size={18} aria-hidden="true"/></Link></div></section>
   <section id="beneficios" className="editorial-section" aria-labelledby="benefits-heading">
    <div className="section-intro"><div><p className="eyebrow">Benefícios e pontos de atenção</p><h2 id="benefits-heading">Tratamentos para emagrecer.<br/>Mais de uma dimensão de cuidado.</h2></div><p>Escolha uma pergunta e veja o resultado medido. Cada gráfico mantém o estudo, a população e o limite da interpretação.</p></div>
    <ClinicalChart/>

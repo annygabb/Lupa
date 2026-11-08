@@ -25,3 +25,15 @@ test.describe("WCAG automatizado — regras A e AA verificáveis",()=>{
     });
   }
 });
+
+test("comparação e cenários mantêm acessibilidade nas visualizações alternativas",async({page})=>{
+ await page.goto("/projecoes");
+ await page.getByRole("button",{name:"Estados Unidos",exact:true}).click();
+ await page.getByLabel("Entenda o ponto selecionado").getByText("População, limites e premissas").click();
+ let results=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"]).analyze();
+ expect(results.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+ await page.getByRole("button",{name:"Explorar cenários",exact:true}).click();
+ await page.getByText("5,1% versus 4,9% prova que GLP-1 aumenta a mortalidade?",{exact:true}).click();
+ results=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"]).analyze();
+ expect(results.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+});
