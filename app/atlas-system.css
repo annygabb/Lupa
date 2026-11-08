@@ -126,3 +126,18 @@ html[data-motion=off]::view-transition-old(*), html[data-motion=off]::view-trans
 .at-plate-gl.is-gl canvas { opacity: 1; }
 .at-plate-gl.is-gl.has-lens { cursor: none; }
 @media (hover: none) { .at-plate-gl.has-lens { cursor: auto; } }
+
+/* Celular: primitivas compartilhadas mais compactas */
+@media (max-width: 640px) {
+  .at-section { padding: 64px 20px; }
+  .at-section__head { margin-bottom: 32px; }
+  .at-section__title { font-size: clamp(36px, 10.5vw, 52px); }
+  .at-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .at-stats dd { font-size: clamp(40px, 12vw, 60px); }
+  .at-stats dt { font-size: 12px; letter-spacing: .04em; }
+  .at-chapter-hero { padding-bottom: 48px; }
+  .at-chapter-hero__meta { margin-bottom: 28px; }
+  .at-chapter-hero__fig { max-width: 240px; margin-top: 32px; }
+  .at-limit { padding: 16px; }
+  .at-card { padding: 18px; }
+}

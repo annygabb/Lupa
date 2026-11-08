@@ -72,12 +72,8 @@ export function LensHeadlines() {
   };
   const onEnter = (e: React.PointerEvent) => { if (!revealed && e.pointerType !== "touch") animateRadius(170, 0.45); };
   const onTap = (e: React.PointerEvent) => {
-    if (e.pointerType !== "touch" || revealed) return;
-    const r = stage.current!.getBoundingClientRect();
-    pos.current = { x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 };
-    paint();
-    gsap.killTweensOf(radius.current);
-    gsap.timeline({ onUpdate: paint }).to(radius.current, { r: 130, duration: 0.35, ease: "power3.out" }).to(radius.current, { r: 0, duration: 0.4 }, "+=1.6");
+    if (e.pointerType !== "touch" || (e.target as HTMLElement).closest("a")) return;
+    toggleReveal();
   };
   const onLeave = () => { if (!revealed) animateRadius(0, 0.3); };
 

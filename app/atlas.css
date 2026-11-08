@@ -609,3 +609,58 @@ html[data-motion=off] .evidence-bar { animation: none; }
 .at-menu__peek-img img { object-fit: cover; }
 .at-menu__peek-img figcaption { position: absolute; left: 12px; right: 12px; bottom: 12px; padding: 8px 10px; background: rgba(255,255,255,.94); color: var(--at-prussia-900); font-size: 12.5px; line-height: 1.4; border-radius: 3px; }
 @media (max-width: 1100px) { .at-menu__list { max-width: none; } .at-menu__peek { display: none; } }
+
+/* ==========================================================================
+   Alinhamento consistente: todo texto corrido à esquerda, com quebra cuidada
+   ========================================================================== */
+p, li, dd, figcaption, .at-limit__body, .at-section__intro { text-align: left; text-wrap: pretty; }
+h1, h2, h3, .at-split { text-wrap: balance; }
+.at-chain__label { text-align: center; }
+
+/* ==========================================================================
+   Celular: experiência pensada para toque e leitura rápida
+   ========================================================================== */
+.at-menu__motion { margin-top: 28px; }
+.at-menu__motion .at-chapter__motion { min-height: 44px; }
+@media (max-width: 900px) {
+  /* "Passe a lupa" vira acordeão: toque na manchete abre a leitura do estudo */
+  .at-lens-stage { display: block; min-height: 0; cursor: pointer; }
+  .at-lens-stage__headline { min-height: 0; gap: 22px; }
+  .at-lens-stage__study { display: none; clip-path: none !important; }
+  .at-lens-stage.is-revealed .at-lens-stage__study { display: block; }
+  .at-lens-stage__ring { display: none; }
+  .at-lens-stage__headline::after { content: "Toque para ver o que o estudo mediu ↓"; font: 600 13px var(--font-mono); color: var(--at-prussia-300); }
+  .at-lens-stage.is-revealed .at-lens-stage__headline::after { content: "Leitura do estudo ↓"; }
+  /* Scrollytelling estático: a grade já mostra o resultado */
+  .at-scrolly__visual { position: static; background: none; padding: 0; }
+  .at-scrolly__sticky { max-width: 260px; margin: 0 auto 8px; }
+  .at-scrolly .at-waffle__cell.is-fat { background: var(--at-prussia-900) !important; opacity: 1 !important; transform: none !important; }
+  .at-scrolly .at-waffle__cell.is-lean { background: var(--at-prussia-300) !important; opacity: 1 !important; transform: none !important; }
+  .at-scrolly__figure, .at-stamp { display: none; }
+  .at-scrolly__step { border-left-width: 2px; padding: 24px 0 24px 18px; }
+  /* Legenda da figura do propósito não sobrepõe o texto */
+  .at-purpose__fig { margin-bottom: 40px; }
+  .at-purpose__fig figcaption { display: none; }
+  .at-scrolly__step:first-child { min-height: 0; padding-top: 24px; }
+}
+@media (max-width: 640px) {
+  /* Barra de capítulos sai do caminho no celular (o controle de movimento fica no menu) */
+  .at-chapter { display: none; }
+  /* Hero: uma etiqueta só, abaixo da prancha */
+  .at-hero__stage { min-height: 0; }
+  .at-tag--b, .at-tag--c { display: none; }
+  .at-tag--a { position: relative; left: auto; right: auto; top: auto; bottom: auto; rotate: 0deg; scale: 1; width: 100%; max-width: 340px; margin: 26px auto 0; }
+  /* Seções mais compactas */
+  .at-purpose, .at-scrolly, .at-benefits, .at-chain, .at-index { padding-top: 64px; padding-bottom: 64px; }
+  .at-lens-sec, .at-archive, .at-closing { padding-top: 72px; padding-bottom: 72px; }
+  .at-sec-head h2, .at-split.at-section__title { font-size: clamp(36px, 10.5vw, 52px); }
+  .at-lens-sec__body { margin-top: 36px; }
+  .at-archive__counts { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 44px; }
+  .at-archive__counts dd { font-size: clamp(40px, 12vw, 60px); }
+  .at-archive__counts dt { font-size: 12px; letter-spacing: .04em; }
+  .at-index__list { margin-top: 40px; }
+  .at-index__row { padding: 16px 0; }
+  .at-index__label { font-size: 28px; }
+  .at-closing { min-height: 0; }
+  .at-footer__inner { padding-top: 48px; gap: 28px; }
+}

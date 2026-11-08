@@ -2,12 +2,21 @@ import { test, expect } from "@playwright/test";
 
 test("barra de capítulos acompanha a leitura e o movimento pode ser desligado", async ({ page }) => {
   await page.goto("/");
-  const bar = page.getByRole("region", { name: "Progresso da leitura" });
-  await expect(bar).toBeVisible();
-  await expect(bar).toContainText("Canetas para emagrecer");
-  await page.locator(".at-chain").scrollIntoViewIfNeeded();
-  await expect(bar).toContainText("Onde a conclusão para");
-  const toggle = bar.getByRole("button", { name: /Movimento/ });
+  const narrow = (page.viewportSize()?.width ?? 1280) <= 640;
+  let toggle;
+  if (narrow) {
+    // No celular a barra sai do caminho; o controle de movimento fica no menu Índice.
+    await expect(page.getByRole("region", { name: "Progresso da leitura" })).toBeHidden();
+    await page.getByRole("button", { name: "Índice" }).click();
+    toggle = page.getByRole("dialog", { name: "Índice de pranchas" }).getByRole("button", { name: /Movimento/ });
+  } else {
+    const bar = page.getByRole("region", { name: "Progresso da leitura" });
+    await expect(bar).toBeVisible();
+    await expect(bar).toContainText("Canetas para emagrecer");
+    await page.locator(".at-chain").scrollIntoViewIfNeeded();
+    await expect(bar).toContainText("Onde a conclusão para");
+    toggle = bar.getByRole("button", { name: /Movimento/ });
+  }
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", "false");

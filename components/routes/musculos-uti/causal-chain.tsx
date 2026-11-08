@@ -22,19 +22,19 @@ export function CausalChain() {
     const el = root.current;
     if (!el || !motionAllowed()) return;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 78%", end: "bottom 60%", scrub: 0.7 } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, scrollTrigger: { trigger: el, start: "top 78%", once: true } });
       const desktop = window.matchMedia("(min-width: 1101px)").matches;
       const nodes = gsap.utils.toArray<HTMLElement>(".mu-chain__node");
       const segs = gsap.utils.toArray<HTMLElement>(desktop ? ".mu-chain__seg" : ".mu-chain__link");
       const dots = gsap.utils.toArray<HTMLElement>(".mu-chain__dot");
       nodes.forEach((node, i) => {
-        tl.from(node, { y: 70, opacity: 0, rotate: i % 2 ? 2.5 : -2.5, duration: 0.6 }, i * 0.8);
-        if (desktop && dots[i]) tl.from(dots[i], { scale: 0, duration: 0.3, ease: "back.out(2)" }, i * 0.8);
+        tl.from(node, { y: 70, opacity: 0, rotate: i % 2 ? 2.5 : -2.5, duration: 0.6 }, i * 0.45);
+        if (desktop && dots[i]) tl.from(dots[i], { scale: 0, duration: 0.3, ease: "back.out(2)" }, i * 0.45);
         const seg = segs[i];
         if (!seg) return;
-        tl.from(seg.querySelector(desktop ? ".mu-chain__line" : ".mu-chain__wire"), { scale: 0, duration: 0.55, ease: "none" }, i * 0.8 + 0.35);
+        tl.from(seg.querySelector(desktop ? ".mu-chain__line" : ".mu-chain__wire"), { scale: 0, duration: 0.5, ease: "power2.inOut" }, i * 0.45 + 0.3);
         const brk = seg.querySelector(".mu-chain__break");
-        if (brk) tl.from(brk, { scale: 0, rotate: -60, opacity: 0, duration: 0.3, ease: "back.out(2.4)" }, i * 0.8 + 0.85);
+        if (brk) tl.from(brk, { scale: 0, rotate: -60, opacity: 0, duration: 0.3, ease: "back.out(2.4)" }, i * 0.45 + 0.7);
       });
     }, el);
     return () => ctx.revert();

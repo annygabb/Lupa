@@ -62,7 +62,7 @@
 .cp-beam__pan-label--a { left: 15%; }
 .cp-beam__pan-label--b { left: 85%; }
 .cp-beam.is-same .cp-beam__pan-label { background: var(--at-amber); }
-.cp-bench__caption { max-width: 640px; margin: 18px auto 0; text-align: center; font-size: 15.5px; line-height: 1.6; color: #3c5068; }
+.cp-bench__caption { max-width: 640px; margin: 18px 0 0; text-align: left; font-size: 15.5px; line-height: 1.6; color: #3c5068; }
 .cp-bench__caption .at-mono { font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--at-prussia-900); }
 
 /* Fichas de herbário */

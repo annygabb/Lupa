@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { plates } from "@/components/atlas/plates";
+import { MotionToggle } from "@/components/atlas/chapter-bar";
 
 function LupaMark() {
   return (
@@ -120,6 +121,7 @@ export function SiteHeader() {
               </figure>
             ))}
           </div>
+          <div className="at-menu__motion"><MotionToggle/></div>
           <p className="at-menu__foot">Ferramenta de pesquisa. Não oferece diagnóstico, prescrição nem estimativa de risco individual.</p>
         </div>
       </div>

@@ -31,7 +31,7 @@ export function EvidenceBars({plot}:{plot:ClinicalPlot}) {
       })}
     </svg>
     <div className="mobile-evidence-bars" aria-hidden="true">
-      {plot.arms.map((arm,i)=><div key={arm.label} className="mobile-evidence-row"><p>{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}<strong>{arm.value>0&&min<0?"+":""}{number(arm.value)}%</strong></p><div className="mobile-evidence-track"><span style={{left:`${(Math.min(0,arm.value)-low)/(high-low||1)*100}%`,width:`${Math.abs(arm.value)/(high-low||1)*100}%`,background:i===0?"#2558c8":"#b9c9e6"}}/></div></div>)}
+      {plot.arms.map((arm,i)=><div key={arm.label} className="mobile-evidence-row"><p>{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}<strong>{arm.value>0&&min<0?"+":""}{number(arm.value)}%</strong></p><div className="mobile-evidence-track"><span style={{left:`${(Math.min(0,arm.value)-low)/(high-low||1)*100}%`,width:`${Math.abs(arm.value)/(high-low||1)*100}%`,background:i===0?"#0e2a4a":"#9dbedc"}}/></div></div>)}
       <div className="mobile-chart-axis"><span>{number(low)}%</span><span>{number(high)}%</span></div>
     </div>
     <details className="chart-data"><summary>Ver valores em tabela</summary>

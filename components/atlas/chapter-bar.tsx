@@ -17,6 +17,16 @@ function setMotion(off: boolean) {
   window.dispatchEvent(new CustomEvent("lupa:motion", { detail: !off }));
 }
 
+/** Botão "Movimento ligado/desligado" (usado na barra de capítulos e no menu). */
+export function MotionToggle({ className = "" }: { className?: string }) {
+  const motionOff = useSyncExternalStore(subscribe, getMotionOff, getServerMotionOff);
+  return (
+    <button type="button" className={"at-chapter__motion at-mono " + className} aria-pressed={!motionOff} onClick={() => setMotion(!motionOff)}>
+      Movimento {motionOff ? "desligado" : "ligado"}
+    </button>
+  );
+}
+
 /**
  * Barra fixa de leitura (padrão de The Shape of Intelligence / Compass Pathways):
  * capítulo atual, progresso e um controle para desligar o movimento.
@@ -26,7 +36,6 @@ export function ChapterBar() {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [hidden, setHidden] = useState(false);
-  const motionOff = useSyncExternalStore(subscribe, getMotionOff, getServerMotionOff);
 
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>("[data-chapter]"));
@@ -52,9 +61,7 @@ export function ChapterBar() {
       <span className="at-chapter__bar" style={{ transform: `scaleX(${progress})` }} aria-hidden="true"/>
       <span className="at-mono at-chapter__n">{String(current + 1).padStart(2, "0")}/{String(chapters.length).padStart(2, "0")}</span>
       <span className="at-chapter__label">{chapters[current]}</span>
-      <button type="button" className="at-chapter__motion at-mono" aria-pressed={!motionOff} onClick={() => setMotion(!motionOff)}>
-        Movimento {motionOff ? "desligado" : "ligado"}
-      </button>
+      <MotionToggle/>
     </div>
   );
 }
