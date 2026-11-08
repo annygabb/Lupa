@@ -17,7 +17,7 @@ test("observações e cenários mantêm denominadores e premissas",async({page})
  await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("23,8%");
  await page.getByRole("button",{name:"Estados Unidos",exact:true}).click();
  await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("12,0%");
- await page.getByRole("button",{name:/Adultos do painel nacional · Mar\/2024/}).click();
+ await page.locator(".chart-point-buttons").getByRole("button",{name:/Adultos do painel nacional · Mar\/2024/}).click();
  await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("8,2%");
  await page.getByLabel("O que você quer investigar?").selectOption("icu");
  await expect(page.getByRole("heading",{name:/Uso prévio de GLP-1 e mortalidade/})).toBeVisible();
@@ -55,4 +55,16 @@ test("navegação fica no topo e abre no celular",async({page})=>{
   await page.getByRole("navigation").getByRole("link",{name:"Brasil × EUA",exact:true}).click();
   await expect(page).toHaveURL(/projecoes$/);
  }
+});
+
+test("cenários respondem às premissas e preservam o ano-base",async({page})=>{
+ await page.goto("/projecoes");
+ await page.getByRole("button",{name:"Explorar cenários",exact:true}).click();
+ await page.getByLabel("Início anual assumido").press("Home");
+ await page.getByLabel("Continuidade anual assumida").press("Home");
+ await page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:"2031",exact:true}).click();
+ await page.locator(".chart-point-buttons").getByRole("button",{name:"Acesso constante · 2031",exact:false}).click();
+ await expect(page.locator(".metric-detail-value")).toHaveText("0");
+ await page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:"2026",exact:true}).click();
+ await expect(page.locator(".metric-detail-value")).toHaveText("100");
 });
