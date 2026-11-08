@@ -43,7 +43,7 @@ export function EvidenceBars({plot}:{plot:ClinicalPlot}) {
 }
 
 export function ClinicalChart({initial="cardio",only}:{initial?:string;only?:readonly string[]}) {
-  const options=only?clinicalPlots.filter(p=>only.includes(p.id)):clinicalPlots.filter(p=>p.id!=="icu");
+  const options=only?clinicalPlots.filter(p=>only.includes(p.id)):clinicalPlots.filter(p=>!p.id.startsWith("icu"));
   const [selected,setSelected]=useState(initial);
   const plot=options.find(p=>p.id===selected)??options[0];
   return <section className="clinical-chart" aria-label="Resultados medidos nos estudos">

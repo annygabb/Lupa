@@ -59,6 +59,16 @@ export const clinicalPlots: readonly ClinicalPlot[] = [
     locator:"Resumo, Results; mudança média do peso entre semanas 36 e 88",approvedForProjection:false,
   },
   {
+    id:"icu-glp1",label:"GLP-1 e UTI",title:"Uso prévio de GLP-1 e mortalidade hospitalar na UTI",
+    question:"O estudo encontrou maior mortalidade entre usuários de GLP-1?",unit:"% de pacientes",axisLabel:"Mortalidade hospitalar entre pacientes críticos (%)",
+    arms:[{label:"Prescrição prévia de GLP-1",value:5.1,n:452},{label:"Grupo comparador",value:4.9,n:452}],
+    population:"452 pares de adultos de 18–89 anos admitidos em UTI em Stanford, após pareamento por propensão. Exposição: prescrição de GLP-1 nos 12 meses anteriores; não exclusivamente para emagrecimento.",
+    period:"Internações de 2015–2024",design:"Coorte retrospectiva pareada",pmid:"41286572",
+    finding:"Não foi identificada diferença estatisticamente significativa: OR 1,05 (IC95% 0,58–1,91), p=0,88. O intervalo inclui menor chance, ausência de associação e maior chance de morte.",
+    limitation:"Não demonstra equivalência nem causa. Prescrição não garante uso contínuo. O estudo não testou se perda de massa magra mediou os resultados e não fornece um coeficiente de previsão clínica.",
+    locator:"Resumo, Methods e Results; mortalidade hospitalar após pareamento",approvedForProjection:false,
+  },
+  {
     id:"icu",label:"Gravidade na UTI",title:"Perda muscular observada na primeira semana de UTI",
     question:"A gravidade da doença faz diferença para o músculo?",unit:"% da área do reto femoral inicial",axisLabel:"Mudança na área do músculo reto femoral por ultrassom (%)",
     arms:[{label:"Falência de um órgão",value:-3,n:null},{label:"Falência de múltiplos órgãos",value:-15.7,n:null}],

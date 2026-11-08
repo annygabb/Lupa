@@ -11,21 +11,26 @@ test("abertura explica tema e público e troca dados científicos",async({page})
  await expect(page.getByText(/Não é incidência de depressão causada/)).toBeVisible();
 });
 
-test("horizontes e temas não fabricam previsões nacionais",async({page})=>{
+test("observações e cenários mantêm denominadores e premissas",async({page})=>{
  await page.goto("/projecoes");
- const panel=page.getByRole("region",{name:"O futuro do tratamento precisa de mais que uma curva."});
+ await expect(page.getByRole("heading",{name:"Como os participantes acessaram o tratamento?"})).toBeVisible();
+ await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("23,8%");
+ await page.getByRole("button",{name:"Estados Unidos",exact:true}).click();
+ await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("12,0%");
+ await page.getByRole("button",{name:/Adultos do painel nacional · Mar\/2024/}).click();
+ await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("8,2%");
+ await page.getByLabel("O que você quer investigar?").selectOption("icu");
+ await expect(page.getByRole("heading",{name:/Uso prévio de GLP-1 e mortalidade/})).toBeVisible();
+ await expect(page.getByText(/OR 1,05/).first()).toBeVisible();
+ await page.getByRole("button",{name:"Explorar cenários",exact:true}).click();
  for(const year of [2026,2031,2036,2041]){
-  const button=page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:new RegExp(String(year))});
+  const button=page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:String(year),exact:true});
   await button.click();
   await expect(button).toHaveAttribute("aria-pressed","true");
-  await expect(panel.getByText("Sem estimativa validada",{exact:true})).toHaveCount(2);
+  await expect(page.getByLabel("Entenda o ponto selecionado")).toContainText("hipótese");
  }
- await page.getByLabel("O que você quer investigar?").selectOption("icu");
- await expect(page.getByRole("heading",{name:/Perda muscular observada/})).toBeVisible();
- await expect(page.getByText(/O estudo não avaliou GLP-1 ou tirzepatida/)).toBeVisible();
- await page.getByLabel("O que você quer investigar?").selectOption("use");
- await expect(page.getByRole("heading",{name:"Dados observados, com definições diferentes"})).toBeVisible();
- await expect(page.getByText("preprint ainda sem revisão por pares",{exact:true})).toBeVisible();
+ await page.getByText("5,1% versus 4,9% prova que GLP-1 aumenta a mortalidade?",{exact:true}).click();
+ await expect(page.getByText(/diferença bruta de 0,2 ponto percentual/)).toBeVisible();
 });
 
 test("saúde mental tem fonte e não cria taxa de depressão brasileira",async({page})=>{
@@ -35,7 +40,7 @@ test("saúde mental tem fonte e não cria taxa de depressão brasileira",async({
  await expect(page.getByRole("heading",{name:"Não é uma taxa nacional"})).toBeVisible();
 });
 
-test("navegação fica à esquerda no desktop e abre no celular",async({page})=>{
+test("navegação fica no topo e abre no celular",async({page})=>{
  await page.goto("/");
  const menu=page.getByRole("button",{name:"Abrir menu"});
  if(await menu.isVisible()){
@@ -46,7 +51,7 @@ test("navegação fica à esquerda no desktop e abre no celular",async({page})=>
   await expect(page.getByRole("button",{name:"Abrir menu"})).toHaveAttribute("aria-expanded","false");
  }else{
   const box=await page.locator(".lupa-navigation").boundingBox();
-  expect(box?.x).toBe(0); expect(box?.width).toBe(128);
+  expect(box?.x).toBe(0); expect(box?.y).toBe(0); expect(box?.width).toBeGreaterThan(1100); expect(box?.height).toBeLessThan(110);
   await page.getByRole("navigation").getByRole("link",{name:"Brasil × EUA",exact:true}).click();
   await expect(page).toHaveURL(/projecoes$/);
  }
