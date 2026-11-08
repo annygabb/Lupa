@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { StudyComparator } from "@/components/comparison/study-comparator";
+import { PagePlate } from "@/components/atlas/page-plate";
 
 export const metadata: Metadata = {
   title: "Comparador Científico",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function CompararPage() {
-  return <StudyComparator />;
+  return <><PagePlate href="/comparar"/><StudyComparator /></>;
 }

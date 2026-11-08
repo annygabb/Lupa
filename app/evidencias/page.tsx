@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EvidenceExplorer } from "@/components/evidence/evidence-explorer";
+import { PagePlate } from "@/components/atlas/page-plate";
 
 export const metadata: Metadata = {
   title: "Explorador Científico",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function EvidenciasPage() {
-  return <div className="lupa-studio"><EvidenceExplorer/></div>;
+  return <><PagePlate href="/evidencias"/><div className="lupa-studio"><EvidenceExplorer/></div></>;
 }
