@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
 
+// Static audits inspect the fully readable reduced-motion state; motion has its own tests.
+test.use({ reducedMotion: "reduce" });
+
 /**
  * Capturas de referência para a próxima etapa de polimento visual.
  * Não são aprovações de design nem snapshot tests por comparação pixel a pixel.

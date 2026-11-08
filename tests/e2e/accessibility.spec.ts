@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+// Static audits inspect the fully readable reduced-motion state; motion has its own tests.
+test.use({ reducedMotion: "reduce" });
+
 const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia","/saude-mental"];
 
 test.describe("WCAG automatizado — regras A e AA verificáveis",()=>{

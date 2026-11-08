@@ -64,7 +64,7 @@ test("cenários respondem às premissas e preservam o ano-base",async({page})=>{
  await page.getByLabel("Continuidade anual assumida").press("Home");
  await page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:"2031",exact:true}).click();
  await page.locator(".chart-point-buttons").getByRole("button",{name:"Acesso constante · 2031",exact:false}).click();
- await expect(page.locator(".metric-detail-value")).toHaveText("0");
+ await expect(page.locator(".metric-detail-value [aria-hidden=true]")).toHaveText("0");
  await page.getByRole("group",{name:"Horizonte da comparação"}).getByRole("button",{name:"2026",exact:true}).click();
- await expect(page.locator(".metric-detail-value")).toHaveText("100");
+ await expect(page.locator(".metric-detail-value [aria-hidden=true]")).toHaveText("100");
 });

@@ -5,19 +5,19 @@
  * Cor nunca é o único indicador de estado; as mensagens possuem texto explícito.
  */
 :root {
-  --background: #f6f8fb;
+  --background: #f7f9fd;
   --foreground: #17283d;
   --card: #ffffff;
   --card-foreground: #17283d;
-  --primary: #0f766e;
+  --primary: #2558c8;
   --primary-foreground: #ffffff;
-  --muted: #eaf5f3;
+  --muted: #edf3ff;
   --muted-foreground: #526575;
   --border: #e2e8f0;
   --ring: #2563eb;
   --accent-blue: #2563eb;
   --accent-blue-soft: #eef3ff;
-  --accent-teal-soft: #eaf5f3;
+  --accent-teal-soft: #edf3ff;
   --warning-foreground: #8a5a15;
   --warning-surface: #fff8ec;
   --danger-foreground: #a33d3d;
