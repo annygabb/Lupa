@@ -142,7 +142,7 @@ export function StudyComparator() {
                   <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
                     Estudos lado a lado
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-[#657993]">
+                  <p className="mt-2 text-sm leading-6 text-[#53645b]">
                     Comece selecionando duas referências. O LUPA explica o que pode e o que não pode ser comparado.
                   </p>
                 </div>
@@ -198,7 +198,7 @@ export function StudyComparator() {
                 <h2 className="lupa-premium-text mt-2 text-[27px] font-extrabold sm:text-[34px]">
                   Evidência em perspectiva
                 </h2>
-                <p className="mt-2 max-w-[820px] text-sm leading-7 text-[#657993]">
+                <p className="mt-2 max-w-[820px] text-sm leading-7 text-[#53645b]">
                   Explore cinco indicadores extraídos de fontes primárias. Cada gráfico representa
                   somente os grupos internos do próprio estudo e é <strong>independente dos estudos A e B</strong> acima.
                 </p>

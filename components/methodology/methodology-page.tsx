@@ -131,7 +131,7 @@ export function MethodologyPage(){
         <section className="mt-12" aria-labelledby="math-title">
           <p className="lupa-premium-kicker">03 / Motor matemático</p>
           <h2 id="math-title" className="lupa-premium-text mt-2 text-3xl font-extrabold">Como funcionam os cenários de 2031, 2036 e 2041</h2>
-          <p className="mt-2 max-w-4xl text-sm leading-7 text-[#61768d]">
+          <p className="mt-2 max-w-4xl text-sm leading-7 text-[#53645b]">
             O simulador <strong>não estima efeitos clínicos</strong>. Ele aplica taxas hipotéticas a um
             grupo de referência editável e contabiliza entradas, continuidade e saídas por ano.
           </p>

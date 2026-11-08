@@ -65,3 +65,6 @@ Assinatura: “o que mostra” ao lado de “onde a conclusão para”.
 - Interações na prévia local ainda não reagiram pelo navegador disponível, mesmo após recarga e reinício. Exige conferir deploy e CI antes de declarar controles funcionais.
 - Playwright MCP, agent-browser e Graphify não foram conectados/executados nesta sessão. Não atribuir a eles os testes realizados. O projeto mantém a configuração existente dessas ferramentas.
 - Sem Supabase, SQL, dados pessoais, serviços pagos ou novas APIs.
+
+## Revisão independente e primeira execução de CI
+Revisão independente não encontrou defeito científico crítico. Corrigidos: locator de navegação que ficava oculto no mobile e foco de teclado na tabela Brasil/EUA. A primeira CI passou lint, tipagem, 99 unitários, build, smoke HTTP e auditoria de dependências. No navegador, 140 testes passaram; 15 falharam apenas por contraste em Comparador, Músculos/UTI e Metodologia (três rotas × cinco larguras). A mudança do fundo reduziu o contraste de cinzas anteriores. Correção dirigida: usar o papel secundário #53645b e escurecer o aviso marrom para #785024; sem remover regras axe. Interações de gráficos, cenários e navegação funcionaram na CI, limitando a falha anterior de interação à prévia local. A execução após a correção deve ser conferida antes do release.
