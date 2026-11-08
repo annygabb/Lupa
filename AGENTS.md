@@ -1,7 +1,7 @@
 # AGENTS.md — LUPA Saúde
 
 ## Product and boundaries
-Public research MVP (Next.js 16, React 19, TypeScript, Tailwind 4) at https://lupaa.vercel.app. 50 canonical candidate records, five source-checked metrics M01–M05, and hypothetical flow scenarios 2026–2036. **Never** present candidate studies as independently approved. Do not combine effect sizes across studies, invent N/CI/risk denominators, imply tirzepatide causes ICU outcomes, or treat a Conitec evaluation request as SUS incorporation.
+Public research MVP (Next.js 16, React 19, TypeScript, Tailwind 4) at https://lupaa.vercel.app. 50 canonical candidate records, five source-checked metrics M01–M05, and hypothetical flow scenarios 2026–2041. **Never** present candidate studies as independently approved. Do not combine effect sizes across studies, invent N/CI/risk denominators, imply tirzepatide causes ICU outcomes, or treat a Conitec evaluation request as SUS incorporation.
 
 No Supabase, SQL, migrations or new paid infrastructure without explicit authorization.
 
@@ -26,3 +26,6 @@ Run: \`pnpm run lint\`, \`pnpm run typecheck\`, \`pnpm run test\`, \`pnpm run bu
 Check the **Vercel lupaa deployment** for current commit (READY, SHA, alias). Never claim browser testing or deployment based only on compilation.
 Record a screenshot pair for desktop/mobile and a regression table with observed defects.
 Use \`scripts/setup-design-stack.ps1\` to install project skills in VS Code; skills installed on a CI runner or in another agent do NOT automatically connect to this ChatGPT session.
+
+## Permanent UX review — user requirement (08/11/2026)
+For EVERY change, regardless of task type, read and apply [docs/UX_PRINCIPLES.md](docs/UX_PRINCIPLES.md). Review Hick, Fitts, Jakob, Miller, Von Restorff, Proximity, Tesler, Zeigarnik, Doherty, and Serial Position across the complete site journey. Record findings, fixes, justified non-applicability and verification limits in the change report. Keep primary tasks clear, secondary detail progressive, controls comfortably sized, related information grouped, numeric formatting consistent and feedback immediate. Do not turn Miller into an arbitrary seven-item limit, add fake task progress, invent scientific claims, hide important sources, or delay interactions to display animation. Preserve the blue/white identity and responsive desktop-first behavior.
