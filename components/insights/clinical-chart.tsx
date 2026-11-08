@@ -17,21 +17,21 @@ export function EvidenceBars({plot}:{plot:ClinicalPlot}) {
     <svg viewBox="0 0 660 268" role="img" aria-label={plot.arms.map(a=>`${a.label}: ${number(a.value)} ${plot.unit}`).join("; ")}>
       {[0,1,2,3,4].map(i=>{
         const value=low+(high-low)*i/4;
-        return <g key={i}><line x1={x(value)} x2={x(value)} y1="16" y2="224" stroke="#dde4e0" strokeDasharray="3 5"/>
-          <text x={x(value)} y="250" textAnchor="middle" fill="#53645c" fontSize="14">{number(value)}%</text></g>;
+        return <g key={i}><line x1={x(value)} x2={x(value)} y1="16" y2="224" stroke="#dce4f0" strokeDasharray="3 5"/>
+          <text x={x(value)} y="250" textAnchor="middle" fill="#52637a" fontSize="14">{number(value)}%</text></g>;
       })}
-      <line x1={x(0)} x2={x(0)} y1="16" y2="224" stroke="#74857c"/>
+      <line x1={x(0)} x2={x(0)} y1="16" y2="224" stroke="#7385a0"/>
       {plot.arms.map((arm,i)=>{
         const y=46+i*100;
         return <g key={arm.label}>
-          <text x="40" y={y-12} fill="#233c30" fontSize="16">{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}</text>
-          <rect x={Math.min(x(0),x(arm.value))} y={y} width={Math.abs(x(arm.value)-x(0))} height="36" rx="2" fill={i===0?"#28755a":"#bac8be"}/>
-          <text x={arm.value<0?x(arm.value)+8:x(arm.value)-8} y={y+24} textAnchor={arm.value<0?"start":"end"} fill={i===0?"white":"#233c30"} fontSize="17" fontWeight="600">{arm.value>0&&min<0?"+":""}{number(arm.value)}%</text>
+          <text x="40" y={y-12} fill="#172b4d" fontSize="16">{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}</text>
+          <rect x={Math.min(x(0),x(arm.value))} y={y} width={Math.abs(x(arm.value)-x(0))} height="36" rx="2" fill={i===0?"#2558c8":"#b9c9e6"}/>
+          <text x={arm.value<0?x(arm.value)+8:x(arm.value)-8} y={y+24} textAnchor={arm.value<0?"start":"end"} fill={i===0?"white":"#172b4d"} fontSize="17" fontWeight="600">{arm.value>0&&min<0?"+":""}{number(arm.value)}%</text>
         </g>;
       })}
     </svg>
     <div className="mobile-evidence-bars" aria-hidden="true">
-      {plot.arms.map((arm,i)=><div key={arm.label} className="mobile-evidence-row"><p>{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}<strong>{arm.value>0&&min<0?"+":""}{number(arm.value)}%</strong></p><div className="mobile-evidence-track"><span style={{left:`${(Math.min(0,arm.value)-low)/(high-low||1)*100}%`,width:`${Math.abs(arm.value)/(high-low||1)*100}%`,background:i===0?"#28755a":"#bac8be"}}/></div></div>)}
+      {plot.arms.map((arm,i)=><div key={arm.label} className="mobile-evidence-row"><p>{arm.label}{arm.n?` · n = ${arm.n.toLocaleString("pt-BR")}`:""}<strong>{arm.value>0&&min<0?"+":""}{number(arm.value)}%</strong></p><div className="mobile-evidence-track"><span style={{left:`${(Math.min(0,arm.value)-low)/(high-low||1)*100}%`,width:`${Math.abs(arm.value)/(high-low||1)*100}%`,background:i===0?"#2558c8":"#b9c9e6"}}/></div></div>)}
       <div className="mobile-chart-axis"><span>{number(low)}%</span><span>{number(high)}%</span></div>
     </div>
     <details className="chart-data"><summary>Ver valores em tabela</summary>

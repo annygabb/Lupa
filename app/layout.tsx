@@ -3,6 +3,7 @@ import "./globals.css";
 import "./lupa-premium.css";
 import "./editorial.css";
 import { SiteHeader } from "@/components/site-header";
+import { ScrollReveals } from "@/components/motion/scroll-reveals";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({children}:Readonly<{children:React.ReactNode
           Ir para o conteúdo principal
         </a>
         <div className="flex min-h-screen flex-col">
+          <ScrollReveals/>
           <SiteHeader/>
           <main id="conteudo" className="lupa-main flex-1">{children}</main>
           <SiteFooter/>
