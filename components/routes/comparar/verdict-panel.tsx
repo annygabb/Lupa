@@ -10,12 +10,19 @@ import { motionAllowed } from "@/components/atlas/motion";
 import type { StudyComparisonAssessment } from "@/features/comparison/compatibility";
 import { friendlyCompatibilityWarnings, getCompatibilityVerdict } from "@/features/comparison/compatibility-copy";
 
-export function VerdictPanel({ assessment, pairKey }: { assessment: StudyComparisonAssessment; pairKey: string }) {
+export function VerdictPanel({ assessment, pairKey, idSuffix = "" }: {
+  assessment: StudyComparisonAssessment; pairKey: string; idSuffix?: string;
+}) {
+  const titleId = "cp-verdict-title" + idSuffix;
   const root = useRef<HTMLElement>(null);
   const first = useRef(true);
   const verdict = getCompatibilityVerdict(assessment);
   const warnings = friendlyCompatibilityWarnings(assessment);
   const sideBySide = assessment.canShowSideBySide;
+  // Motivos específicos do par (do motor de comparação); o aviso de curadoria vale para todo o catálogo.
+  const noSumReasons = assessment.warnings.filter(w =>
+    w.code !== "BOTH_PENDING_CURATOR_REVIEW" && w.code !== "NO_DIRECT_CROSS_STUDY_POOLED_EFFECT");
+  const noPooling = assessment.warnings.find(w => w.code === "NO_DIRECT_CROSS_STUDY_POOLED_EFFECT");
 
   const stamps = [
     { label: "Leitura lado a lado", value: sideBySide ? "Disponível" : "Indisponível", ok: sideBySide,
@@ -40,11 +47,11 @@ export function VerdictPanel({ assessment, pairKey }: { assessment: StudyCompari
   }, [pairKey]);
 
   return (
-    <section ref={root} className={"cp-verdict" + (sideBySide ? "" : " is-blocked")} aria-labelledby="cp-verdict-title">
+    <section ref={root} className={"cp-verdict" + (sideBySide ? "" : " is-blocked")} aria-labelledby={titleId}>
       <div className="cp-verdict__head">
         <div aria-live="polite">
           <p className="cp-verdict__kicker at-mono">Análise de compatibilidade</p>
-          <h3 id="cp-verdict-title" className="cp-verdict__title">{verdict.title}</h3>
+          <h3 id={titleId} className="cp-verdict__title">{verdict.title}</h3>
           <p className="cp-verdict__sub">{verdict.subtitle}</p>
         </div>
         <p className="cp-verdict__status at-mono"><span aria-hidden="true"/>{verdict.statusLabel}</p>
@@ -82,6 +89,29 @@ export function VerdictPanel({ assessment, pairKey }: { assessment: StudyCompari
           <p className="cp-warns__empty">Nenhum conflito temático adicional foi identificado. Isso não habilita cálculos combinados.</p>
         )}
       </div>
+
+      <details className="cp-why cp-nosum">
+        <summary>
+          <span>Por que não somar estes dois resultados?</span>
+          <span className="cp-nosum__count at-mono">
+            {noSumReasons.length} {noSumReasons.length === 1 ? "motivo específico" : "motivos específicos"}
+          </span>
+          <span className="cp-why__icon" aria-hidden="true">+</span>
+        </summary>
+        <div className="cp-nosum__body">
+          {noSumReasons.length > 0 && (
+            <ol className="cp-nosum__list">
+              {noSumReasons.map(w => (
+                <li key={w.code} data-code={w.code}>
+                  <strong>{w.label}</strong>
+                  <span>{w.explanation}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+          {noPooling && <p className="cp-nosum__rule"><strong>{noPooling.label}.</strong> {noPooling.explanation}</p>}
+        </div>
+      </details>
 
       <details className="cp-why">
         <summary><span>Ver justificativas científicas completas</span><span className="cp-why__icon" aria-hidden="true">+</span></summary>

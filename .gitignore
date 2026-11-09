@@ -10,3 +10,6 @@ coverage/
 npm-debug.log*
 playwright-report/
 test-results/
+
+# Relatórios locais do dry-run PubMed (candidatos; não versionar)
+reports/pubmed-dry-run/

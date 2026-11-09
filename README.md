@@ -2,7 +2,7 @@
 
 Plataforma de pesquisa sobre medicamentos para emagrecimento, composição corporal, saúde mental, sarcopenia e cuidados críticos. O sistema separa **dado observado, associação e cenário hipotético**, preservando as fontes e os limites científicos.
 
-> **Estado em 06/11/2026:** módulos principais implementados, **93 testes unitários + 100 execuções Playwright aprovadas** em quatro larguras (360/390/768/1280 px), implantação `lupaa` confirmada `READY` no commit `11c7ca8`. O simulador é matemático e hipotético; não prevê efeitos clínicos. Revisão clínica independente do catálogo **ainda está pendente**.
+> **Estado em 08/11/2026 (branch `redesign/site-novo`):** Evidence Lens, Evidence Engine (`POST /api/interpretar`), Passaporte da Evidência, comparador explicável, análise de sensibilidade e pipeline PubMed em dry-run. **186 testes Vitest + 260 execuções Playwright** aprovados localmente no build de produção. Revisão clínica independente **pendente**; teste com usuários **não executado**. Detalhes em [docs/STATUS.md](docs/STATUS.md).
 
 ## Onde acessar
 
@@ -12,23 +12,25 @@ O projeto está hospedado na Vercel pela equipe em **https://lupaa.vercel.app**.
 
 | Rota | O que faz |
 |---|---|
-| `/` | Apresenta os módulos com navegação direta |
-| `/evidencias` | Pesquisa, filtros, 50 registros científicos canônicos e 55 referências de origem |
-| `/evidencias/[id]` | Fichas científicas, limitações, aliases e links originais |
-| `/comparar` | Duas publicações em paralelo, avisos de incompatibilidade, cinco indicadores comparados dentro de cada estudo |
-| `/musculos-uti` | Quatro perguntas interativas, medidas musculares, estudos de UTI e lacuna causal |
-| `/projecoes` | Simulação hipotética 2026–2036, 2031/2036, presets, taxas editáveis, gráficos, tabela, CSV e JSON |
-| `/metodologia` | Curadoria, conceitos, fórmulas, contexto SUS, fontes oficiais e glossário |
+| `/` | Hero e **Evidence Lens**: afirmações curadas interpretadas com fonte, limites e bloqueios (`?afirmacao=<id>`) |
+| `/evidencias` | Herbário de evidências: busca, filtros, grade/lista, 50 registros canônicos e 55 IDs de origem |
+| `/evidencias/[id]` | **Passaporte da Evidência**: status de revisão, limites, aliases e exportação JSON/Markdown |
+| `/comparar` | Comparador explicável (`?a=&b=`), avisos de incompatibilidade e indicadores M01–M05 |
+| `/musculos-uti` | Investigação guiada sobre composição corporal, força e UTI, com a lacuna causal explícita |
+| `/saude-mental` | PHQ-9, exclusões e limites de interpretação |
+| `/projecoes` | Brasil × EUA (lacunas explícitas) e laboratório `lupa-flow-v2` com sensibilidade e exportação |
+| `/metodologia` | Protocolo, níveis de evidência, 17 bloqueios de projeção explicados, glossário e fontes |
+| `GET/POST /api/interpretar` | Lista e interpreta afirmações (determinístico, sem IA) |
 | `/api/health` | Estado público do serviço sem segredos |
 
 ## Executar localmente
 
-Pré-requisitos: Node.js 22 e pnpm 10.
+Pré-requisitos: Node.js 22 (`.nvmrc`) e pnpm 10.18 (`packageManager`). A instalação é reproduzível com `pnpm install --frozen-lockfile`.
 
 ```powershell
 git clone https://github.com/annygabb/Lupa.git
 cd Lupa
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -65,15 +67,13 @@ A CI executa essas quatro verificações, **smoke HTTP das oito rotas**, auditor
 
 ## Documentação
 
-- [Etapas 5–7: núcleo funcional, fórmulas, fontes e validação](docs/ETAPA5_6_7_MVP_FUNCIONAL.md)
-- [Estado real e pendências](docs/STATUS.md)
-- [QA de navegador, acessibilidade e screenshots](docs/QA_TESTES_BROWSER_ACESSIBILIDADE.md)
-- [Plano de revisão clínica prioritária](docs/PLANO_REVISAO_CLINICA_PRIORITARIA.md)
-- [Metodologia científica](docs/METHODOLOGY.md)
-- [Etapa 4: dados para comparação](docs/ETAPA4_COMPARADOR.md)
-- [Etapa 4C: dashboard premium](docs/ETAPA4C_DASHBOARD_PREMIUM.md)
-- [Etapa 3A: curadoria](docs/ETAPA3A_CURADORIA.md)
-- [Etapa 2: contratos científicos](docs/ETAPA2_CONTRATOS.md)
+- [Estado real e pendências](docs/STATUS.md) · [Arquitetura](docs/ARCHITECTURE.md) · [Changelog](docs/release/CHANGELOG.md)
+- ADRs: [0001 monólito modular](docs/adr/0001-monolito-modular.md) · [0002 interpretação determinística](docs/adr/0002-interpretacao-deterministica.md)
+- [Pipeline PubMed em dry-run](docs/ingestion/PUBMED_DRY_RUN.md) · [Revisão científica independente](docs/evidence-review/README.md)
+- [Protocolo do teste de compreensão](docs/validation/protocolo-teste-compreensao.md) (não executado)
+- [Roteiro de pitch](docs/pitch/ROTEIRO_3_MIN.md) · [Perguntas difíceis](docs/pitch/PERGUNTAS_DIFICEIS.md)
+- [Sistema de design do atlas](components/atlas/README.md) · [Metodologia científica](docs/METHODOLOGY.md)
+- Histórico: etapas 2–7, QA de navegador, curadoria e plano de revisão clínica em `docs/`.
 
 ## Antes da entrega do hackathon
 

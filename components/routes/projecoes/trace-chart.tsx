@@ -93,8 +93,8 @@ export function TraceChart({ series, max, unit = "%", caption, xLabels, selected
           {series.map((s, si) => (
             <g key={s.label} className={`px-trace__s px-trace__s--${si}`}>
               {s.points.length > 1 && (
-                <path d={pathFor(s, X, Y)} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
-                  strokeDasharray={s.dashed ? "8 8" : undefined} mask={`url(#${id}-m${si})`}/>
+                <path d={pathFor(s, X, Y)} fill="none" stroke="currentColor" strokeWidth={s.dashed ? 3 : 2} strokeLinecap="round" strokeLinejoin="round"
+                  strokeOpacity={s.dashed ? undefined : .55} strokeDasharray={s.dashed ? "8 8" : "1 7"} mask={`url(#${id}-m${si})`}/>
               )}
               {s.points.map((p, pi) => {
                 const on = selected === `${si}-${pi}`;
@@ -119,8 +119,11 @@ export function TraceChart({ series, max, unit = "%", caption, xLabels, selected
         </svg>
       </div>
       <ul className="px-trace__legend">
-        {series.map((s, i) => <li key={s.label} className={`px-trace__s--${i}`}><i className={s.dashed ? "is-dashed" : ""} aria-hidden="true"/>{s.label}{s.dashed ? " · hipótese" : ""}</li>)}
-        {gap && <li className="px-trace__legend-gap"><i aria-hidden="true"/>Lacuna: sem valor sustentado, não é zero</li>}
+        {series.map((s, i) => <li key={s.label} className={`px-trace__s--${i}`}><i className={s.dashed ? "is-dashed" : "is-dot"} aria-hidden="true"/>{s.label}{s.dashed ? " · hipótese (modelo)" : " · observado"}</li>)}
+        {series.some(s => !s.dashed && s.points.length > 1) && (
+          <li className="px-trace__legend-link"><i className="is-dotted" aria-hidden="true"/>Pontilhado entre observações: ligação ilustrativa, sem medições intermediárias</li>
+        )}
+        {gap && <li className="px-trace__legend-gap"><i aria-hidden="true"/>Dados insuficientes · lacuna: sem valor sustentado, não é zero</li>}
       </ul>
       <p className="px-trace__hint">Toque em um ponto do gráfico ou use os botões abaixo para entender o número.</p>
       <div className="chart-point-buttons px-points">

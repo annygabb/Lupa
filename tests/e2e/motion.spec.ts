@@ -45,12 +45,12 @@ test("a lupa abre a leitura completa do estudo", async ({ page }) => {
   await page.goto("/");
   const section = page.locator("#lupa");
   await section.scrollIntoViewIfNeeded();
-  await section.getByRole("button", { name: /Perder massa magra com o medicamento piora a UTI/ }).click();
-  await expect(section.locator(".at-lens-stage__q")).toContainText("Perder massa magra");
+  await section.getByRole("button", { name: /Estudos de massa muscular na UTI comprovam mortalidade/ }).click();
+  await expect(section.locator(".at-lens-stage__q")).toContainText("massa muscular na UTI");
   const open = section.getByRole("button", { name: "Abrir a leitura do estudo" });
   await open.click();
   await expect(section.getByRole("button", { name: "Voltar à manchete" })).toHaveAttribute("aria-pressed", "true");
-  await expect(section.getByRole("region", { name: "O que o estudo permite dizer" })).toContainText("ainda não foi demonstrada");
+  await expect(section.getByRole("region", { name: "O que o estudo permite dizer" })).toContainText("nenhum estudo do acervo testou");
 });
 
 test.describe("Preferência de movimento reduzido", () => {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { supplementalEvidenceCatalog } from "@/features/evidence/supplemental";
 import { getUnifiedEvidence, unifiedEvidenceCatalog } from "@/features/evidence/unified-catalog";
+import { buildEvidencePassport } from "@/features/evidence/passport";
 import { EvidenceSheet } from "@/components/routes/evidencias/sheet";
 import "../evidencias.css";
 
@@ -25,11 +26,12 @@ export async function generateMetadata({ params }: EvidencePageProps): Promise<M
 export default async function EvidenceDetailPage({params}:EvidencePageProps) {
   const {id}=await params;
   const record=getUnifiedEvidence(id);
-  if(!record)notFound();
+  const passport=buildEvidencePassport(id);
+  if(!record||!passport)notFound();
 
   // Transcrições de outras fontes que apontam para o mesmo documento (aliases), sem campos internos.
   const complementary=supplementalEvidenceCatalog.filter(item=>
     item.sourceId!==record.id && record.sourceIds.includes(item.sourceId));
 
-  return <EvidenceSheet record={record} accessedAs={id.trim().toUpperCase()} complementary={complementary}/>;
+  return <EvidenceSheet record={record} accessedAs={id.trim().toUpperCase()} complementary={complementary} passport={passport}/>;
 }

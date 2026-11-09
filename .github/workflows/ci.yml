@@ -22,9 +22,9 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
-          cache-dependency-path: "package.json"
+          cache-dependency-path: "pnpm-lock.yaml"
       - name: Instalar dependências
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Lint
         run: pnpm run lint
       - name: Tipagem
@@ -55,9 +55,9 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
-          cache-dependency-path: "package.json"
+          cache-dependency-path: "pnpm-lock.yaml"
       - name: Instalar dependências
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Instalar Chromium do Playwright
         run: pnpm exec playwright install --with-deps chromium
       - name: Compilar aplicação de teste
@@ -89,8 +89,8 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
-          cache-dependency-path: "package.json"
+          cache-dependency-path: "pnpm-lock.yaml"
       - name: Instalar dependências
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Auditar dependências de produção (high+)
         run: pnpm audit --prod --audit-level high

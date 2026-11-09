@@ -132,6 +132,11 @@
 .ev-spec:hover .ev-spec__cta i { transform: translateX(6px); }
 .ev-spec__src, .ev-row__src { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 5px; min-height: 44px; font-size: 14px; font-weight: 600; color: var(--at-prussia-800); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .ev-spec__src:hover, .ev-row__src:hover { color: var(--at-prussia-950); text-decoration-thickness: 2px; }
+.ev-spec__acts { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 16px; }
+.ev-row__acts { display: flex; flex-direction: column; align-items: flex-start; }
+.ev-spec__cmp, .ev-row__cmp { position: relative; z-index: 3; display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600; color: #4a5d72; text-decoration: underline dotted; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.ev-spec__cmp:hover, .ev-row__cmp:hover { color: var(--at-prussia-900); text-decoration-style: solid; }
+.ev-spec__cmp:focus-visible, .ev-row__cmp:focus-visible { outline: 3px solid var(--at-prussia-500); outline-offset: 2px; }
 
 /* ---------- Lista ---------- */
 .ev-list { border-top: 0; }
@@ -285,6 +290,41 @@
 .ev-step__title { font-family: var(--font-display); font-size: clamp(18px, 1.6vw, 22px); font-weight: 800; line-height: 1.2; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .ev-sheet__end { margin: 40px 0 0; }
 
+/* ---------- Passaporte da Evidência (/evidencias/[id]) ---------- */
+.ev-pass { margin-top: 26px; padding: clamp(20px, 2.6vw, 32px); border: 1.5px solid var(--at-prussia-900); border-radius: 6px; background: #fff; box-shadow: 0 30px 60px -48px rgba(7, 26, 51, .55); }
+.ev-pass h3 { font-size: 19px; }
+.ev-pass__status { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0; padding-bottom: 16px; border-bottom: 1px dashed var(--at-line-strong); font-size: 16px; font-weight: 650; line-height: 1.5; color: var(--at-prussia-900); }
+.ev-pass__status-k { padding: 2px 8px; border: 1.5px solid var(--at-prussia-700); border-radius: 3px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--at-prussia-700); }
+.ev-pass__review { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 18px 0 0; }
+.ev-pass__review > div { padding: 14px 16px; border: 1.5px solid var(--at-line-strong); border-radius: 4px; background: var(--at-paper); }
+.ev-pass__review > div.is-pending { border-style: dashed; border-color: var(--at-amber); background: var(--at-paper-warm); }
+.ev-pass__review dt { font-size: 12.5px; font-weight: 600; color: #4a5d72; }
+.ev-pass__review dd { display: grid; gap: 4px; margin: 6px 0 0; }
+.ev-pass__review strong { font-size: 17px; color: var(--at-prussia-900); }
+.ev-pass__review .is-pending strong { color: var(--at-amber); }
+.ev-pass__review dd > span { font-size: 14px; line-height: 1.5; color: #2c425b; }
+.ev-pass__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 22px 0 0; }
+.ev-pass__facts > div { display: grid; grid-template-columns: minmax(120px, 38%) minmax(0, 1fr); gap: 12px; padding: 10px 0; border-top: 1px solid var(--at-line); }
+.ev-pass__facts dt { font-size: 12.5px; font-weight: 600; color: #4a5d72; }
+.ev-pass__facts dd { margin: 0; font-size: 15px; line-height: 1.5; color: var(--at-prussia-900); overflow-wrap: anywhere; }
+.ev-pass__facts dd.at-mono { font-size: 14px; font-weight: 600; }
+.ev-pass__reading { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 26px; }
+.ev-pass__col { padding: 18px 20px; border: 1px solid var(--at-line); border-radius: 4px; }
+.ev-pass__col--limit { border: 1.5px dashed var(--at-amber); background: var(--at-paper-warm); }
+.ev-pass__not { text-transform: uppercase; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.ev-pass__col ul, .ev-pass__metrics ul { display: grid; gap: 8px; margin: 12px 0 0; padding-left: 20px; }
+.ev-pass__col li, .ev-pass__col p, .ev-pass__metrics li, .ev-pass__metrics p { font-size: 15.5px; line-height: 1.6; color: #2c425b; }
+.ev-pass__col p, .ev-pass__metrics p { margin: 12px 0 0; }
+.ev-pass__metrics { margin-top: 24px; }
+.ev-pass__metrics strong { color: var(--at-prussia-900); }
+.ev-pass__metrics .at-mono { font-size: 13.5px; font-weight: 700; color: var(--at-prussia-800); }
+.ev-pass__metrics .ev-pass__meta { font-weight: 500; color: #4a5d72; }
+.ev-pass__actions { margin-top: 26px; padding-top: 20px; border-top: 1px dashed var(--at-line-strong); }
+.ev-pass__btns { display: flex; flex-wrap: wrap; gap: 10px 12px; }
+.ev-pass__btns .at-btn { gap: 8px; }
+.ev-pass__feedback { min-height: 1.5em; margin: 12px 0 0; font-size: 14.5px; font-weight: 600; color: var(--at-prussia-800); }
+.ev-pass__disclaimer { margin: 8px 0 0; font-size: 13.5px; line-height: 1.5; color: #4a5d72; }
+
 /* ---------- Responsivo ---------- */
 @media (max-width: 1100px) {
   .ev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -307,8 +347,11 @@
   .ev-sheet__body { grid-template-columns: 1fr; }
   .ev-toc { display: none; }
   .ev-class, .ev-rel__grid { grid-template-columns: 1fr; }
+  .ev-pass__review, .ev-pass__facts, .ev-pass__reading { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
+  .ev-pass__facts > div { grid-template-columns: 1fr; gap: 2px; }
+  .ev-pass__btns .at-btn { width: 100%; justify-content: center; }
   .ev-grid { grid-template-columns: 1fr; }
   .ev-row { grid-template-columns: 1fr; padding-inline: 4px; }
   .ev-row:hover { padding-left: 4px; }

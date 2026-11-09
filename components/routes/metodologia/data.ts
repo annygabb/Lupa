@@ -63,3 +63,22 @@ export const sources = [
   { label: "Conitec / decisão de 2025", url: "https://bvsms.saude.gov.br/bvs/saudelegis/sctie/2025/prt0065_16_09_2025.html", role: "Não incorporação em indicação específica à época", type: "Oficial" },
   { label: "Ministério da Saúde / pedido de 2026", url: "https://www.gov.br/saude/pt-br/assuntos/noticias/2026/setembro/ministerio-da-saude-protocola-na-conitec-pedido-de-analise-para-incorporacao-de-canetas-emagrecedoras-no-sus", role: "Pedido de avaliação, não fornecimento universal", type: "Oficial" },
 ] as const;
+
+/**
+ * Quatro tipos de afirmação, do mais simples ao mais exigente. Só a previsão validada
+ * exige calibração contra dados observados e validação; o LUPA não tem nenhuma.
+ */
+export const claimLevels = [
+  { id: "O", name: "Observação", asks: "O que foi medido, em quem e quando?",
+    example: "Percentual de automedicação entre os adultos entrevistados de uma amostra online brasileira.",
+    needs: "Fonte, população, denominador e período.", status: "Há no acervo, sempre com denominador", validated: false },
+  { id: "A", name: "Associação", asks: "Duas coisas aparecem juntas?",
+    example: "Baixa massa muscular associada a mortalidade na UTI (metanálise E12, medida em OR).",
+    needs: "Desenho, medida de efeito e população. Não prova que uma coisa causa a outra.", status: "Há no acervo, sem leitura causal", validated: false },
+  { id: "H", name: "Hipótese", asks: "E se as premissas fossem estas?",
+    example: "Os cenários 2031, 2036 e 2041 do laboratório e o elo medicamento → reserva muscular → UTI.",
+    needs: "Premissas explícitas, editáveis e rotuladas como hipotéticas.", status: "Há no LUPA, sempre rotulada", validated: false },
+  { id: "P", name: "Previsão validada", asks: "O que deve acontecer, com erro conhecido?",
+    example: "Nenhuma. O LUPA não publica previsão nacional nem clínica.",
+    needs: "Calibração contra dados observados e validação em dados que não foram usados no ajuste. É a única categoria que exige isso.", status: "Nenhuma até esta versão", validated: true },
+] as const;

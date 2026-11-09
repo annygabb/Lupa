@@ -14,15 +14,17 @@ type Props = {
   side: "a" | "b";
   selectId: string;
   onSelect: (id: string) => void;
+  /** Sufixo de ids para a cópia estática renderizada antes da hidratação (fallback do Suspense). */
+  idSuffix?: string;
 };
 
-export const HerbariumSheet = forwardRef<HTMLElement, Props>(function HerbariumSheet({ record, side, selectId, onSelect }, ref) {
+export const HerbariumSheet = forwardRef<HTMLElement, Props>(function HerbariumSheet({ record, side, selectId, onSelect, idSuffix = "" }, ref) {
   const letter = side === "a" ? "A" : "B";
   const results = splitResults(record.resultsSummary);
   const family = readableFamily(record);
   const metrics = reviewedMetricsForEvidence(record.id);
   const drugs = record.drugs.filter(d => d !== "not_applicable");
-  const titleId = `cp-sheet-${side}-title`;
+  const titleId = `cp-sheet-${side}-title${idSuffix}`;
 
   return (
     <article ref={ref} className={`cp-sheet cp-sheet--${side}`} aria-labelledby={titleId}>

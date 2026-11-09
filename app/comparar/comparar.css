@@ -182,6 +182,22 @@
 .cp-why__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 32px; margin: 0; padding: 20px; border-top: 1px solid rgba(255, 255, 255, .18); }
 .cp-why__grid dt { font-size: 15.5px; font-weight: 700; color: #fff; }
 .cp-why__grid dd { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; color: var(--at-prussia-150); }
+/* "Por que não somar estes dois resultados?" — motivos específicos do par, vindos de assessStudyComparison */
+.cp-nosum summary > span:first-child { margin-right: auto; }
+.cp-nosum__count { font-size: 13px; font-weight: 600; color: var(--at-prussia-150); white-space: nowrap; }
+.cp-nosum__body { padding: 18px 20px 20px; border-top: 1px solid rgba(255, 255, 255, .18); }
+.cp-nosum__list { display: grid; gap: 14px; margin: 0; padding: 0 0 0 22px; color: var(--at-prussia-150); }
+.cp-nosum__list li { padding-left: 4px; }
+.cp-nosum__list li::marker { font-family: var(--font-mono); font-size: 13px; color: var(--at-prussia-150); }
+.cp-nosum__list strong { display: block; font-size: 15.5px; font-weight: 700; color: #fff; }
+.cp-nosum__list span { display: block; margin-top: 3px; font-size: 14.5px; line-height: 1.6; }
+.cp-nosum__rule { margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed rgba(255, 255, 255, .24); font-size: 14.5px; line-height: 1.6; color: var(--at-prussia-150); }
+.cp-nosum__rule strong { color: #fff; }
+.cp-nosum + .cp-why { margin-top: 12px; }
+@media (max-width: 600px) {
+  .cp-nosum summary { flex-wrap: wrap; gap: 4px 16px; padding-block: 12px; }
+  .cp-nosum__count { order: 3; flex-basis: 100%; white-space: normal; }
+}
 .cp-verdict__how { margin: 24px 0 0; font-size: 15.5px; line-height: 1.6; color: var(--at-prussia-150); }
 .cp-verdict__how strong { color: #fff; }
 .cp-compare__limit { margin-top: 28px; }

@@ -13,14 +13,20 @@ import { unifiedEvidenceCatalog, type UnifiedEvidenceRecord } from "@/features/e
 import {
   buildEvidenceHref, designNames, drugNames, shortDescription, sourceKindName, topicNames, yearName,
 } from "@/lib/evidence-presentation";
+import {
+  PASSPORT_MISSING, passportReviewSummary, type EvidencePassport,
+} from "@/features/evidence/passport";
+import { formatMetricValue } from "@/features/comparison/reviewed-metrics";
 import { cutoutNameFor, plateFor, splitSummary } from "./data";
+import { PassportActions } from "./passport-actions";
 
 const toc = [
-  { id: "resultado", n: "01", label: "Resultado descrito" },
-  { id: "populacao", n: "02", label: "População" },
-  { id: "limites", n: "03", label: "Limitações" },
-  { id: "fontes", n: "04", label: "Fonte e identificadores" },
-  { id: "relacionados", n: "05", label: "Relacionados" },
+  { id: "passaporte", n: "01", label: "Passaporte da Evidência" },
+  { id: "resultado", n: "02", label: "Resultado descrito" },
+  { id: "populacao", n: "03", label: "População" },
+  { id: "limites", n: "04", label: "Limitações" },
+  { id: "fontes", n: "05", label: "Fonte e identificadores" },
+  { id: "relacionados", n: "06", label: "Relacionados" },
 ];
 
 function titleLines(title: string): string[] {
@@ -81,8 +87,118 @@ function HerbariumLabel({ record, accessedAs }: { record: UnifiedEvidenceRecord;
   );
 }
 
-export function EvidenceSheet({ record, accessedAs, complementary }: {
+function fmtInt(n: number): string {
+  return n.toLocaleString("pt-BR");
+}
+
+/**
+ * Passaporte da Evidência: o resumo exportável da ficha. Status em texto (não só cor),
+ * leitura permitida e limites registrados; campos ausentes ficam explícitos, nunca inferidos.
+ */
+function EvidencePassportBlock({ passport }: { passport: EvidencePassport }) {
+  const s = passport.reviewStatus;
+  const n = passport.sampleSize;
+  const family = passport.studyFamily;
+  const review = [
+    { key: "catalogacao", label: "Catalogação", value: "Candidato em curadoria", done: true,
+      note: "Registro do catálogo LUPA, ainda não aprovado para projeções." },
+    { key: "documental", label: "Conferência documental", value: s.documentaryCheck.checked ? "Conferida" : "Pendente",
+      done: s.documentaryCheck.checked,
+      note: s.documentaryCheck.basis ?? "Sem indicador conferido nem nota de conferência registrada para esta ficha." },
+    { key: "clinica", label: "Revisão clínica independente", value: "Pendente", done: false,
+      note: "Nenhum revisor clínico independente avaliou esta ficha." },
+  ];
+  const facts: Array<{ label: string; value: string; mono?: boolean }> = [
+    { label: "ID LUPA", value: passport.lupaId, mono: true },
+    { label: "Identificadores de origem", value: passport.sourceIds.join(", "), mono: true },
+    { label: "PMID", value: passport.pmid ?? PASSPORT_MISSING, mono: passport.pmid !== null },
+    { label: "Tipo de fonte / desenho",
+      value: (passport.sourceKind === "regulatory" ? "Documento oficial" : "Publicação científica") + " · " + passport.design.label },
+    { label: "Medicamento / exposição",
+      value: passport.exposure ? passport.exposure.map(e => e.label).join(" · ") : PASSPORT_MISSING },
+    { label: "N (campo conferido)", value: n
+      ? fmtInt(n.total) +
+        (n.byArm ? " (" + n.byArm.map(a => a.label + ": " + fmtInt(a.n)).join("; ") + ")" : " · N por braço " + PASSPORT_MISSING) +
+        " · " + n.sourceMetricId
+      : PASSPORT_MISSING },
+    { label: "Família / coorte", value: family
+      ? (family.overlapUndetermined
+        ? "Sobreposição de participantes não determinada"
+        : family.code + (family.relatedIds.length ? " · também " + family.relatedIds.join(", ") : ""))
+      : PASSPORT_MISSING },
+    { label: "Versão do esquema", value: passport.schemaVersion, mono: true },
+  ];
+  const notProven = [
+    passport.limitations ?? PASSPORT_MISSING,
+    ...passport.checkedMetrics.map(m => m.id + ": " + m.limitations),
+  ];
+
+  return (
+    <div className="ev-pass">
+      <p className="ev-pass__status">
+        <span className="ev-pass__status-k at-mono">Status</span>
+        <span>{passportReviewSummary(passport)}</span>
+      </p>
+      <dl className="ev-pass__review" aria-label="Status de revisão">
+        {review.map(r => (
+          <div key={r.key} className={r.done ? "is-done" : "is-pending"}>
+            <dt className="at-mono">{r.label}</dt>
+            <dd>
+              <strong><span aria-hidden="true">{r.done ? "✓ " : "○ "}</span>{r.value}</strong>
+              <span>{r.note}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <dl className="ev-pass__facts">
+        {facts.map(f => (
+          <div key={f.label}>
+            <dt className="at-mono">{f.label}</dt>
+            <dd className={f.mono ? "at-mono" : undefined}>{f.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="ev-pass__reading">
+        <div className="ev-pass__col">
+          <h3>O que o estudo observou</h3>
+          {passport.reportedResult ? (
+            <ul>{passport.reportedResult.map((r, i) => <li key={i}>{r}</li>)}</ul>
+          ) : <p>{PASSPORT_MISSING}</p>}
+        </div>
+        <div className="ev-pass__col ev-pass__col--limit">
+          <h3>O que o estudo <span className="ev-pass__not">não</span> prova</h3>
+          <ul>{notProven.map((r, i) => <li key={i}>{r}</li>)}</ul>
+        </div>
+      </div>
+
+      <div className="ev-pass__metrics">
+        <h3>Indicadores conferidos vinculados</h3>
+        {passport.checkedMetrics.length ? (
+          <ul>
+            {passport.checkedMetrics.map(m => (
+              <li key={m.id}>
+                <span className="at-mono">{m.id}</span>{" "}
+                <strong>{m.title}</strong>{" — "}
+                {m.arms.map(a => a.label + " " + formatMetricValue(a.value, m.unit)).join(" · ")}
+                <span className="ev-pass__meta at-mono"> · conferido na fonte em {m.reviewedOn}</span>
+              </li>
+            ))}
+          </ul>
+        ) : <p>Nenhum indicador numérico conferido para esta ficha.</p>}
+      </div>
+
+      <PassportActions passport={passport}/>
+      <p className="ev-pass__disclaimer">{passport.disclaimer}</p>
+    </div>
+  );
+}
+
+
+export function EvidenceSheet({ record, accessedAs, complementary, passport }: {
   record: UnifiedEvidenceRecord; accessedAs: string; complementary: readonly SupplementalRecord[];
+  passport: EvidencePassport;
 }) {
   const plate = plateFor(record.topics);
   const results = splitSummary(record.resultsSummary);
@@ -158,7 +274,12 @@ export function EvidenceSheet({ record, accessedAs, complementary }: {
         </nav>
 
         <div className="ev-sheet__main">
-          <SheetSection id="resultado" n="01" title="Resultado descrito no material de pesquisa"
+          <SheetSection id="passaporte" n="01" title="Passaporte da Evidência"
+            description={"Resumo exportável desta ficha, com fonte, status de revisão e limites. Campos ausentes aparecem como “" + PASSPORT_MISSING + "”."}>
+            <EvidencePassportBlock passport={passport}/>
+          </SheetSection>
+
+          <SheetSection id="resultado" n="02" title="Resultado descrito no material de pesquisa"
             description="Síntese documental, ainda não aprovada como número clínico para gráficos ou projeções.">
             {results.length ? (
               <Reveal as="ol" className="ev-obs">
@@ -183,7 +304,7 @@ export function EvidenceSheet({ record, accessedAs, complementary }: {
             )}
           </SheetSection>
 
-          <SheetSection id="populacao" n="02" title="População, desenho ou contexto informado">
+          <SheetSection id="populacao" n="03" title="População, desenho ou contexto informado">
             {population.length ? (
               <Reveal className="ev-pop">
                 {population.map((seg, i) => {
@@ -198,7 +319,7 @@ export function EvidenceSheet({ record, accessedAs, complementary }: {
             )}
           </SheetSection>
 
-          <SheetSection id="limites" n="03" title="Limitações da evidência">
+          <SheetSection id="limites" n="04" title="Limitações da evidência">
             <LimitNote>
               <p>{record.limitations || "Limitações específicas ainda não revisadas; consulte a publicação original."}</p>
             </LimitNote>
@@ -211,7 +332,7 @@ export function EvidenceSheet({ record, accessedAs, complementary }: {
             )}
           </SheetSection>
 
-          <SheetSection id="fontes" n="04" title="Fonte original e identificadores"
+          <SheetSection id="fontes" n="05" title="Fonte original e identificadores"
             description="Abra o documento original em outra aba para conferir os resultados e o contexto.">
             <ul className="ev-sources">
               {record.references.map((ref, i) => (
@@ -244,7 +365,7 @@ export function EvidenceSheet({ record, accessedAs, complementary }: {
             </div>
           </SheetSection>
 
-          <SheetSection id="relacionados" n="05" title="Estudos relacionados">
+          <SheetSection id="relacionados" n="06" title="Estudos relacionados">
             {family.length > 0 && (
               <div className="ev-rel">
                 <h3>Publicações da mesma família</h3>

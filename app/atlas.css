@@ -664,3 +664,9 @@ h1, h2, h3, .at-split { text-wrap: balance; }
   .at-closing { min-height: 0; }
   .at-footer__inner { padding-top: 48px; gap: 28px; }
 }
+
+/* Evidence Lens: conteúdo do motor de interpretação */
+.at-lens-stage__status { margin: 14px 0 0; font-size: 12.5px; color: var(--at-amber); }
+.at-lens-stage__list { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 15px; line-height: 1.55; color: #34485f; }
+.at-lens-stage__links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 22px; }
+.at-lens-stage__links .at-lens-stage__src { margin-top: 0; }

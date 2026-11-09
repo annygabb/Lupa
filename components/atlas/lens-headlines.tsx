@@ -1,22 +1,36 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { gsap } from "gsap";
-import { evidenceQuestions } from "@/features/insights/questions";
+import { evidenceLensClaims } from "@/features/interpretation/claims";
+import { interpretClaim } from "@/features/interpretation/interpret-claim";
 import { Cutout, SplitTitle, motionAllowed } from "./motion";
 
 /**
  * "Passe a lupa na manchete": a manchete fica na camada de cima; a leitura do estudo,
  * na camada de baixo. A lupa abre um círculo que segue o cursor; o botão abre tudo.
  * As duas camadas estão no DOM e são lidas por leitores de tela.
+ * Evidence Lens: cada manchete é uma afirmação curada interpretada pelo motor determinístico
+ * (features/interpretation), com fontes, limites, bloqueios e status de revisão.
  */
+const noopSubscribe = () => () => {};
+const readClaimParam = () => new URLSearchParams(window.location.search).get("afirmacao");
+
 export function LensHeadlines() {
-  const [index, setIndex] = useState(0);
+  // ?afirmacao=<id> abre o Lens naquela afirmação (link compartilhável, sem dados pessoais).
+  const urlClaimId = useSyncExternalStore(noopSubscribe, readClaimParam, () => null);
+  const urlIndex = evidenceLensClaims.findIndex(c => c.id === urlClaimId);
+  const [picked, setIndex] = useState<number | null>(null);
+  const index = picked ?? (urlIndex >= 0 ? urlIndex : 0);
   const [revealed, setRevealed] = useState(false);
+  const [copied, setCopied] = useState("");
   const stage = useRef<HTMLDivElement>(null);
   const radius = useRef({ r: 0 });
   const pos = useRef({ x: 50, y: 50 });
-  const q = evidenceQuestions[index];
+  const claim = evidenceLensClaims[index];
+  const r = useMemo(() => interpretClaim(claim.id)!, [claim.id]);
+  const tab = revealed ? 0 : -1;
 
   const paint = () => {
     const el = stage.current;
@@ -52,6 +66,11 @@ export function LensHeadlines() {
   const choose = (i: number) => {
     setIndex(i);
     setRevealed(false);
+    setCopied("");
+    const url = new URL(window.location.href);
+    url.searchParams.set("afirmacao", evidenceLensClaims[i].id);
+    url.hash = "lupa";
+    window.history.replaceState(null, "", url);
     gsap.killTweensOf(radius.current);
     radius.current.r = 0;
     paint();
@@ -76,6 +95,11 @@ export function LensHeadlines() {
     toggleReveal();
   };
   const onLeave = () => { if (!revealed) animateRadius(0, 0.3); };
+  const share = async () => {
+    const link = `${window.location.origin}/?afirmacao=${claim.id}#lupa`;
+    try { await navigator.clipboard.writeText(link); setCopied("Link desta investigação copiado."); }
+    catch { setCopied(`Copie o link: ${link}`); }
+  };
 
   return (
     <section id="lupa" className="at-lens-sec" data-chapter="Passe a lupa na manchete" aria-labelledby="lupa-title">
@@ -88,8 +112,8 @@ export function LensHeadlines() {
 
       <div className="at-lens-sec__body">
         <ol className="at-lens-sec__list" aria-label="Manchetes">
-          {evidenceQuestions.map((item, i) => (
-            <li key={item.question}>
+          {evidenceLensClaims.map((item, i) => (
+            <li key={item.id}>
               <button type="button" aria-pressed={i === index} onClick={() => choose(i)}>
                 <span className="at-mono">{String(i + 1).padStart(2, "0")}</span>{item.question}
               </button>
@@ -102,20 +126,44 @@ export function LensHeadlines() {
             onPointerMove={onMove} onPointerEnter={onEnter} onPointerLeave={onLeave} onPointerDown={onTap}>
             <div className="at-lens-stage__headline">
               <p className="at-mono">Manchete {String(index + 1).padStart(2, "0")}</p>
-              <p className="at-lens-stage__q">{q.question}</p>
+              <p className="at-lens-stage__q">{claim.question}</p>
             </div>
             <div className="at-lens-stage__study" role="region" aria-label="O que o estudo permite dizer">
-              <p className="at-mono">O que o estudo mediu</p>
-              <p className="at-lens-stage__a">{q.answer}</p>
+              <p className="at-mono">O que o estudo mediu · {r.classificationLabel}</p>
+              <p className="at-lens-stage__a">{r.summary}</p>
+              <p className="at-lens-stage__status at-mono">{r.reviewStatusLabel}</p>
               <div className="at-lens-stage__cols">
-                <div><h3>Por quê</h3><p>{q.why}</p></div>
-                <div><h3>O que dá para concluir</h3><p>{q.allows}</p></div>
+                <div><h3>Por quê</h3><p>{r.explanation}</p></div>
+                <div><h3>O que dá para concluir</h3><p>{r.allowedConclusion}</p></div>
               </div>
-              {q.pmid && (
-                <a className="at-lens-stage__src" href={`https://pubmed.ncbi.nlm.nih.gov/${q.pmid}/`} target="_blank" rel="noopener noreferrer" tabIndex={revealed ? 0 : -1}>
-                  Fonte · PubMed {q.pmid} ↗
-                </a>
-              )}
+              <div className="at-lens-stage__cols">
+                <div>
+                  <h3>O que não dá para concluir</h3>
+                  <ul className="at-lens-stage__list">{r.prohibitedExtrapolations.map(p => <li key={p}>{p}</li>)}</ul>
+                </div>
+                {r.projection && !r.projection.allowed ? (
+                  <div>
+                    <h3>Por que o LUPA não projeta isso</h3>
+                    <ul className="at-lens-stage__list">{r.projection.blockers.map(b => <li key={b.code}><strong>{b.title}.</strong> {b.why}</li>)}</ul>
+                  </div>
+                ) : r.comparison ? (
+                  <div>
+                    <h3>Por que não juntar os estudos</h3>
+                    <ul className="at-lens-stage__list">{r.comparison.warnings.filter(w => w.code !== "BOTH_PENDING_CURATOR_REVIEW").slice(0, 3).map(w => <li key={w.code}><strong>{w.label}.</strong> {w.explanation}</li>)}</ul>
+                  </div>
+                ) : null}
+              </div>
+              <div className="at-lens-stage__links">
+                {r.evidence.map(e => (
+                  <Link key={e.id} className="at-lens-stage__src" href={e.passportHref} tabIndex={tab}>Passaporte {e.id} →</Link>
+                ))}
+                {r.comparison && <Link className="at-lens-stage__src" href={r.comparison.compareHref} tabIndex={tab}>Ver no comparador →</Link>}
+                {r.evidence[0] && (
+                  <a className="at-lens-stage__src" href={r.evidence[0].url} target="_blank" rel="noopener noreferrer" tabIndex={tab}>
+                    Fonte original{r.evidence[0].pmid ? ` · PubMed ${r.evidence[0].pmid}` : ""} ↗
+                  </a>
+                )}
+              </div>
             </div>
             <span className="at-lens-stage__ring" aria-hidden="true"/>
           </div>
@@ -123,7 +171,8 @@ export function LensHeadlines() {
             <button type="button" className="at-btn at-btn--solid" aria-pressed={revealed} onClick={toggleReveal}>
               {revealed ? "Voltar à manchete" : "Abrir a leitura do estudo"}
             </button>
-            <span className="at-mono at-lens-sec__hint">Leitura descritiva da fonte · sem revisão clínica independente</span>
+            <button type="button" className="at-btn at-btn--ghost" onClick={share}>Copiar link desta investigação</button>
+            <span className="at-mono at-lens-sec__hint" aria-live="polite">{copied || "Interpretação determinística · sem IA · revisão clínica independente pendente"}</span>
           </div>
         </div>
       </div>

@@ -5,10 +5,13 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { motionAllowed } from "@/components/atlas/motion";
 import {
-  SCENARIO_PRESETS, scenarioInputSchema, runScenario, scenarioCsv,
+  SCENARIO_PRESETS, scenarioInputSchema, runScenario,
   type ScenarioInput, type ScenarioPresetId, type ScenarioResult,
 } from "@/features/scenarios/engine";
+import { runSensitivity, sensitivityGrid, type SensitivityField, type SensitivityResult } from "@/features/scenarios/sensitivity";
 import { TweenNumber } from "./tween-number";
+import { SensitivityPanel, sensitivityOptions } from "./sensitivity-panel";
+import { scenarioExportCsv, scenarioExportJson } from "./scenario-export";
 
 const useIso = typeof window === "undefined" ? useEffect : useLayoutEffect;
 const compact = new Intl.NumberFormat("pt-BR");
@@ -57,15 +60,22 @@ export function ScenarioLab() {
   const [preset, setPreset] = useState<ActivePreset>("intermediario");
   const [showRules, setShowRules] = useState(true);
   const [feedback, setFeedback] = useState("");
+  const [sensField, setSensField] = useState<SensitivityField | null>(null);
 
   const parsed = useMemo(() => scenarioInputSchema.safeParse(input), [input]);
   const result = useMemo(() => parsed.success ? runScenario(parsed.data) : null, [parsed]);
+  const sensitivity = useMemo<SensitivityResult | null>(() => {
+    const option = sensitivityOptions.find(o => o.field === sensField);
+    if (!parsed.success || !option) return null;
+    return runSensitivity(parsed.data, option.field, sensitivityGrid(option.field, parsed.data[option.field], option.offsets));
+  }, [parsed, sensField]);
   const setField = (key: FieldKey, value: number) => { setInput(p => ({ ...p, [key]: value })); setPreset("personalizado"); setFeedback(""); };
   const choose = (id: ScenarioPresetId) => { setInput({ ...SCENARIO_PRESETS[id].input }); setPreset(id); setFeedback(""); };
   const exportScenario = (type: "csv" | "json") => {
     if (!result) return;
-    if (type === "csv") downloadFile("lupa-cenario-2026-2041.csv", scenarioCsv(result), "text/csv;charset=utf-8");
-    else downloadFile("lupa-cenario-2026-2041.json", JSON.stringify(result, null, 2), "application/json;charset=utf-8");
+    const now = new Date();
+    if (type === "csv") downloadFile("lupa-cenario-2026-2041.csv", scenarioExportCsv(result, sensitivity, now), "text/csv;charset=utf-8");
+    else downloadFile("lupa-cenario-2026-2041.json", scenarioExportJson(result, sensitivity, now), "application/json;charset=utf-8");
     setFeedback(`Arquivo ${type.toUpperCase()} preparado. Confira os downloads do navegador.`);
   };
   const sources = (result ?? runScenario(SCENARIO_PRESETS.intermediario.input)).sources;
@@ -167,13 +177,20 @@ export function ScenarioLab() {
                 ))}
               </section>
               <LabChart result={result}/>
-              {result.last2036.annualIllustrativeCostBRL !== null && (
-                <section className="px-cost" aria-label="Custo meramente hipotético em 2036">
-                  <p className="px-cost__k">Custo meramente hipotético em 2036</p>
-                  <p className="px-cost__v">{money.format(result.last2036.annualIllustrativeCostBRL)}</p>
-                  <p className="px-cost__n">Ativos estimados × custo anual informado pelo usuário. Não representa orçamento público.</p>
-                </section>
-              )}
+              <section className="px-cost" aria-label="Custo meramente hipotético em 2036">
+                <p className="px-cost__k">Custo meramente hipotético em 2036</p>
+                {result.last2036.annualIllustrativeCostBRL !== null ? (
+                  <>
+                    <p className="px-cost__v">{money.format(result.last2036.annualIllustrativeCostBRL)}</p>
+                    <p className="px-cost__n">Ativos estimados × custo anual informado pelo usuário. Não representa orçamento público.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="px-cost__v is-missing">Custo não informado</p>
+                    <p className="px-cost__n">Informe um custo anual hipotético por pessoa para ver valores. Sem esse dado, o custo fica ausente, não zero.</p>
+                  </>
+                )}
+              </section>
               <section className="px-ledger-card" aria-labelledby="scenario-table-title">
                 <div className="px-ledger-card__head">
                   <div>
@@ -203,6 +220,7 @@ export function ScenarioLab() {
                 </div>
                 <p className="px-swipe">Deslize a tabela para visualizar todas as colunas.</p>
               </section>
+              <SensitivityPanel field={sensField} onField={setSensField} result={sensitivity}/>
               <section className="px-warnings" aria-labelledby="scenario-warnings">
                 <h3 id="scenario-warnings">O que os resultados não significam</h3>
                 <ul>{result.warnings.map(t => <li key={t}>{t}</li>)}</ul>
@@ -282,7 +300,7 @@ function LabChart({ result }: { result: ScenarioResult }) {
       <figcaption>
         <span className="px-labchart__k">Série anual calculada</span>
         <span className="px-labchart__t">Pessoas ativas no cenário</span>
-        <span className="px-labchart__n">2026–2041 · curva ilustrativa, não previsão epidemiológica · grupo definido pelo usuário</span>
+        <span className="px-labchart__n">2026–2041 · curva ilustrativa, não previsão epidemiológica · grupo definido pelo usuário · cada ano é calculado pelo modelo, sem interpolação</span>
       </figcaption>
       <div ref={wrap} className="px-labchart__canvas">
         <svg ref={svg} width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img"
@@ -316,6 +334,11 @@ function LabChart({ result }: { result: ScenarioResult }) {
           ) : null)}
         </svg>
       </div>
+      <ul className="px-trace__legend px-labchart__legend" aria-label="Legenda do gráfico">
+        <li><i className="is-dashed" aria-hidden="true"/>Hipotético · calculado pelo modelo a partir das premissas</li>
+        <li className="px-labchart__legend-none"><i className="is-none" aria-hidden="true">∅</i>Observado · nenhum dado observado neste gráfico</li>
+        <li className="px-trace__legend-gap"><i aria-hidden="true"/>Dados insuficientes · sem série nacional calibrada; nada é desenhado como zero</li>
+      </ul>
       <p className="px-labchart__foot">Os pontos são produzidos exclusivamente pelas taxas informadas. Não indicam redução de obesidade, internação, mortalidade ou efeitos do medicamento.</p>
     </figure>
   );

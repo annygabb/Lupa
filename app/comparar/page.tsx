@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { ChapterHero, Cutout, LimitNote, Section, StatRow } from "@/components/atlas/ui";
 import { ChapterBar } from "@/components/atlas/chapter-bar";
 import { CompareBench } from "@/components/routes/comparar/compare-bench";
+import { CompareBenchFromUrl } from "@/components/routes/comparar/compare-bench-url";
 import { MetricExplorer } from "@/components/routes/comparar/metric-explorer";
 import { LimitsPlates } from "@/components/routes/comparar/limits-plates";
 import { catalogSize, projectionApprovedCount, reviewedMetricCount } from "@/components/routes/comparar/data";
@@ -63,7 +65,11 @@ export default function CompararPage() {
         </>}
       >
         <Cutout name="eucalipto" className="cp-cut cp-cut--compare" depth={0.5} width={200} rotate={8}/>
-        <CompareBench/>
+        {/* useSearchParams exige Suspense; sem JS (ou antes da hidratação) fica o par padrão E04/E12,
+            com ids próprios para não duplicar #compare-left/#compare-right durante a troca. */}
+        <Suspense fallback={<CompareBench idSuffix="-inicial"/>}>
+          <CompareBenchFromUrl/>
+        </Suspense>
         <div className="cp-compare__limit">
           <LimitNote>
             <p>A ferramenta não calcula diferença de tratamento entre estudos, risco acumulado, incidência ou metanálise. Lado a lado não significa causa e efeito.</p>

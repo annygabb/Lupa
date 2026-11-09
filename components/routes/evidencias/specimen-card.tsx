@@ -9,6 +9,7 @@ import {
   buildEvidenceHref, designNames, shortDescription,
   sourceKindName, topicNames, yearName,
 } from "@/lib/evidence-presentation";
+import { buildCompareHref } from "@/features/comparison/params";
 import { cutoutFor, splitSummary } from "./data";
 
 const fallback = {
@@ -28,6 +29,15 @@ function SourceLink({ record, className }: { record: UnifiedEvidenceRecord; clas
       Fonte original<span className="sr-only"> de {record.id} (abre em nova aba)</span>
       <ArrowUpRight size={15} aria-hidden="true"/>
     </a>
+  );
+}
+
+/** Link discreto para abrir o Comparador com esta referência pré-selecionada em A. */
+function CompareLink({ record, className }: { record: UnifiedEvidenceRecord; className: string }) {
+  return (
+    <Link href={buildCompareHref(record.id)} className={className}>
+      Comparar<span className="sr-only"> {record.id} com outro estudo</span>
+    </Link>
   );
 }
 
@@ -71,7 +81,10 @@ export function SpecimenCard({ record, headingLevel = 3 }: { record: UnifiedEvid
       <div className="ev-spec__foot">
         <span className="at-mono">{record.sourceIds.length} referência(s) de origem</span>
         <span className="ev-spec__cta" aria-hidden="true">Ver ficha <i>→</i></span>
-        <SourceLink record={record} className="ev-spec__src"/>
+        <span className="ev-spec__acts">
+          <CompareLink record={record} className="ev-spec__cmp"/>
+          <SourceLink record={record} className="ev-spec__src"/>
+        </span>
       </div>
     </article>
   );
@@ -90,7 +103,10 @@ export function SpecimenRow({ record }: { record: UnifiedEvidenceRecord }) {
         </p>
       </div>
       <p className="ev-row__limit"><strong>Limitação: </strong>{record.limitations || fallback.limitations}</p>
-      <SourceLink record={record} className="ev-row__src"/>
+      <div className="ev-row__acts">
+        <SourceLink record={record} className="ev-row__src"/>
+        <CompareLink record={record} className="ev-row__cmp"/>
+      </div>
     </article>
   );
 }

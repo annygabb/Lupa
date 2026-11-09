@@ -9,16 +9,26 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { motionAllowed } from "@/components/atlas/motion";
 import { assessStudyComparison } from "@/features/comparison/compatibility";
+import { DEFAULT_COMPARE_PAIR } from "@/features/comparison/params";
 import { getUnifiedEvidence } from "@/features/evidence/unified-catalog";
 import { BalanceBeam } from "./balance-beam";
 import { HerbariumSheet } from "./herbarium-sheet";
 import { VerdictPanel } from "./verdict-panel";
 
 type Rects = { a: DOMRect; b: DOMRect } | null;
+type Pair = { a: string; b: string };
 
-export function CompareBench() {
-  const [leftId, setLeftId] = useState("E04");
-  const [rightId, setRightId] = useState("E12");
+/**
+ * `initial` define o par na montagem (padrão E04/E12, ou a pré-seleção da URL).
+ * `onPairChange` só é chamado por ações da pessoa (selecionar ou inverter), para que a URL
+ * acompanhe o par sem recarregar a página. `idSuffix` evita ids repetidos na cópia
+ * renderizada como fallback do Suspense enquanto a versão ligada à URL é transmitida.
+ */
+export function CompareBench({ initial = DEFAULT_COMPARE_PAIR, onPairChange, idSuffix = "" }: {
+  initial?: Pair; onPairChange?: (pair: Pair) => void; idSuffix?: string;
+} = {}) {
+  const [leftId, setLeftId] = useState(initial.a);
+  const [rightId, setRightId] = useState(initial.b);
   const [pulse, setPulse] = useState(0);
   const [swaps, setSwaps] = useState(0);
   const sheetA = useRef<HTMLElement>(null);
@@ -39,6 +49,7 @@ export function CompareBench() {
     setRightId(leftId);
     setPulse(p => p + 1);
     setSwaps(s => s + 1);
+    onPairChange?.({ a: rightId, b: leftId });
   };
 
   // FLIP: cada ficha começa onde estava a outra e atravessa a bancada em arco.
@@ -64,6 +75,7 @@ export function CompareBench() {
   const pick = (side: "a" | "b") => (id: string) => {
     if (side === "a") setLeftId(id); else setRightId(id);
     setPulse(p => p + 1);
+    onPairChange?.(side === "a" ? { a: id, b: rightId } : { a: leftId, b: id });
   };
 
   return (
@@ -75,7 +87,7 @@ export function CompareBench() {
       </p>
 
       <div className="cp-bench__sheets">
-        <HerbariumSheet ref={sheetA} record={left} side="a" selectId="compare-left" onSelect={pick("a")}/>
+        <HerbariumSheet ref={sheetA} record={left} side="a" selectId={"compare-left" + idSuffix} idSuffix={idSuffix} onSelect={pick("a")}/>
         <div className="cp-swap">
           <span className="cp-swap__wire" aria-hidden="true"/>
           <button type="button" className="cp-swap__btn" onClick={swap}>
@@ -85,10 +97,10 @@ export function CompareBench() {
             <span>Trocar posições dos estudos</span>
           </button>
         </div>
-        <HerbariumSheet ref={sheetB} record={right} side="b" selectId="compare-right" onSelect={pick("b")}/>
+        <HerbariumSheet ref={sheetB} record={right} side="b" selectId={"compare-right" + idSuffix} idSuffix={idSuffix} onSelect={pick("b")}/>
       </div>
 
-      <VerdictPanel assessment={assessment} pairKey={left.id + "|" + right.id}/>
+      <VerdictPanel assessment={assessment} pairKey={left.id + "|" + right.id} idSuffix={idSuffix}/>
     </div>
   );
 }

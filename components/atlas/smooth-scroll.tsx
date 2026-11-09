@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
@@ -49,8 +49,12 @@ export function SmoothScroll() {
     return () => { window.removeEventListener("lupa:motion", onToggle); stop(); };
   }, []);
 
+  // Ao trocar de rota, volta ao topo — mas não no primeiro carregamento (respeita
+  // a posição do navegador e âncoras como /?afirmacao=...#lupa).
+  const firstPath = useRef(true);
   useEffect(() => {
-    window.__lupaLenis?.scrollTo(0, { immediate: true });
+    if (firstPath.current) firstPath.current = false;
+    else if (!window.location.hash) window.__lupaLenis?.scrollTo(0, { immediate: true });
     const id = window.setTimeout(() => ScrollTrigger.refresh(), 120);
     return () => window.clearTimeout(id);
   }, [pathname]);

@@ -7,10 +7,13 @@ import { SCENARIO_PRESETS, runScenario } from "@/features/scenarios/engine";
 import { reviewedMetrics } from "@/features/comparison/reviewed-metrics";
 import { getCatalogAudit } from "@/features/evidence/unified-catalog";
 import { ProtocolTimeline } from "./protocol-timeline";
-import { formulas, glossary, principles, safeguards, sources, susContext } from "./data";
+import { claimLevels, formulas, glossary, principles, safeguards, sources, susContext } from "./data";
+import { blockerCopy } from "@/features/interpretation/blocker-copy";
+import { blockerCodes, e12Example } from "./blocker-example";
 
 const audit = getCatalogAudit();
 const modelVersion = runScenario(SCENARIO_PRESETS.intermediario.input).modelVersion;
+const e12Fired = new Set(e12Example.assessment.blockers);
 
 /** Prancha 06 — Metodologia: do artigo original ao gráfico, com os limites à vista. */
 export function MetodologiaPage() {
@@ -90,7 +93,66 @@ export function MetodologiaPage() {
         </Reveal>
       </Section>
 
-      <Section id="motor" tone="white" chapter="Motor matemático" kicker="06.3 · Motor matemático"
+      <Section id="tipos-de-afirmacao" tone="white" chapter="Quatro tipos de afirmação" kicker="06.3 · Observação · Associação · Hipótese · Previsão validada"
+        title={["Quatro tipos", "de afirmação"]}
+        intro={<p>Nem todo número diz a mesma coisa. Cada leitura do LUPA pertence a uma destas categorias, e só a última exige calibração e validação.</p>}>
+        <ol className="mt-levels" aria-label="Categorias de afirmação, da observação à previsão validada">
+          {claimLevels.map((l, i) => (
+            <li key={l.id} className={"mt-level" + (l.validated ? " is-validated" : "")}>
+              <span className="mt-level__id" aria-hidden="true">{l.id}</span>
+              <p className="mt-level__n">{String(i + 1).padStart(2, "0")} de 04</p>
+              <h3>{l.name}</h3>
+              <p className="mt-level__ask">{l.asks}</p>
+              <dl>
+                <div><dt>Exemplo</dt><dd>{l.example}</dd></div>
+                <div><dt>{l.validated ? "Exige calibração e validação" : "Exige"}</dt><dd>{l.needs}</dd></div>
+              </dl>
+              <p className="mt-level__status"><span>No LUPA</span> {l.status}</p>
+            </li>
+          ))}
+        </ol>
+        <LimitNote title="Nenhuma previsão validada">
+          <p>Observação, associação e hipótese não precisam de calibração para serem mostradas, desde que rotuladas. Previsão validada precisa: um modelo ajustado a dados observados e testado em dados que não foram usados no ajuste. O LUPA ainda não tem nenhuma previsão validada; por isso os horizontes de 2031, 2036 e 2041 são cenários hipotéticos.</p>
+        </LimitNote>
+      </Section>
+
+      <Section id="bloqueios" tone="paper" chapter="Por que o LUPA se recusa a projetar" kicker="06.4 · Regras do bloqueio de projeção"
+        title={["Por que o LUPA", "se recusa a projetar"]}
+        intro={<p>Antes de qualquer número virar projeção, uma ficha passa por {blockerCodes.length} verificações. Basta uma falhar para a projeção ser recusada. Abaixo, todos os códigos de bloqueio e um exemplo real do acervo.</p>}>
+        <div className="mt-blockers">
+          <ol className="mt-blockers__list" aria-label="Todos os códigos de bloqueio de projeção">
+            {blockerCodes.map(code => (
+              <li key={code} className={"mt-blocker" + (e12Fired.has(code) ? " is-fired" : "")}>
+                <p className="mt-blocker__code at-mono">{code}</p>
+                <h3>{blockerCopy[code].title}</h3>
+                <p>{blockerCopy[code].why}</p>
+                {e12Fired.has(code) && <p className="mt-blocker__tag">Dispara no exemplo E12</p>}
+              </li>
+            ))}
+          </ol>
+          <aside className="mt-example" aria-labelledby="exemplo-e12-title">
+            <p className="mt-example__k">Exemplo · candidato curado</p>
+            <h3 id="exemplo-e12-title">E12 tentando virar projeção de UTI</h3>
+            <p className="mt-example__lead">Ficha montada com dados do catálogo para ilustrar o bloqueio. Não é registro aprovado nem estimativa.</p>
+            <dl className="mt-example__fields">
+              {e12Example.fields.map(f => (
+                <div key={f.label}><dt>{f.label}</dt><dd>{f.value}<span className="mt-example__origin">{f.origin}</span></dd></div>
+              ))}
+            </dl>
+            <p className="mt-example__verdict">
+              {e12Example.assessment.allowed ? "Projeção permitida" : `Projeção recusada · ${e12Example.assessment.blockers.length} bloqueios`}
+            </p>
+            <ul className="mt-example__fired">
+              {e12Example.assessment.blockers.map(code => (
+                <li key={code}><span className="at-mono">{code}</span> {blockerCopy[code].title}</li>
+              ))}
+            </ul>
+            <a className="at-link" href={e12Example.sourceUrl} target="_blank" rel="noopener noreferrer">Consultar a metanálise original <span aria-hidden="true">↗</span></a>
+          </aside>
+        </div>
+      </Section>
+
+      <Section id="motor" tone="white" chapter="Motor matemático" kicker="06.5 · Motor matemático"
         title={["Como funcionam", "os cenários de", "2031, 2036 e 2041"]}
         intro={<p>O simulador <strong>não estima efeitos clínicos</strong>. Ele aplica taxas hipotéticas a um grupo de referência editável e contabiliza entradas, continuidade e saídas por ano.</p>}>
         <div className="mt-engine">
@@ -143,7 +205,7 @@ export function MetodologiaPage() {
         </div>
       </Section>
 
-      <Section id="sus" tone="paper" chapter="Brasil e SUS" kicker="06.4 · Contexto brasileiro"
+      <Section id="sus" tone="paper" chapter="Brasil e SUS" kicker="06.6 · Contexto brasileiro"
         title={["Brasil e SUS:", "o que sabemos", "até esta versão"]}>
         <ol className="mt-sus">
           {susContext.map(c => (
@@ -160,7 +222,7 @@ export function MetodologiaPage() {
         </LimitNote>
       </Section>
 
-      <Section id="glossario" tone="white" chapter="Glossário" kicker="06.5 · Glossário científico"
+      <Section id="glossario" tone="white" chapter="Glossário" kicker="06.7 · Glossário científico"
         title={["Termos para", "interpretar", "com segurança"]}
         intro={<p>Um herbário de conceitos: cada termo preso à sua definição e ao que ele não significa.</p>}>
         <Reveal className="mt-herbarium" stagger={.06}>
@@ -180,7 +242,7 @@ export function MetodologiaPage() {
         </Reveal>
       </Section>
 
-      <Section id="fontes" tone="ink" chapter="Fontes auditáveis" kicker="06.6 · Fontes auditáveis"
+      <Section id="fontes" tone="ink" chapter="Fontes auditáveis" kicker="06.8 · Fontes auditáveis"
         title={["Publicações e", "documentos originais"]}>
         <ol className="mt-refs">
           {sources.map((s, i) => (

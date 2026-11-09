@@ -110,6 +110,8 @@ test.describe("LUPA — fluxos reais",()=>{
 
   test("simulador exporta CSV e JSON com premissas rastreáveis",async({page})=>{
     await page.goto("/projecoes");
+    // Espera a hidratação (o provider de movimento marca o <html>) antes de clicar.
+    await page.waitForFunction(()=>Boolean(document.documentElement.dataset.motion));
     const [csv]=await Promise.all([
       page.waitForEvent("download"),
       page.getByRole("button",{name:"Exportar CSV"}).click(),
