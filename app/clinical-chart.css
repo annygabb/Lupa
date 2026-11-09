@@ -1,0 +1,57 @@
+/* Estilos do gráfico de benefícios (components/insights/clinical-chart.tsx), extraídos do CSS antigo. */
+:root{--green:var(--at-prussia-700);--ink:var(--at-ink);--line:#d9e2ec;--secondary:#4a5d72}
+.eyebrow{font-size:13px;line-height:1.6;color:var(--green);font-weight:500;margin:0 0 20px;letter-spacing:0;text-transform:none}
+.text-link{display:inline-flex;min-height:44px;align-items:center;gap:8px;font-size:14px;font-weight:500;line-height:1.6;color:var(--green);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.text-link svg{flex-shrink:0}
+.text-link:hover{color:#15243f}
+.section-intro .eyebrow{font-size:13px;margin-bottom:16px;color:var(--green)}
+.clinical-chart{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.chart-tabs{display:flex;gap:4px;flex-wrap:wrap;padding:16px 24px;border-bottom:1px solid var(--line);background:#eef0f3}
+.chart-tabs button{min-height:44px;padding:10px 16px;border-radius:6px;font-size:14px;border:1px solid transparent;background:transparent;color:#4c535f;cursor:pointer;transition:background 160ms ease,color 160ms ease}
+.chart-tabs button[aria-pressed=true]{background:#fff;border-color:#ccd1d9;color:#20304d}
+.chart-tabs button:hover{background:#dfe3e9}
+.chart-reading{padding:32px}
+.chart-heading .eyebrow{margin-bottom:8px;font-size:13px}
+.chart-heading h3{font-weight:500;font-size:24px;line-height:1.4;margin:0 0 24px;max-width:800px}
+.evidence-figure{margin:0;max-width:900px}
+.evidence-figure figcaption{font-size:13px;color:var(--secondary);line-height:1.7}
+.evidence-figure svg{display:block;width:100%;max-height:320px;margin-top:12px}
+.chart-data,.source-details{font-size:14px;line-height:1.8;color:var(--secondary)}
+.chart-data table{border-collapse:collapse;width:100%;font-size:14px;text-align:left}
+.chart-data caption{font-size:13px;text-align:left;margin-bottom:12px}
+.chart-data th,.chart-data td{padding:12px;border-bottom:1px solid var(--line);font-weight:400;vertical-align:top}
+.chart-data th{font-weight:500}
+.chart-interpretation{display:grid;grid-template-columns:1fr 1fr;gap:32px;border-top:1px solid var(--line);margin-top:20px;padding-top:24px}
+.chart-interpretation h4{font-weight:600;font-size:14px;margin:0 0 8px}
+.chart-interpretation p{font-size:14px;line-height:1.8;color:var(--secondary);margin:0}
+.source-details{margin:16px 0 0}
+.source-details p{max-width:860px}
+.chart-reading>.text-link{font-size:13px}
+.research-paths .text-link{margin-top:12px}
+.mental-invitation>p:not(.eyebrow){font-size:17px;line-height:1.8;color:var(--secondary);max-width:720px;margin:24px 0}
+.mobile-evidence-bars{display:none}
+@media(max-width:1100px){.chart-reading{padding:24px}}
+@media(max-width:600px){.eyebrow{font-size:12px;margin-bottom:16px}.hero-actions .text-link{min-height:44px}.chart-tabs{padding:12px;gap:4px}.chart-tabs button{font-size:13px;padding:8px 12px;min-height:44px}.chart-reading{padding:20px}.chart-heading h3{font-size:22px}.chart-interpretation{grid-template-columns:1fr;gap:20px}.chart-interpretation p{font-size:15px}.mental-invitation>p:not(.eyebrow){font-size:16px}.evidence-figure svg{display:none}.mobile-evidence-bars{display:block;margin:24px 0}.mobile-evidence-row{margin:24px 0}.mobile-evidence-row p{font-size:14px;line-height:1.6;margin-bottom:8px}.mobile-evidence-row p>strong{display:block;font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}.mobile-evidence-track{position:relative;height:28px;background:#edeff2}.mobile-evidence-track>span{display:block;position:absolute;height:100%}.mobile-chart-axis{display:flex;justify-content:space-between;gap:8px;color:var(--secondary);font-size:12px}.chart-data table{font-size:13px}.chart-data td,.chart-data th{padding:8px 4px;overflow-wrap:anywhere}}
+.composition-section>div:last-child>p:not(.eyebrow){font-size:17px;line-height:1.8;color:var(--secondary);max-width:480px}
+.chart-detail-layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:32px;align-items:start}
+.observed-chart .eyebrow{margin:0 0 12px}
+.chart-point{cursor:pointer;outline:none}
+.chart-point:focus-visible circle:last-child{stroke-width:5;stroke:var(--ink)}
+.chart-point:hover circle:last-child{fill:#d4dce9}
+.chart-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;margin:20px 0 12px}
+.chart-legend>span{display:flex;align-items:center;gap:8px}
+.chart-legend i{display:inline-block;width:24px;border-top:2px solid currentColor}
+.chart-legend i.is-dashed{border-top-style:dashed}
+.chart-hint{font-size:12px;line-height:1.7;color:var(--secondary);margin:12px 0}
+.chart-point-buttons{display:flex;gap:6px;flex-wrap:wrap}
+.chart-point-buttons button{font-size:12px;line-height:1.5;border:1px solid var(--line);border-radius:6px;min-height:44px;text-align:left;padding:8px 12px;color:var(--secondary);cursor:pointer;flex:1 1 130px}
+.chart-point-buttons strong{display:block;color:var(--ink);font-size:16px;font-weight:500;font-variant-numeric:tabular-nums}
+.chart-point-buttons button[aria-pressed=true]{background:#e3e7ee;border-color:#8996ad}
+.chart-point-buttons button:hover{border-color:var(--green)}
+.metric-detail .text-link{font-size:13px}
+.scenario-explorer>.source-details p{font-size:15px;line-height:1.8;color:var(--secondary)}
+@media(max-width:1100px){.chart-detail-layout{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px}}
+@media(max-width:768px){.chart-detail-layout{grid-template-columns:minmax(0,1fr)}.chart-point-buttons button{flex-basis:125px}}
+@media(max-width:600px){.chart-hint{font-size:13px}.clinical-context .text-link{margin-top:12px}}
+.composition-section>div:last-child>p:not(.eyebrow){font-size:16px}
+.mental-invitation>p:not(.eyebrow){max-width:650px;font-size:16px;margin:20px 0}

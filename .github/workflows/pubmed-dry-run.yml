@@ -1,0 +1,74 @@
+name: PubMed dry-run (candidatos para revisão humana)
+
+# Execução SOMENTE manual. Gera relatório de candidatos como artifact.
+# Não faz push, não abre PR, não altera o catálogo e não exige secrets.
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "Consulta PubMed (vazio = consulta padrão do LUPA)"
+        required: false
+        default: ""
+        type: string
+      max_results:
+        description: "Máximo de resultados (1–100)"
+        required: false
+        default: "20"
+        type: string
+      sort:
+        description: "Ordenação do PubMed"
+        required: false
+        default: "relevance"
+        type: choice
+        options: [relevance, pub_date]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pubmed-dry-run
+  cancel-in-progress: false
+
+jobs:
+  dry-run:
+    name: Dry-run PubMed
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Executar dry-run (somente leitura do catálogo)
+        env:
+          # Entradas passam por variáveis de ambiente, nunca interpoladas no shell.
+          PUBMED_QUERY: ${{ inputs.query }}
+          PUBMED_MAX: ${{ inputs.max_results }}
+          PUBMED_SORT: ${{ inputs.sort }}
+          # Opcionais: ausentes por padrão. A chave nunca é impressa pelo script.
+          NCBI_EMAIL: ${{ vars.NCBI_EMAIL }}
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+        run: |
+          args=(--max "${PUBMED_MAX:-20}" --sort "${PUBMED_SORT:-relevance}")
+          if [ -n "${PUBMED_QUERY}" ]; then args+=(--query "${PUBMED_QUERY}"); fi
+          pnpm run ingest:pubmed:dry-run "${args[@]}"
+      - name: Conferir que o catálogo não mudou
+        run: git diff --exit-code -- features/evidence
+      - name: Publicar relatório como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pubmed-dry-run-report
+          path: reports/pubmed-dry-run/
+          if-no-files-found: warn
+          retention-days: 14

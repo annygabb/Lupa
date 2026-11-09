@@ -1,27 +1,30 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import "lenis/dist/lenis.css";
 import "./globals.css";
-import "./lupa-premium.css";
-import "./editorial.css";
+import "./clinical-chart.css";
+import "./atlas.css";
+import "./atlas-system.css";
+import { display, body, mono } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
-import { ScrollReveals } from "@/components/motion/scroll-reveals";
 import { SiteFooter } from "@/components/site-footer";
+import { SmoothScroll } from "@/components/atlas/smooth-scroll";
 
 export const metadata: Metadata = {
-  title: { default: "LUPA Saúde | Evidência que orienta", template: "%s | LUPA Saúde" },
-  description: "Entenda benefícios, riscos e lacunas dos medicamentos para emagrecimento. Evidências sobre semaglutida, tirzepatida, saúde mental e massa magra.",
+  title: { default: "LUPA Saúde | Canetas para emagrecer: o que muda além do peso?", template: "%s | LUPA Saúde" },
+  description: "Um atlas ilustrado das evidências sobre semaglutida e tirzepatida: benefícios, riscos, massa magra, saúde mental e o que os estudos ainda não mostram.",
   robots: { index: false, follow: false },
 };
 
+export const viewport: Viewport = { themeColor: "#0e2a4a" };
+
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>) {
   return (
-    <html lang="pt-BR" data-scroll-behavior="smooth">
+    <html lang="pt-BR" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
-        <a href="#conteudo"
-          className="sr-only fixed left-4 top-4 z-50 rounded-lg bg-white px-4 py-3 font-semibold text-primary focus:not-sr-only">
-          Ir para o conteúdo principal
-        </a>
+        <a href="#conteudo" className="at-skip">Ir para o conteúdo principal</a>
+        <SmoothScroll/>
+        <div className="at-grain" aria-hidden="true"/>
         <div className="flex min-h-screen flex-col">
-          <ScrollReveals/>
           <SiteHeader/>
           <main id="conteudo" className="lupa-main flex-1">{children}</main>
           <SiteFooter/>
