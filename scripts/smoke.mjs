@@ -3,13 +3,13 @@
 const base=process.argv[2]??"http://127.0.0.1:3010";
 const checks=[
   {path:"/",contains:["Canetas para emagrecer","Por que o LUPA existe","benefícios, riscos"]},
-  {path:"/evidencias",contains:["Estudos sobre medicamentos para emagrecer","Em curadoria"]},
+  {path:"/evidencias",contains:["Estudos sobre","medicamentos para emagrecer.","Em curadoria"]},
   {path:"/evidencias/E04",contains:["SURMOUNT-1","Limitações"]},
-  {path:"/comparar",contains:["Enxergue além dos números","Cálculo combinado"]},
+  {path:"/comparar",contains:["Compare estudos.","Enxergue além","dos números.","Cálculo combinado"]},
   {path:"/musculos-uti",contains:["Além do peso","Que pergunta você quer responder?","A lacuna causal"]},
   {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
   {path:"/saude-mental",contains:["Emagrecer não resume","PHQ-9","41537305"]},
-  {path:"/metodologia",contains:["Como analisamos uma evidência","cenários","Fontes auditáveis"]},
+  {path:"/metodologia",contains:["Cada conclusão precisa","Como analisamos","uma evidência","cenários","Fontes auditáveis"]},
 ];
 
 async function waitForServer() {
