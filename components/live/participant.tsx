@@ -9,7 +9,7 @@ export function LiveParticipant({code}:{code:string}){
  const [error,setError]=useState("");
  const [busy,setBusy]=useState(false);
  const [submitted,setSubmitted]=useState<"pre"|"post"|null>(null);
- const [chosen,setChosen]=useState<number|null>(null);
+ const [chosen,setChosen]=useState<{phase:"pre"|"post";option:number}|null>(null);
  useEffect(()=>{
   let active=true;
   const load=async()=>{
@@ -24,12 +24,11 @@ export function LiveParticipant({code}:{code:string}){
   void load(); const timer=setInterval(()=>void load(),5000);
   return()=>{active=false;clearInterval(timer);};
  },[code]);
- useEffect(()=>{setChosen(null);},[data?.phase]);
  const vote=async()=>{
-  if(!data||chosen===null||!["pre","post"].includes(data.phase)||busy)return;
+  if(!data||chosen===null||chosen.phase!==data.phase||!["pre","post"].includes(data.phase)||busy)return;
   setBusy(true);setError("");
   try{
-   const response=await fetch("/api/live/"+code+"/vote",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phase:data.phase,optionIndex:chosen})});
+   const response=await fetch("/api/live/"+code+"/vote",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({phase:data.phase,optionIndex:chosen.option})});
    const result=await response.json() as {accepted?:boolean;reason?:string;error?:string};
    if(!response.ok){
     if(result.reason==="ALREADY_VOTED")throw new Error("Esta sessão já registrou um voto seu nesta rodada.");
@@ -48,8 +47,8 @@ export function LiveParticipant({code}:{code:string}){
   {!data?<><p>{loading?"Carregando...":"Não há sessão disponível neste endereço."}</p><Link href="/live">Voltar à entrada</Link></>:<>
    <p className="lx-kicker">Fase: {labels[phase]}</p><h2>{data.question}</h2>
    {(phase==="pre"||phase==="post")?<><div className="lx-list" role="group" aria-label="Alternativas da votação">
-    {data.choices.map((choice,i)=><button key={i} type="button" className="lx-choice" aria-pressed={chosen===i} disabled={voted||busy} onClick={()=>setChosen(i)}>{String.fromCharCode(65+i)}. {choice}</button>)}
-   </div><p style={{marginTop:18}}><button className="lx-button" type="button" onClick={vote} disabled={voted||busy||chosen===null}>{busy?"Registrando…":voted?"Resposta registrada":"Enviar resposta"}</button></p>
+    {data.choices.map((choice,i)=><button key={i} type="button" className="lx-choice" aria-pressed={chosen?.phase===phase&&chosen.option===i} disabled={voted||busy} onClick={()=>setChosen({phase:data.phase as "pre"|"post",option:i})}>{String.fromCharCode(65+i)}. {choice}</button>)}
+   </div><p style={{marginTop:18}}><button className="lx-button" type="button" onClick={vote} disabled={voted||busy||chosen===null||chosen.phase!==phase}>{busy?"Registrando…":voted?"Resposta registrada":"Enviar resposta"}</button></p>
    {voted&&<p role="status" className="lx-science">Seu voto foi registrado para esta rodada. Os resultados são agregados.</p>}</>:
    <div className="lx-science"><p>{phase==="reveal"?"O organizador está apresentando a evidência. Aguarde a segunda rodada.":"A sessão foi encerrada. Obrigada pela participação."}</p></div>}
    <p className="lx-muted">Não pedimos seu nome, idade ou dados de saúde. Uma sessão anônima temporária impede votação duplicada por rodada no mesmo navegador; não identifica pessoas.</p>
