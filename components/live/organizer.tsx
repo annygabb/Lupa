@@ -17,12 +17,12 @@ export function LiveOrganizer(){
   if(!code)return;
   let active=true;
   const load=async()=>{
-   try{const r=await fetch("/api/live/"+code,{cache:"no-store"});if(!r.ok)throw new Error("Falha ao atualizar o painel.");const d=await r.json() as LiveSnapshot;if(active)setData(d);}
+   try{const r=await fetch("/api/live/"+code,{cache:"no-store",headers:{"x-lupa-admin-token":adminToken}});if(!r.ok)throw new Error("Falha ao atualizar o painel.");const d=await r.json() as LiveSnapshot;if(active)setData(d);}
    catch{if(active)setNote("A atualização automática falhou; confira a conexão.");}
   };
   void load();const timer=setInterval(()=>void load(),3500);
   return()=>{active=false;clearInterval(timer);};
- },[code]);
+ },[code,adminToken]);
  const create=async()=>{
   setBusy(true);setError("");setNote("");
   try{

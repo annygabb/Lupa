@@ -4,10 +4,15 @@ import {isOrganizerAuthorized,sameOrigin,validCode} from "@/lib/live/security";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 type Context={params:Promise<{code:string}>};
 const result=(data:unknown,status=200)=>NextResponse.json(data,{status,headers:{"Cache-Control":"no-store"}});
-export async function GET(_req:NextRequest,{params}:Context){
+export async function GET(req:NextRequest,{params}:Context){
  const {code}=await params;if(!validCode(code))return result({error:"INVALID_CODE"},400);
  if(!liveDatabaseEnabled())return result({error:"LIVE_UNCONFIGURED"},503);
- try{const data=await eventSnapshot(code);return data?result(data):result({error:"NOT_FOUND"},404);}
+ try{const data=await eventSnapshot(code);
+  if(!data)return result({error:"NOT_FOUND"},404);
+  // O organizador vê totais durante a coleta; participantes só após a revelação.
+  if(!isOrganizerAuthorized(req))data.counts=data.phase==="pre"?[]:data.phase==="reveal"?data.counts.filter(v=>v.phase==="pre"):data.phase==="post"?data.counts.filter(v=>v.phase==="pre"):data.counts;
+  return result(data);
+ }
  catch{return result({error:"LIVE_READ_FAILED"},503);}
 }
 export async function PATCH(req:NextRequest,{params}:Context){
