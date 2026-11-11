@@ -4,7 +4,7 @@
 
 ## Baseline e escopo
 
-- Fonte GitHub: ann ygabb/Lupa (remover espaço) em branch de feature; produção permanece na main.
+- Fonte GitHub: annygabb/Lupa em branch de feature; produção permanece na main.
 - Funcionalidades sem banco: Corpo & Evidência, Desafio, Impacto A/B, Dossiê, Explorar. Todas educativas, sem cálculos de risco clínico.
 - Funcionalidade com banco: LUPA Live (organizador desktop, participante mobile, APIs server-side, migração SQL).
 - Data source de evidências: catálogo canônico local existente; nada altera status de revisão médica.
@@ -53,6 +53,7 @@ Gerar cada segredo usando Node crypto randomBytes(32).toString("hex"), guardar e
 - POST /api/live: criar sessão; token de organizador e origem permitida.
 - GET /api/live/:code: pergunta, estado e votos exclusivamente agregados.
 - PATCH /api/live/:code: avançar fase; token e transições controladas.
+- DELETE /api/live/:code: excluir a sessão e seus votos, mediante token e confirmação visual.
 - POST /api/live/:code/vote: voto por sessão HttpOnly, inserção atômica, oito tentativas/minuto/sessão e bloqueio de duplicidade.
 
 ## Dicionário de dados já versionado

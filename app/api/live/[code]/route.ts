@@ -32,3 +32,18 @@ export async function PATCH(req:NextRequest,{params}:Context){
   return result({phase:nextPhase});
  }catch{return result({error:"LIVE_UPDATE_FAILED"},503);}
 }
+
+/** Exclusão explícita e irreversível de um evento; votos e limites removidos por CASCADE. */
+export async function DELETE(req:NextRequest,{params}:Context){
+ const {code}=await params;
+ if(!validCode(code))return result({error:"INVALID_CODE"},400);
+ if(!liveDatabaseEnabled())return result({error:"LIVE_UNCONFIGURED"},503);
+ if(!sameOrigin(req))return result({error:"INVALID_ORIGIN"},403);
+ if(!isOrganizerAuthorized(req))return result({error:"UNAUTHORIZED"},401);
+ try{
+  const deleted=await liveDb<Array<{code:string}>>("lupa_live_events?code=eq."+code,{
+   method:"DELETE",headers:{"Prefer":"return=representation"}
+  });
+  return deleted.length?result({deleted:true,code}):result({error:"NOT_FOUND"},404);
+ }catch{return result({error:"LIVE_DELETE_FAILED"},503);}
+}

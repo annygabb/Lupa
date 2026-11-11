@@ -43,6 +43,16 @@ export function LiveOrganizer(){
   }catch(e){setError(e instanceof Error?e.message:"Falha ao mudar fase.");}
   finally{setBusy(false);}
  };
+ const remove=async()=>{
+  if(!code||busy||!window.confirm("Excluir permanentemente a sessão e todos os votos? Esta ação não pode ser desfeita."))return;
+  setBusy(true);setError("");
+  try{
+   const r=await fetch("/api/live/"+code,{method:"DELETE",headers:{"x-lupa-admin-token":adminToken}});
+   if(!r.ok)throw new Error("Não foi possível excluir a sessão.");
+   setCode("");setData(null);setNote("Sessão e votos excluídos.");
+  }catch(e){setError(e instanceof Error?e.message:"Erro na exclusão.");}
+  finally{setBusy(false);}
+ };
  const link=code?"/live/"+code:"";
  const phaseTotals=(phase:"pre"|"post")=>{
   return Array.from({length:3},(_,i)=>data?.counts.filter(c=>c.phase===phase&&c.optionIndex===i).reduce((sum,c)=>sum+c.count,0)??0);
@@ -68,7 +78,7 @@ export function LiveOrganizer(){
      </tbody></table></div>
      {prior.map((v,i)=><div key={i}><p className="lx-muted">{String.fromCharCode(65+i)} · {v} votos na primeira rodada</p><div className="lx-bar"><span style={{width:(v/max*100)+"%"}}/></div></div>)}
      {data.phase!=="pre"&&<div className="lx-science"><strong>Interpretação de referência:</strong> a resposta B explicita a limitação científica. <Link href={"/?afirmacao="+data.claimId+"#lupa"}>Abrir explicação e fontes →</Link></div>}
-     {nextPhase[data.phase]&&<p style={{marginTop:20}}><button className="lx-button" type="button" disabled={busy||adminToken.length<32} onClick={advance}>{phases[data.phase]}</button></p>}
+     {nextPhase[data.phase]&&<p style={{marginTop:20}}><button className="lx-button" type="button" disabled={busy||adminToken.length<32} onClick={advance}>{phases[data.phase]}</button></p>}<p style={{marginTop:14}}><button type="button" className="lx-button lx-button--line" disabled={busy||adminToken.length<32} onClick={remove}>Excluir sessão e votos</button></p>
      <div className="lx-warning">Não alegar que a mudança de votos prova aprendizado. Repetir a mesma pergunta pode produzir familiaridade; faça validação separada se desejar medir impacto educacional.</div>
     </>}
    </section>
