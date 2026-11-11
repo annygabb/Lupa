@@ -23,8 +23,8 @@ export function calculateComposition(input: CompositionInput): CompositionOutput
   }
   return {
     weightAfterKg: Math.round((weight - lost) * 100) / 100,
-    fatLossKg: Math.round(lost * (100 - fraction)) / 10000,
-    leanLossKg: Math.round(lost * fraction) / 10000,
+    fatLossKg: Math.round(lost * (100 - fraction) * 100) / 10000,
+    leanLossKg: Math.round(lost * fraction * 100) / 10000,
     leanShareOfLossPct: fraction,
     context: "hypothetical_illustration",
   };
