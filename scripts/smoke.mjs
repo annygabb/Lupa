@@ -12,7 +12,7 @@ const checks=[
   {path:"/metodologia",contains:["Cada conclusão precisa","Como analisamos","uma evidência","cenários","Fontes auditáveis"]},
   {path:"/experiencias",contains:["A ciência fica mais clara","Desafio LUPA"]},
   {path:"/corpo-evidencia",contains:["O peso conta uma história","25% do peso perdido"]},
-  {path:"/desafio",contains:["Você sabe interpretar uma evidência?","Antes de aprender"]},
+  {path:"/desafio",contains:["Você sabe interpretar uma evidência?","O desafio não é acertar por sorte."]},
   {path:"/impacto",contains:["Duas hipóteses.","Comparação explicável"]},
   {path:"/dossie",contains:["Da pergunta à fonte.","Exportar dossiê"]},
   {path:"/live",contains:["A ciência acontece","Entrar em uma sessão"]},
