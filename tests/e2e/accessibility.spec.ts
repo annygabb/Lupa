@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 // Static audits inspect the fully readable reduced-motion state; motion has its own tests.
 test.use({ reducedMotion: "reduce" });
 
-const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia","/saude-mental"];
+const auditedRoutes=["/","/evidencias","/comparar","/musculos-uti","/projecoes","/metodologia","/saude-mental","/experiencias","/corpo-evidencia","/desafio","/impacto","/dossie","/live","/live/organizador"];
 
 test.describe("WCAG automatizado — regras A e AA verificáveis",()=>{
   for(const route of auditedRoutes){
