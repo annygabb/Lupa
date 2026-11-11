@@ -11,11 +11,11 @@ const destinations=[
  {href:"/live",title:"LUPA Live",description:"Participe de uma investigação coletiva no celular com um código de evento.",image:"/assets/images/cianotipia/laboratorio-2.webp"},
 ] as const;
 export default function Experiencias() {
- return <main className="lx"><div className="lx-main"><header className="lx-head">
+ return <div className="lx"><div className="lx-main"><header className="lx-head">
   <p className="lx-kicker">Experimente · investigue · compreenda</p><h1>A ciência fica mais clara quando você participa.</h1>
   <p className="lx-lead">Escolha uma experiência. Cada resultado traz premissas, limites e fontes — não diagnósticos ou promessas sobre o seu corpo.</p>
  </header><div className="lx-cols-3">{destinations.map(d=><Link key={d.href} href={d.href} className="lx-panel lx-grid-card">
   <Image src={d.image} width={600} height={340} alt="" sizes="(max-width:640px) 100vw, (max-width:930px) 50vw, 32vw"/>
   <h2>{d.title}</h2><p>{d.description}</p><span className="lx-button">Explorar →</span>
- </Link>)}</div></div></main>;
+ </Link>)}</div></div></div>;
 }
