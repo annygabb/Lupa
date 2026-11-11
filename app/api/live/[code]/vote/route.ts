@@ -24,7 +24,7 @@ export async function POST(req:NextRequest,{params}:Context){
   });
   const status=outcome.accepted?201:outcome.reason==="RATE_LIMIT"?429:outcome.reason==="ALREADY_VOTED"?409:outcome.reason==="NOT_FOUND"?404:409;
   const res=NextResponse.json({accepted:outcome.accepted,reason:outcome.reason},{status,headers:{"Cache-Control":"no-store"}});
-  res.cookies.set(SID_COOKIE,session,{httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/api/live",maxAge:60*60*4});
+  res.cookies.set(SID_COOKIE,session,{httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/api/live/"+code+"/vote",maxAge:60*60*4});
   return res;
  }catch{return fail("LIVE_VOTE_FAILED",503);}
 }

@@ -1,6 +1,7 @@
 -- LUPA Live: schema mínimo e isolado. Nunca aplicar em banco de outros projetos.
 -- Backend autorizado: exclusivamente service_role, em rotas Next.js server-side.
 -- Não grava nome, telefone, e-mail, peso, idade ou perfil de saúde.
+create schema if not exists extensions;
 create extension if not exists pgcrypto with schema extensions;
 
 create table if not exists public.lupa_live_events (
@@ -88,7 +89,42 @@ set search_path = ''
 as $$
 declare v_event public.lupa_live_events%rowtype; v_attempts integer; v_added integer;
 begin
- if p_session_hash !~ '^[a-f0-9]{64}$' or p_phase not in ('pre','post') or p_option not between 0 and 2 then
+ if p_session_hash is null or p_session_hash !~ '^[a-f0-9]{64}
+   return jsonb_build_object('accepted',false,'reason','INVALID_INPUT');
+ end if;
+ select * into v_event from public.lupa_live_events
+  where code=p_code for share;
+ if not found then return jsonb_build_object('accepted',false,'reason','NOT_FOUND'); end if;
+ if v_event.expires_at < now() or v_event.phase <> p_phase then
+   return jsonb_build_object('accepted',false,'reason','PHASE_UNAVAILABLE');
+ end if;
+ insert into public.lupa_live_rate_limits(event_id,session_hash,minute_bucket,attempts)
+ values(v_event.id,p_session_hash,date_trunc('minute',now()),1)
+ on conflict(event_id,session_hash,minute_bucket)
+ do update set attempts=public.lupa_live_rate_limits.attempts+1
+ returning attempts into v_attempts;
+ if v_attempts > 8 then return jsonb_build_object('accepted',false,'reason','RATE_LIMIT'); end if;
+ insert into public.lupa_live_votes(event_id,phase,option_index,session_hash)
+ values(v_event.id,p_phase,p_option,p_session_hash)
+ on conflict(event_id,phase,session_hash) do nothing;
+ get diagnostics v_added = row_count;
+ return jsonb_build_object('accepted',(v_added=1),'reason',case when v_added=1 then 'ACCEPTED' else 'ALREADY_VOTED' end);
+end $$;
+
+-- Funções em public exigem REVOKE explícito; nunca disponibilizar a anon/auth.
+revoke all on function public.lupa_event_snapshot(text) from public, anon, authenticated;
+revoke all on function public.lupa_cast_vote(text,text,integer,text) from public, anon, authenticated;
+grant execute on function public.lupa_event_snapshot(text) to service_role;
+grant execute on function public.lupa_cast_vote(text,text,integer,text) to service_role;
+
+comment on table public.lupa_live_events is 'Sessões educacionais, não prontuários, sem dados clínicos.';
+comment on table public.lupa_live_votes is 'Voto por pseudônimo de sessão; não armazenar IP bruto ou PII.';
+comment on table public.lupa_live_rate_limits is 'Contagem efêmera de tentativas por sessão; limpeza periódica obrigatória.';
+
+-- Retenção (job a habilitar com aprovação e monitoramento):
+-- delete from public.lupa_live_events where expires_at < now() - interval '30 days';
+-- delete from public.lupa_live_rate_limits where minute_bucket < now() - interval '1 day';
+ or p_phase is null or p_phase not in ('pre','post') or p_option is null or p_option not between 0 and 2 then
    return jsonb_build_object('accepted',false,'reason','INVALID_INPUT');
  end if;
  select * into v_event from public.lupa_live_events

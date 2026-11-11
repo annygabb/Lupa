@@ -67,6 +67,7 @@ export default function Home() {
           <p>O LUPA não indica medicamentos, não diagnostica e não calcula risco individual. Ele mostra o que os estudos mediram e onde a leitura precisa parar.</p>
           <div className="at-hero__actions">
             <Magnetic><Link className="at-btn at-btn--light" href="/comparar">Comparar dois estudos</Link></Magnetic>
+            <Magnetic><Link className="at-btn at-btn--line" href="/experiencias">Experimentar o LUPA →</Link></Magnetic>
             <Magnetic><Link className="at-btn at-btn--ghost" href="/metodologia">Conhecer o método e os limites</Link></Magnetic>
           </div>
         </div>
