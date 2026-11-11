@@ -26,7 +26,7 @@ export function ImpactExperience(){
  return <div className="lx"><div className="lx-main"><header className="lx-head">
   <p className="lx-kicker">Laboratório · lupa-flow-v2</p><h1>Duas hipóteses. Dois futuros possíveis no modelo.</h1>
   <p className="lx-lead">Altere as taxas e compare o efeito matemático sobre um grupo fictício. Não estimamos cobertura SUS, efeitos clínicos, mortalidade ou necessidades reais de tratamento.</p>
- </header><div className="lx-cols-3" style={{gridTemplateColumns:"repeat(2,minmax(0,1fr))"}}>
+ </header><div className="lx-impact-controls">
   <ScenarioControls label="Cenário A · acesso restrito" input={a} onChange={setA}/><ScenarioControls label="Cenário B · acesso ampliado" input={b} onChange={setB}/>
  </div>
  {(!ra||!rb)?<div role="alert" className="lx-warning">Revise as entradas numéricas. População de 1.000 a 100 milhões; taxas e custos dentro dos limites do motor.</div>:

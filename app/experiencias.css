@@ -46,3 +46,9 @@
 @media(max-width:930px) { .lx-cols { grid-template-columns:1fr; } .lx-cols-3 { grid-template-columns:1fr 1fr; } }
 @media(max-width:640px) { .lx-cols-3,.lx-kpis { grid-template-columns:1fr; } .lx-main { padding:20px 18px 70px; } .lx-panel { padding:19px; } .lx-head { padding-bottom:24px; } }
 @media(prefers-reduced-motion:reduce){ .lx * { transition:none!important; animation:none!important; } }
+
+.lx-body-display { display:grid; grid-template-columns:minmax(150px,.55fr) minmax(220px,1fr); gap:20px; align-items:center; }
+.lx-impact-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.lx-panel { overflow-wrap:anywhere; }
+.lx button:disabled { opacity:.58; cursor:not-allowed; }
+@media(max-width:760px) { .lx-body-display,.lx-impact-controls { grid-template-columns:1fr; } .lx-body-display .lx-figure {max-width:360px;margin:0 auto;} }

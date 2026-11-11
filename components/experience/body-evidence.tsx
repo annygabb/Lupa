@@ -34,7 +34,7 @@ export function BodyEvidenceExperience() {
    </section>
    <div>
     <section className="lx-panel" aria-labelledby="sim-result"><h2 id="sim-result">O que o exemplo mostra</h2>
-     <div className="lx-cols" style={{gridTemplateColumns:"minmax(160px,.55fr) minmax(200px,1fr)"}}>
+     <div className="lx-body-display">
       <Image className="lx-figure" src="/assets/images/cianotipia/corpo-composicao.webp" width={410} height={410} alt="Ilustração artística de anatomia, não um modelo do corpo do usuário"/>
       <div>
        <p className="lx-muted">De {fmt(weight)} kg para {fmt(result.weightAfterKg)} kg, se a perda total for {fmt(safeLoss)} kg.</p>
