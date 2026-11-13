@@ -25,7 +25,8 @@ export function allowLocalDemo(): boolean {
 }
 export function liveDatabaseEnabled(): boolean {
   // Em produção, nunca simular persistência quando o banco está ausente.
-  return isSupabaseConfigured() && Boolean(process.env.LUPA_LIVE_SIGNING_SECRET);
+  return allowLocalDemo() || (isSupabaseConfigured() &&
+    Boolean(process.env.LUPA_LIVE_SIGNING_SECRET && process.env.LUPA_LIVE_ADMIN_TOKEN));
 }
 
 export function liveDatabaseMode(): "supabase" | "local-resilient" {
