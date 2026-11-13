@@ -241,6 +241,9 @@ export function LiveParticipant({ code }: { code: string }) {
                       <p className="text-xs text-[#0e2a4a] leading-relaxed">
                         Obrigada por participar! A ciência ganha rigor quando confrontamos manchetes com as fontes originais.
                       </p>
+                      <Link href="/relatos" className="lx-button lx-button--line mt-3 text-xs">
+                        Reflexão voluntária sobre o uso e possíveis sintomas (somente local)
+                      </Link>
                     </div>
 
                     {/* Formulário de Feedback Opcional */}
