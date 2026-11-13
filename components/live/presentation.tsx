@@ -60,7 +60,7 @@ export function LivePresentation({ code }: { code: string }) {
       try {
         const res = await fetch(`/api/live/${code}`, {
           cache: "no-store",
-          headers: { "x-lupa-view": "presentation" },
+          
         });
 
         if (!res.ok) {
