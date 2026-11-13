@@ -58,6 +58,7 @@ export function BodyEvidenceExperience() {
   ]);
   const [leanLow, setLeanLow] = useState("20");
   const [leanHigh, setLeanHigh] = useState("25");
+  const [selectedPeriodId, setSelectedPeriodId] = useState("m1");
   const [showBmi, setShowBmi] = useState(false);
   const [showBody, setShowBody] = useState(true);
   const [cases, setCases] = useState("20");
@@ -101,6 +102,7 @@ export function BodyEvidenceExperience() {
     setWeight("65"); setHeight("164"); setAge("22"); setSexStyle("neutro");
     setMedicine("tirzepatida"); setLossMode("kg"); setLeanLow("20"); setLeanHigh("25");
     setPoints([{id:"m1",month:"1",loss:"1"},{id:"m3",month:"3",loss:"3"},{id:"m5",month:"5",loss:"5"}]);
+    setSelectedPeriodId("m1");
   };
 
   const rows = body?.rows ?? [];
@@ -114,6 +116,7 @@ export function BodyEvidenceExperience() {
     : "";
   const mainWeight = body?.input.initialWeightKg ?? 65;
   const mainHeight = body?.input.heightCm ?? 164;
+  const selectedPeriod = rows.find((r) => r.id === selectedPeriodId) ?? rows[0];
 
   return <div className="lx">
     <div className="lx-main">
@@ -129,15 +132,15 @@ export function BodyEvidenceExperience() {
           <p className="lx-muted">Os campos começam com um <strong>exemplo editável</strong>. Nada é detectado ou salvo sobre você. A ferramenta funciona localmente no navegador.</p>
           <label className="lx-field">Peso inicial (kg)
             <input type="number" min="30" max="400" step=".1" value={weight} onChange={(e)=>setWeight(e.target.value)}/>
-            <input aria-label="Ajustar peso pelo controle deslizante" type="range" min="30" max="200" step="1" value={clamp(Number(weight)||65,30,200)} onChange={(e)=>setWeight(e.target.value)}/>
+            <input aria-label="Ajustar peso pelo controle deslizante" type="range" min="30" max="400" step="1" value={clamp(Number(weight)||65,30,400)} onChange={(e)=>setWeight(e.target.value)}/>
           </label>
           <label className="lx-field">Altura (cm)
             <input type="number" min="120" max="230" step="1" value={height} onChange={(e)=>setHeight(e.target.value)}/>
-            <input aria-label="Ajustar altura pelo controle deslizante" type="range" min="120" max="220" step="1" value={clamp(Number(height)||164,120,220)} onChange={(e)=>setHeight(e.target.value)}/>
+            <input aria-label="Ajustar altura pelo controle deslizante" type="range" min="120" max="230" step="1" value={clamp(Number(height)||164,120,230)} onChange={(e)=>setHeight(e.target.value)}/>
           </label>
           <label className="lx-field">Idade (anos)
             <input type="number" min="18" max="110" step="1" value={age} onChange={(e)=>setAge(e.target.value)}/>
-            <input aria-label="Ajustar idade pelo controle deslizante" type="range" min="18" max="100" step="1" value={clamp(Number(age)||22,18,100)} onChange={(e)=>setAge(e.target.value)}/>
+            <input aria-label="Ajustar idade pelo controle deslizante" type="range" min="18" max="110" step="1" value={clamp(Number(age)||22,18,110)} onChange={(e)=>setAge(e.target.value)}/>
           </label>
           <label className="lx-field">Estilo visual do corpo (opcional)
             <select value={sexStyle} onChange={(e)=>setSexStyle(e.target.value as SexStyle)}>
@@ -199,8 +202,13 @@ export function BodyEvidenceExperience() {
                   <label><input type="checkbox" checked={showBody} onChange={(e)=>setShowBody(e.target.checked)}/> Mostrar corpo ilustrativo</label>
                   <label><input type="checkbox" checked={showBmi} onChange={(e)=>setShowBmi(e.target.checked)}/> Ver IMC aritmético</label>
                 </div>
+                <label className="lx-field">Ver representação do corpo em qual momento?
+                  <select value={selectedPeriod?.id ?? ""} onChange={(e)=>setSelectedPeriodId(e.target.value)}>
+                    {rows.map((r)=><option key={r.id} value={r.id}>Mês {r.month} — {formatKg(r.weightAfterKg)} kg hipotéticos</option>)}
+                  </select>
+                </label>
                 <div className="lx-body-display">
-                  {showBody ? <BodySilhouette weight={mainWeight} height={mainHeight} style={sexStyle}/> : <p className="lx-muted">Visual desativado. Os dados completos continuam disponíveis na tabela.</p>}
+                  {showBody ? <BodySilhouette weight={selectedPeriod?.weightAfterKg ?? mainWeight} height={mainHeight} style={sexStyle}/> : <p className="lx-muted">Visual desativado. Os dados completos continuam disponíveis na tabela.</p>}
                   <div className="lx-scenario-readout">
                     <p><strong>{formatKg(mainWeight)} kg</strong> · {formatInteger(mainHeight)} cm · {age} anos · representação {sexStyle==="nao-informar"?"não informada":sexStyle}</p>
                     {showBmi && <p>IMC aritmético: <strong>{formatKg(body.bmi)}</strong>. IMC não mede massa muscular e não é indicação de tratamento.</p>}
@@ -208,7 +216,7 @@ export function BodyEvidenceExperience() {
                       <div className="lx-stat"><strong>{rows.length}</strong><span>Marcos do cenário</span></div>
                       <div className="lx-stat"><strong>{formatKg(rows[rows.length - 1]?.weightAfterKg ?? mainWeight)} kg</strong><span>Peso matemático no último marco</span></div>
                     </div>
-                    <p className="lx-muted">A silhueta muda de escala e estilo quando você altera os controles, mas <strong>não representa seu biotipo real</strong> nem mede reservas musculares.</p>
+                    <p className="lx-muted">A silhueta muda de escala, contorno esquemático, estilo e mês selecionado, mas <strong>não representa seu biotipo real</strong> nem mede reservas musculares.</p>
                   </div>
                 </div>
                 <div className="lx-chart-wrap">
