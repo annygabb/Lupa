@@ -299,12 +299,12 @@ export function LiveParticipant({ code }: { code: string }) {
                           className="lx-button text-xs py-2 w-full"
                           onClick={() => setFeedbackSent(true)}
                         >
-                          Enviar Avaliação
+                          Pré-visualizar avaliação
                         </button>
                       </div>
                     ) : (
                       <div className="p-3 bg-emerald-50 text-emerald-800 text-xs rounded-lg border border-emerald-300">
-                        ✓ Agradecemos sua avaliação!
+                        Prévia local: esta avaliação não foi enviada nem salva. A coleta persistente requer consentimento e proteção de dados.
                       </div>
                     )}
                   </div>
