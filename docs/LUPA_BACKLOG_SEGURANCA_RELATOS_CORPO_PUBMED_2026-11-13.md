@@ -235,22 +235,28 @@ No `/desafio` ou em Live, oferecer questões de compreensão distintas da coleta
 
 **Rota existente a evoluir:** `/corpo-evidencia`. Pergunta central: **“Quando o peso diminui, quais tecidos podem compor essa mudança, e por que a função muscular merece atenção?”** Mostrar evidências sobre perda de composição e contextos de recuperação física **sem anunciar risco individual**.
 
-### 4.2 Campos e como cada um afeta (ou não) o cálculo
-| Campo de UI | Obrigatoriedade | Propósito | Pode entrar no cálculo? |
-|---|---|---|---|
-| Peso inicial (kg) | sim para exemplo | base aritmética | **sim**, apenas para peso final após perda hipotética |
-| Altura (cm) | opcional | contextualização/escala visual | **não** para inferir músculo ou prognóstico; IMC apenas se justificado e rotulado |
-| Idade (anos completos) | opcional | contexto educativo | **não** como ajuste clínico automático |
-| Silhueta representativa | opcional | preferência visual `feminina`, `masculina`, `neutra`, `não escolher` | **não** para estimar composição por sexo, tecido ou risco |
-| Medicamento | opcional | exibir evidência específica (`tirzepatida`, `semaglutida`, `outro/nenhum`) | **não** converter direto em previsão pessoal |
-| Tempo da hipótese | 1, 3, 5 meses | eixo visual | só exibir valores fornecidos / aprovados por estudo correspondente |
-| Perda hipotética (%) ou (kg) por marco | sim para simulação | controle manual | **sim**, exclusivamente para decomposição ilustrativa |
-| Fração da perda atribuída à massa magra | default explicativo `20%–25%` | análise de sensibilidade | **sim**, apenas banda de cenário, não estimativa da pessoa |
-| Avaliação real de composição/força | **não coletar** no MVP | exige profissional e governança | nenhuma inferência clínica a partir de campos acima |
+### 4.2 Campos 100% editáveis — sem perfil fixo
 
-**Nota inclusiva:** “silhueta escolhida” é preferência estética de visualização; **não é diagnóstico, sexo biológico ou identidade de gênero inferida**. Se uma pesquisa futura exigir estratificação biológica, fazer pergunta específica, separada, com justificativa científica e proteção de privacidade.
+**Requisito atualizado pelo usuário em 13/11/2026:** peso, altura, idade e sexo/representação corporal **não podem ser valores estáticos ou imagens pré-prontas**. São campos controlados, alteráveis a qualquer momento; cada mudança atualiza a visualização, os rótulos contextuais e todos os cálculos matematicamente dependentes. **65 kg é apenas um exemplo de teste**, nunca o peso obrigatório, perfil inicial imutável ou dado presumido.
+
+| Campo | Controle interativo | Efeito imediato | O que NÃO pode presumir |
+|---|---|---|---|
+| **Peso inicial** `weightKg` | número editável + slider sincronizado, com unidades kg | muda peso de referência, curva de peso, variação acumulada em kg ou % e partição ilustrativa da perda, conforme o modo escolhido | massa muscular inicial, adiposidade, força, risco de UTI |
+| **Altura** `heightCm` | número editável + slider sincronizado, cm | muda escala/proporção **gráfica** do avatar e etiqueta de altura; IMC aritmético só se a pessoa optar por vê-lo | medidas anatômicas reais, distribuição de gordura, risco clínico, indicação de medicamento |
+| **Idade** `ageYears` | número editável + slider sincronizado, anos | atualiza o contexto/faixa etária exibida e alertas de **aplicabilidade da população estudada**, sem recalcular desfechos clínicos por idade | aparência, sarcopenia, recuperação cirúrgica, tempo de UTI ou resposta farmacológica |
+| **Sexo declarado / visualização** `sexOption` | opções `feminino`, `masculino`, `outro / neutro`, `prefiro não informar` | troca **estilo visual** da silhueta solicitada; permitir representação neutra independentemente da resposta; muda legendas e pronomes configuráveis | sexo biológico a partir de aparência, percentual de músculo, eficácia de fármaco, diagnóstico ou vulnerabilidade |
+| **Medicamento** `medicine` | `tirzepatida`, `semaglutida`, `outro`, `nenhum`, `prefiro não dizer` | altera quais estudos/limites aparecem; não cria taxa de perda automática sem série temporal validada para contexto correspondente | risco hospitalar pessoal, média mensal por sexo/idade/peso sem fonte aplicável |
+| **Modo de cenário** `lossMode` | `kg perdidos` **ou** `% do peso inicial` | converte e recalcula as perdas acumuladas para **qualquer** peso informado | evolução real garantida |
+| **Linha temporal** `months` | marcadores editáveis, com atalhos para 1, 3 e 5 meses e possibilidade de outros marcos | refaz gráficos e tabela para cada período e mantém estados correspondentes | interpolação de 72 semanas como “média real” em 1–5 meses |
+| **Perda hipotética em cada marco** `cumulativeLoss` | inputs + sliders editáveis com validação coerente | recalcula imediatamente `remainingWeight`, `leanLoss`, `fatLoss`, texto e bandas gráficas | perda de tecido muscular individual |
+| **Fração ilustrativa de massa magra na perda** `leanShareRange` | intervalo de sensibilidade inicialmente 20–25%, com edição e aviso de hipótese | recalcula faixa de partição em **kg do peso perdido**, não da musculatura total | diagnóstico de sarcopenia ou perda funcional |
+| **Dados clínicos reais de força/composição** | **não coletar** no MVP de simulação | informar “não mensurado” | não preencher valores inventados |
+
+**Não exigir um conjunto fixo como `65 kg / 1,64 m / 22 anos / feminino`.** Inputs inicialmente vazios ou amostra claramente marcada **DEMONSTRAÇÃO EDITÁVEL**; os dados da amostra nunca podem parecer perfil detectado do visitante. A idade/altura/sexo **sempre** influenciam a interface e a contextualização de forma apropriada, mas não devem criar coeficientes clínicos fictícios. Se for necessário coletar sexo biológico para análise científica futura, tratar como pergunta separada, justificada e sujeita à revisão LGPD.
 
 ### 4.3 Aparência visual do corpo — diretrizes
+
+**Mudança de produto obrigatória:** a silhueta é **paramétrica e reativa**, não uma foto/renderização fixa. A alteração de altura ajusta a escala ilustrativa, o seletor visual alterna modelos estilizados inclusivos, e a mudança de peso/perda pode alterar levemente o contorno **em caráter esquemático**, sempre com aviso permanente “representação ilustrativa, não medida do seu corpo”. Idade aparece no contexto/legendas e não causa atrofia ou postura inventadas. A visualização precisa responder a cada controle sem recarregar a página. Não usar duas imagens estáticas como “antes/depois”.
 
 - Desktop 1440 px: coluna esquerda **controles**, centro **silhueta vetorial estilizada** e linha temporal, direita **gráficos e cadeia de evidência**. Mobile 390 px: entrada → silhueta → gráfico → “o que se sabe / não se sabe” → PubMed.
 - Silhueta deve parecer educativa, **sem estética de antes/depois corporal, julgamento de aparência, imagens de músculo “sumindo” como anatomia medida, nem variação visual proporcional supostamente personalizada**.
@@ -477,6 +483,85 @@ interface HealthSystemWhatIf {
 | IMPACT-12 | Teste de compreensão | usuário diferencia “25% da perda” de “25% de todos os músculos”; entende cenário de recursos vs gasto real |
 
 **Etapa adicional após o Sprint 2:** `T-023 (P1)`: painel de impacto hospitalar comparativo com evidências PUB-15 a PUB-19, sem link causal. `T-024 (P1)`: simulador independente de dias-leito e custo hipotético, testes IMPACT-01 a IMPACT-12, exportação com provenance e revisão clínica. São propostas; **não implementadas na main**.
+
+### 4.10 REQUISITO NOVO — SIMULADOR PARAMÉTRICO 100% DINÂMICO (peso, altura, idade, sexo e período)
+
+> **Status: ESPECIFICAÇÃO / A IMPLEMENTAR.** A `main` possui inputs de idade/altura e parâmetros de perda em `components/experience/body-evidence.tsx`, mas não entrega ainda todo o comportamento responsivo paramétrico descrito nesta seção. Não rotular como desenvolvido sem teste e revisão.
+
+#### 4.10.1 Experiência esperada (desktop e mobile)
+
+1. A pessoa entra em `/corpo-evidencia` e pode escolher **seus próprios valores**. Nada começa bloqueado em 65 kg.
+2. Altera **peso** e vê imediatamente o peso projetado em cada marco, quantidades hipotéticas de massa magra/gorda, gráfico e tabela.
+3. Altera **altura** e a escala vertical do corpo ilustrativo se ajusta. Se a opção IMC estiver ativada, recalcula `weightKg / (heightM²)`, com indicação de que IMC **não mede músculos, distribuição de gordura ou aptidão para tratamento**.
+4. Altera **idade** e os rótulos/avisos de aplicabilidade do estudo mudam. **Sem modificar a probabilidade de cirurgia/UTI**, pois não há modelo validado para isso.
+5. Alterna **sexo/estilo da representação** e a silhueta responde sem recarregar. Visual neutro disponível em qualquer escolha; não usar proporções estereotipadas como medição corporal. O sexo declarado não modifica automaticamente a fração 20–25%, porque o estudo não autoriza uma fórmula personalizada dessa espécie.
+6. Altera **medicamento** e aparecem estudos específicos da escolha, com população, tempo e lacunas. Sem afirmar média mensal personalizada a partir de idade, peso e sexo.
+7. Arrasta marcadores de tempo (atalhos 1, 3 e 5 meses) e edita **perdas hipotéticas** em kg ou percentual. Todos os pontos/gráficos/tabelas são recalculados em tempo real.
+8. Pode **redefinir a simulação**, usar exemplo opcional, desativar a imagem corporal, alternar entre meses e exportar **somente dados locais mediante ação explícita**.
+9. Não há recarga, requisição ao backend nem armazenamento obrigatório de peso, idade, sexo ou medicamento. Mudanças de parâmetros não geram mensagens falsas de sucesso no banco.
+10. Painel hospitalar permanece **independente**: mudanças pessoais **NÃO** recalculam automaticamente OR, dias de UTI, internações, sarcopenia, probabilidade de complicação ou custo por pessoa.
+
+#### 4.10.2 Estado único e dependências
+
+```ts
+// CONTRATO PROPOSTO — NÃO EXISTE NA MAIN COMO ESTÁ
+type SexOption = "feminino" | "masculino" | "neutro" | "prefiro-nao-informar";
+type LossMode = "absolute_kg" | "percent_of_baseline";
+
+interface DynamicBodyScenario {
+  weightKg: number | null;             // preenchido/editável pela pessoa
+  heightCm: number | null;             // preenchido/editável pela pessoa
+  ageYears: number | null;             // preenchido/editável pela pessoa
+  sexOption: SexOption;                // estilo escolhido, sem inferência biológica
+  medicine: "tirzepatida" | "semaglutida" | "outro" | "nenhum" | "nao-informar";
+  lossMode: LossMode;
+  timepoints: Array<{
+    month: number;                      // editável; exemplos 1,3,5 não são limite
+    cumulativeLoss: number;            // entrada em kg OU % de W0, de acordo com lossMode
+  }>;
+  leanShareLow: number;                // fração do PESO PERDIDO, ex. 0.20
+  leanShareHigh: number;               // fração do PESO PERDIDO, ex. 0.25
+  showBodyIllustration: boolean;
+  showBmiContext: boolean;
+}
+```
+
+**Motor puro, previsível e testável:** `L_t` é perda acumulada em kg. Em modo porcentagem, `L_t = W0 * (percent_t/100)`; em modo kg, `L_t = enteredKg_t`. `W_t = W0 - L_t`; `leanLossRange = [L_t * low, L_t * high]`; `fatLossRange = [L_t * (1-high), L_t * (1-low)]`. Arredondamento **somente na apresentação**, sem acumular erro. Não recalcular risco individual. Quando o peso muda, no modo porcentagem os kg mudam proporcionalmente; no modo kg, a perda digitada permanece em kg se ainda válida. Quando período muda, só calcular os marcos explicitamente informados ou interpolação **marcada como HIPÓTESE MATEMÁTICA**, nunca "média do Mounjaro".
+
+**Validação:** impedir `NaN`, números infinitos, altura 0, peso não positivo, idade impossível, valores negativos, perda acumulada que exceda o peso basal, `low > high` ou frações fora de 0–100%. Se os marcos divergem (por exemplo, 5 meses com perda menor que 3 em modelo de perda contínua), mostrar explicação e permitir escolher um **modelo com reganho** em vez de corrigir silenciosamente. Campos vazios produzem estado acessível “preencha para simular”, não resultado fictício.
+
+**Avatar:** componente SVG/Canvas paramétrico ou geometria CSS adaptativa, não mero conjunto de imagens por peso. `heightCm` pode escalar a ilustração; `sexOption` escolhe traços estilísticos opcionais; `weightKg`/perda podem alterar **contorno abstrato** com limites visuais e sem alegar medidas de gordura/volume ou localização de músculo; `ageYears` atualiza as notas científicas e o texto da idade, mas **não** gera "envelhecimento muscular" visual sem fonte. Incluir um rótulo permanente de esquematização.
+
+#### 4.10.3 Exemplos dinâmicos: não são valores previstos
+
+- Se usuário digita `W0=65 kg`, perdas acumuladas `1/3/5 kg`, o resultado segue o exemplo matemático das seções 4.5 e 4.9.3.
+- Se altera `W0=80 kg` e escolhe **5% de perda acumulada**, o sistema recalcula `L=4 kg`, `W=76 kg`, massa magra ilustrativa na perda `0,8–1,0 kg` (20–25% de **4 kg**).
+- Se troca `W0=100 kg` mantendo o mesmo cenário de **5%**, o sistema recalcula `L=5 kg`, `W=95 kg`, massa magra ilustrativa na perda `1,0–1,25 kg`.
+- Se altera apenas idade, altura ou sexo visual, **não** podem surgir alterações inventadas nas probabilidades de UTI, cirurgias ou mortalidade. O que muda é o contexto acessível e a representação pertinente.
+
+Esses casos são **testes aritméticos**, não sugestões de meta de emagrecimento. Não exibir qualquer pessoa como tendo diagnóstico de sarcopenia.
+
+#### 4.10.4 Critérios de aceite e testes novos (BODY-DYN)
+
+| ID | Ação de teste | Resultado exigido |
+|---|---|---|
+| BODY-DYN-01 | Digitar 65 kg → 80 kg → 100 kg | gráfico, tabela, pesos, perda e faixas recalculados instantaneamente; sem valores antigos presos |
+| BODY-DYN-02 | Modificar altura 164 → 180 cm | escala do avatar e contexto/IMC opcional atualizados; sem inventar gordura |
+| BODY-DYN-03 | Modificar idade 22 → 45 → 70 anos | rótulo/contextualização atualizados; sem aplicar risco hospitalar inventado |
+| BODY-DYN-04 | Alternar feminino/masculino/neutro/não informar | ilustração troca estilo e mantém números matemáticos da perda; acessibilidade preservada |
+| BODY-DYN-05 | 80 kg, 5% de perda, fração 20–25% | 76 kg finais e 0,8–1,0 kg da perda classificados como massa magra ilustrativa |
+| BODY-DYN-06 | Alterar 80 → 100 kg, mantendo 5% | 95 kg finais e 1,0–1,25 kg na banda de massa magra |
+| BODY-DYN-07 | Alterar mês 1/3/5 ou adicionar novo mês | linha, barras, tabela, títulos e aria-labels sincronizados |
+| BODY-DYN-08 | Alterar medicamento | fonte científica pertinente ou estado “média não disponível”, sem perda prevista fabricada |
+| BODY-DYN-09 | Submeter entrada inválida e limpar campos | mensagens acessíveis; sem divisões por zero, `NaN` ou números impossíveis |
+| BODY-DYN-10 | Alterar todos os parâmetros em 360/390/1440 px | zero overflow, 44 px para controles, gráficos/legendas legíveis, teclado funcional |
+| BODY-DYN-11 | Conferir logs e rede | sem envio de antropometria/sexo/medicação a APIs ou analytics sem consentimento e finalidade |
+| BODY-DYN-12 | Alterar sexo, idade, altura ou peso | painel de OR/risco hospitalar **não** muda em função dos atributos pessoais |
+| BODY-DYN-13 | Alternar `reduced-motion` e desativar avatar | mesma informação em tabela/HTML e navegação acessível |
+
+**Tarefa nova `T-025 (P1)`**: implementar estado e simulador paramétricos, SVG ilustrativo, controles sincronizados e testes `BODY-DYN-01..13`. **Gate de liberação:** screenshot real e E2E desktop/mobile, aprovação de UX, revisão científica da explicação da composição e revisão de privacidade. Não publicar como funcionalidade concluída até os testes passarem.
+
+---
 
 ## 5. ARQUITETURA E CONTRATOS FUNCIONAIS
 
