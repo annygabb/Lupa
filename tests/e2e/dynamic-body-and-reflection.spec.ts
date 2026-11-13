@@ -6,8 +6,6 @@ test("peso/altura/idade/representação respondem e não inventam risco hospital
  const weight=page.getByLabel("Peso inicial (kg)");
  await weight.fill("80");
  await page.getByLabel("Modo da perda hipotética").selectOption("percent");
- const rows=page.getByRole("table",{name:/Simulação hipotética/});
- await expect(rows.getByText("20", {exact:true}).first()).not.toBeVisible().catch(()=>{});
  await page.getByLabel("Altura (cm)").fill("180");
  await page.getByLabel("Idade (anos)").fill("45");
  await page.getByLabel("Estilo visual do corpo (opcional)").selectOption("feminino");
