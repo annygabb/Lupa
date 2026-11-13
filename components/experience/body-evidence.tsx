@@ -24,7 +24,7 @@ function BodySilhouette({ weight, height, style }: { weight: number; height: num
     (130 - hip / 2) + " 225 Q " + (130 - hip / 2) + " 216 " +
     (130 - shoulder / 2 - 14) + " 178 Z";
   return (
-    <div className="lx-avatar" aria-label="Silhueta esquemática editável — não representa medidas ou composição corporal reais">
+    <div className="lx-avatar" >
       <svg viewBox="0 0 260 350" role="img" aria-label="Ilustração abstrata de um corpo, ajustada por escala de altura e contorno esquemático">
         <defs>
           <linearGradient id="lupa-body-shape" x1="0" y1="0" x2="1" y2="1">
@@ -39,7 +39,7 @@ function BodySilhouette({ weight, height, style }: { weight: number; height: num
           <path d="M130 109 V216 M90 218 H170" stroke="#d5e4f1" strokeOpacity=".7" strokeWidth="2" strokeDasharray="4 5"/>
         </g>
       </svg>
-      <p className="lx-muted">Forma e escala **ilustrativas**. Peso, altura e estilo visual não revelam massa muscular, gordura corporal ou aparência real.</p>
+      <p className="lx-muted">Forma e escala <strong>ilustrativas</strong>. Peso, altura e estilo visual não revelam massa muscular, gordura corporal ou aparência real.</p>
     </div>
   );
 }
@@ -206,7 +206,7 @@ export function BodyEvidenceExperience() {
                     {showBmi && <p>IMC aritmético: <strong>{formatKg(body.bmi)}</strong>. IMC não mede massa muscular e não é indicação de tratamento.</p>}
                     <div className="lx-kpis">
                       <div className="lx-stat"><strong>{rows.length}</strong><span>Marcos do cenário</span></div>
-                      <div className="lx-stat"><strong>{formatKg(rows.at(-1)?.weightAfterKg ?? mainWeight)} kg</strong><span>Peso matemático no último marco</span></div>
+                      <div className="lx-stat"><strong>{formatKg(rows[rows.length - 1]?.weightAfterKg ?? mainWeight)} kg</strong><span>Peso matemático no último marco</span></div>
                     </div>
                     <p className="lx-muted">A silhueta muda de escala e estilo quando você altera os controles, mas <strong>não representa seu biotipo real</strong> nem mede reservas musculares.</p>
                   </div>
