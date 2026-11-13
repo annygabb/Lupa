@@ -52,3 +52,39 @@
 .lx-panel { overflow-wrap:anywhere; }
 .lx button:disabled { opacity:.58; cursor:not-allowed; }
 @media(max-width:760px) { .lx-body-display,.lx-impact-controls { grid-template-columns:1fr; } .lx-body-display .lx-figure {max-width:360px;margin:0 auto;} }
+
+
+/* LUPA 2026 — controles paramétricos e relatos locais, PC-first e mobile-safe */
+.lx-result-stack { display:grid; gap:20px; min-width:0; }
+.lx-minor-heading { font-family:var(--font-display),sans-serif; font-size:1.1rem; font-weight:750; margin:18px 0 12px; color:#0e2a4a; }
+.lx-timeline-controls { border-top:1px solid #d5e4f1; padding-top:12px; margin-top:18px; }
+.lx-period { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; align-items:end; margin-bottom:12px; }
+.lx-period > button { grid-column:1 / -1; justify-self:start; }
+.lx-period .lx-field { margin-bottom:0; min-width:0; }
+.lx-period .lx-field input { min-width:0; }
+.lx-avatar { width:100%; max-width:300px; margin:0 auto; text-align:center; }
+.lx-avatar svg { width:100%; height:auto; background:linear-gradient(160deg,#edf4fa,#e1edf6); border:1px solid #d5e4f1; border-radius:10px; }
+.lx-avatar p { font-size:.79rem; margin-top:8px; line-height:1.5; }
+.lx-scenario-readout { min-width:0; }
+.lx-scenario-readout .lx-kpis { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.lx-chart-wrap { background:#fff; border:1px solid #d5e4f1; border-radius:8px; padding:16px; margin-top:20px; }
+.lx-chart-wrap svg { display:block; max-width:100%; width:100%; height:auto; }
+.lx-visibility { margin-bottom:15px; gap:18px; }
+.lx-visibility label { display:flex; align-items:center; gap:7px; cursor:pointer; font-size:.9rem; }
+.lx-visibility input { width:18px; height:18px; accent-color:#1e5486; }
+.lx-evidence-grid { display:grid; gap:12px; grid-template-columns:repeat(3,minmax(0,1fr)); margin:18px 0; }
+.lx-evidence-grid .lx-stat strong { font-size:clamp(1.1rem,1.65vw,1.55rem); }
+.lx-evidence-grid .lx-stat span { display:block; font-size:.82rem; line-height:1.45; }
+.lx-table-wrap:focus-visible { outline:3px solid #1e5486; outline-offset:3px; }
+.lx-field textarea { border:1px solid #90aac4; border-radius:5px; background:white; color:#0b1f3a; padding:12px; min-height:120px; resize:vertical; width:100%; font:inherit; }
+.lx-field textarea:focus-visible,.lx-field input:focus-visible,.lx-field select:focus-visible { outline:3px solid #3d78b0; outline-offset:2px; }
+.lx-reflect-choice { display:flex; flex-wrap:wrap; gap:9px; margin:12px 0 20px; }
+.lx-reflect-choice button { border:1px solid #93abc6; color:#153a63; background:white; border-radius:6px; min-height:48px; padding:10px 14px; cursor:pointer; font-weight:650; }
+.lx-reflect-choice button[aria-pressed=true] { border-color:#1e5486; background:#d5e4f1; box-shadow:inset 0 0 0 1px #1e5486; }
+.lx-reflect-choice button:focus-visible { outline:3px solid #3d78b0; outline-offset:2px; }
+.lx-reflect-privacy { border:1px solid #b5cadc; padding:14px; margin:16px 0; background:#edf4fa; border-radius:6px; }
+.lx-reflect-privacy strong { color:#153a63; }
+.lx-science a,.lx-panel a:not(.lx-button) { text-underline-offset:3px; }
+@media(max-width:1024px){ .lx-evidence-grid { grid-template-columns:1fr; } }
+@media(max-width:640px){ .lx-period { grid-template-columns:1fr; } .lx-period>button { width:100%; } .lx-result-stack{min-width:0;} .lx-avatar{max-width:225px;} .lx-scenario-readout .lx-kpis{grid-template-columns:1fr;} }
+@media(prefers-reduced-motion:reduce){ .lx-avatar *, .lx-chart-wrap * { transition:none!important; animation:none!important; } }
