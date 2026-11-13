@@ -16,7 +16,7 @@ const checks=[
   {path:"/impacto",contains:["Duas hipóteses.","Comparação explicável"]},
   {path:"/dossie",contains:["Da pergunta à fonte.","Exportar dossiê"]},
   {path:"/live",contains:["A ciência acontece","Entrar em uma sessão"]},
-  {path:"/live/organizador",contains:["Sua plateia participa.","Configuração da sessão"]},
+  {path:"/live/organizador",contains:["Sua plateia participa.","Configuração do Evento"]},
 ];
 
 async function waitForServer() {
