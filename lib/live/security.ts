@@ -8,10 +8,9 @@ export function newSessionId() {
 }
 
 function secret() {
-  const s =
-    process.env.LUPA_LIVE_SIGNING_SECRET ||
-    "c9b2f738a164e0d9b47e58a2c31e9f0d4b8a7c6e5d4f3b2a1e0d9c8b7a6f5e4d";
-  return s;
+  const value = process.env.LUPA_LIVE_SIGNING_SECRET;
+  if (!value || value.length < 32) throw new Error("LUPA_LIVE_SIGNING_SECRET não configurado");
+  return value;
 }
 
 export function sessionHash(sessionId: string) {
@@ -23,30 +22,13 @@ export function validSessionId(input: string | undefined): input is string {
 }
 
 export function isOrganizerAuthorized(request: NextRequest) {
-  const expected =
-    process.env.LUPA_LIVE_ADMIN_TOKEN ||
-    "lupa_admin_secret_token_dev_2026_ci_hackathon_99a8b7c6d5e4f3a2b1";
+  const expected = process.env.LUPA_LIVE_ADMIN_TOKEN;
   const got = request.headers.get("x-lupa-admin-token");
-
-  // Permite token de desenvolvimento ou token configurado
-  if (!got) return false;
-  if (got.length < 16) return false;
-
-  // Aceita o token padrão de desenvolvimento ou o token esperado
-  if (
-    got === "lupa_admin_secret_token_dev_2026_ci_hackathon_99a8b7c6d5e4f3a2b1" ||
-    got === expected
-  ) {
-    return true;
-  }
-
-  try {
-    const a = createHash("sha256").update(got).digest();
-    const b = createHash("sha256").update(expected).digest();
-    return timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
+  // Jamais aceitar credenciais embutidas no bundle ou valor de demonstração.
+  if (!expected || expected.length < 32 || !got || got.length < 32) return false;
+  const a = createHash("sha256").update(got).digest();
+  const b = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(a, b);
 }
 
 export function sameOrigin(request: NextRequest) {

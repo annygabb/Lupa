@@ -6,7 +6,6 @@ import { liveOptions, SCIENTIFIC_OBJECTIVES } from "@/lib/live/content";
 import { generateQrSvg, getCanonicalLiveUrl } from "@/lib/live/qr";
 import type { LiveSnapshot } from "@/lib/live/db";
 
-const DEFAULT_DEV_TOKEN = "lupa_admin_secret_token_dev_2026_ci_hackathon_99a8b7c6d5e4f3a2b1";
 
 const PHASE_LABELS: Record<string, string> = {
   pre: "1ª Rodada (Pré-Teste)",
@@ -28,7 +27,7 @@ const NEXT_PHASE_ACTION: Record<string, string> = {
 };
 
 export function LiveOrganizer() {
-  const [adminToken, setAdminToken] = useState(DEFAULT_DEV_TOKEN);
+  const [adminToken, setAdminToken] = useState("");
   const [claimId, setClaimId] = useState(liveOptions[0]?.id ?? "massa-magra-nao-equivale-a-musculos");
   const [code, setCode] = useState("CAFE2026BEEF");
   const [data, setData] = useState<LiveSnapshot | null>(null);
@@ -252,7 +251,7 @@ ${data.choices
             <h2>Configuração do Evento</h2>
 
             <label className="lx-field">
-              Chave de Administração
+              Chave de Administração (mínimo 32 caracteres)
               <input
                 type="password"
                 autoComplete="off"
@@ -262,15 +261,7 @@ ${data.choices
               />
             </label>
 
-            <div className="mb-4">
-              <button
-                type="button"
-                className="text-xs text-[#1e5486] underline hover:text-[#071a33] font-mono"
-                onClick={() => setAdminToken(DEFAULT_DEV_TOKEN)}
-              >
-                ↻ Ativar Chave Padrão de Demonstração / Hackathon
-              </button>
-            </div>
+            <p className="lx-muted">A chave do facilitador deve ser configurada de forma privada. Não existe chave padrão de demonstração.</p>
 
             <label className="lx-field">
               Objetivo Científico / Questão
@@ -294,7 +285,7 @@ ${data.choices
             <button
               className="lx-button"
               type="button"
-              disabled={busy || adminToken.length < 16}
+              disabled={busy || adminToken.length < 32}
               onClick={createSession}
             >
               {busy ? "Criando sessão…" : "Criar Nova Sessão Live"}

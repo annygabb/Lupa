@@ -19,8 +19,14 @@ export function isSupabaseConfigured(): boolean {
   return Boolean(url() && secret());
 }
 
+export function allowLocalDemo(): boolean {
+  return process.env.NODE_ENV === "test" ||
+    (process.env.NODE_ENV !== "production" && process.env.LUPA_LIVE_ALLOW_LOCAL_DEMO === "true");
+}
 export function liveDatabaseEnabled(): boolean {
-  return true; // Sempre habilitado: Supabase em produção ou motor resiliente local
+  // Em produção, nunca simular persistência quando o banco está ausente.
+  return allowLocalDemo() || (isSupabaseConfigured() &&
+    Boolean(process.env.LUPA_LIVE_SIGNING_SECRET && process.env.LUPA_LIVE_ADMIN_TOKEN));
 }
 
 export function liveDatabaseMode(): "supabase" | "local-resilient" {
@@ -46,8 +52,8 @@ export interface LiveSnapshot {
   postQuestion?: {
     question: string;
     choices: string[];
-    correctIndex: number;
-    explanation: string;
+    correctIndex?: number;
+    explanation?: string;
   };
 }
 
@@ -102,7 +108,7 @@ const localVotes = (globalThis.__LUPA_LOCAL_LIVE_VOTES__ ??= []);
 const localRateLimits = (globalThis.__LUPA_LOCAL_LIVE_RATE_LIMITS__ ??= new Map());
 
 // Seed inicial de um evento demo padrão para testes imediatos
-if (localEvents.size === 0) {
+if (allowLocalDemo() && localEvents.size === 0) {
   localEvents.set("CAFE2026BEEF", {
     id: "demo-uuid-0001",
     code: "CAFE2026BEEF",
@@ -162,7 +168,8 @@ export async function liveDb<T>(path: string, init: RequestInit = {}): Promise<T
     throw new Error("Falha no acesso ao banco remoto (HTTP " + res.status + ").");
   }
   if (res.status === 204) return null as T;
-  return (await res.json()) as T;
+  const raw = await res.text();
+  return raw ? JSON.parse(raw) as T : null as T;
 }
 
 export async function createLiveEvent(event: {
@@ -180,7 +187,6 @@ export async function createLiveEvent(event: {
   };
 }): Promise<{ code: string }> {
   if (isSupabaseConfigured()) {
-    try {
       await liveDb("lupa_live_events", {
         method: "POST",
         body: JSON.stringify({
@@ -190,15 +196,14 @@ export async function createLiveEvent(event: {
           question: event.question,
           choices: event.choices,
           correct_index: event.correctIndex ?? 1,
+          post_question: event.postQuestion ?? null,
         }),
       });
       return { code: event.code };
-    } catch {
-      // Fallback para o motor local se Supabase falhar na rede
-    }
   }
+  if (!allowLocalDemo()) throw new LiveDatabaseUnavailable();
 
-  // Motor local resiliente
+  // Motor local: exclusivamente testes/desenvolvimento autorizado
   localEvents.set(event.code, {
     id: "evt-" + Math.random().toString(36).slice(2, 10),
     code: event.code,
@@ -223,16 +228,12 @@ export async function eventSnapshot(
   const normCode = code.toUpperCase();
 
   if (isSupabaseConfigured()) {
-    try {
-      const data = await liveDb<LiveSnapshot | null>("rpc/lupa_event_snapshot", {
-        method: "POST",
-        body: JSON.stringify({ p_code: normCode }),
-      });
-      if (data) return data;
-    } catch {
-      // continua para o local se o remoto falhar
-    }
+    return await liveDb<LiveSnapshot | null>("rpc/lupa_event_snapshot", {
+      method: "POST",
+      body: JSON.stringify({ p_code: normCode }),
+    });
   }
+  if (!allowLocalDemo()) throw new LiveDatabaseUnavailable();
 
   // Motor local
   const evt = localEvents.get(normCode);
@@ -277,7 +278,12 @@ export async function eventSnapshot(
     expiresAt: evt.expiresAt,
     counts: publicCounts,
     correctIndex: options.isOrganizer || evt.phase !== "pre" ? evt.correctIndex : undefined,
-    postQuestion: evt.postQuestion,
+    postQuestion: evt.postQuestion && (evt.phase === "post" || evt.phase === "closed")
+      ? (options.isOrganizer || evt.phase === "closed" ? evt.postQuestion : {
+          question: evt.postQuestion.question,
+          choices: evt.postQuestion.choices,
+        })
+      : undefined,
   };
 }
 
@@ -291,24 +297,16 @@ export async function castVote(params: {
   const normCode = code.toUpperCase();
 
   if (isSupabaseConfigured()) {
-    try {
-      const res = await liveDb<{ accepted: boolean; reason?: string }>(
-        "rpc/lupa_cast_vote",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            p_code: normCode,
-            p_phase: phase,
-            p_option: optionIndex,
-            p_session_hash: sessionHash,
-          }),
-        }
-      );
-      if (res) return res;
-    } catch {
-      // Fallback local se remoto falhar
-    }
+    return await liveDb<{ accepted: boolean; reason?: string }>(
+      "rpc/lupa_cast_vote", {
+        method: "POST",
+        body: JSON.stringify({
+          p_code: normCode, p_phase: phase, p_option: optionIndex, p_session_hash: sessionHash,
+        }),
+      }
+    );
   }
+  if (!allowLocalDemo()) throw new LiveDatabaseUnavailable();
 
   // Motor local
   const evt = localEvents.get(normCode);
@@ -367,16 +365,17 @@ export async function advanceLivePhase(
   const normCode = code.toUpperCase();
 
   if (isSupabaseConfigured()) {
-    try {
-      await liveDb(`lupa_live_events?code=eq.${normCode}`, {
+    const expectedPhase = nextPhase === "reveal" ? "pre" : nextPhase === "post" ? "reveal" : "post";
+    const rows = await liveDb<Array<{ code: string }>>(
+      `lupa_live_events?code=eq.${normCode}&phase=eq.${expectedPhase}&select=code`, {
         method: "PATCH",
+        headers: { Prefer: "return=representation" },
         body: JSON.stringify({ phase: nextPhase }),
-      });
-      return true;
-    } catch {
-      // Fallback
-    }
+      }
+    );
+    return Array.isArray(rows) && rows.length === 1;
   }
+  if (!allowLocalDemo()) throw new LiveDatabaseUnavailable();
 
   const evt = localEvents.get(normCode);
   if (!evt) return false;
@@ -388,14 +387,15 @@ export async function deleteLiveEvent(code: string): Promise<boolean> {
   const normCode = code.toUpperCase();
 
   if (isSupabaseConfigured()) {
-    try {
-      await liveDb(`lupa_live_events?code=eq.${normCode}`, {
+    const rows = await liveDb<Array<{ code: string }>>(
+      `lupa_live_events?code=eq.${normCode}&select=code`, {
         method: "DELETE",
-      });
-    } catch {
-      // continua local
-    }
+        headers: { Prefer: "return=representation" },
+      }
+    );
+    return Array.isArray(rows) && rows.length === 1;
   }
+  if (!allowLocalDemo()) throw new LiveDatabaseUnavailable();
 
   localEvents.delete(normCode);
   // Remove votos com cascade

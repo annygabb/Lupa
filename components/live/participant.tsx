@@ -241,6 +241,9 @@ export function LiveParticipant({ code }: { code: string }) {
                       <p className="text-xs text-[#0e2a4a] leading-relaxed">
                         Obrigada por participar! A ciência ganha rigor quando confrontamos manchetes com as fontes originais.
                       </p>
+                      <Link href="/relatos" className="lx-button lx-button--line mt-3 text-xs">
+                        Reflexão voluntária sobre o uso e possíveis sintomas (somente local)
+                      </Link>
                     </div>
 
                     {/* Formulário de Feedback Opcional */}
@@ -299,12 +302,12 @@ export function LiveParticipant({ code }: { code: string }) {
                           className="lx-button text-xs py-2 w-full"
                           onClick={() => setFeedbackSent(true)}
                         >
-                          Enviar Avaliação
+                          Pré-visualizar avaliação
                         </button>
                       </div>
                     ) : (
                       <div className="p-3 bg-emerald-50 text-emerald-800 text-xs rounded-lg border border-emerald-300">
-                        ✓ Agradecemos sua avaliação!
+                        Prévia local: esta avaliação não foi enviada nem salva. A coleta persistente requer consentimento e proteção de dados.
                       </div>
                     )}
                   </div>

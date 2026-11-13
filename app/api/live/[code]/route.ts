@@ -29,8 +29,7 @@ export async function GET(req: NextRequest, { params }: Context) {
     if (!data) return result({ error: "NOT_FOUND" }, 404);
 
     // O organizador e o modo telão vêem totais completos; participantes só após a revelação
-    const isPresentation = req.headers.get("x-lupa-view") === "presentation";
-    if (!isOrganizer && !isPresentation) {
+    if (!isOrganizer) {
       data.counts =
         data.phase === "pre"
           ? []

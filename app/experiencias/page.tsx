@@ -5,6 +5,7 @@ import "../experiencias.css";
 export const metadata:Metadata={title:"Explore o LUPA | experiências científicas",description:"Aprenda a interpretar evidências, investigue cenários e monte um dossiê científico."};
 const destinations=[
  {href:"/corpo-evidencia",title:"Corpo & Evidência",description:"Entenda o que significa perder massa gorda e massa magra — e onde a hipótese sobre UTI precisa parar.",image:"/assets/images/cianotipia/corpo-composicao.webp"},
+ {href:"/relatos",title:"Reflexão voluntária",description:"Você utiliza medicamentos para emagrecimento? Quais sintomas percebe ou conhece? Demonstração privada, sem envio das respostas.",image:"/assets/images/cianotipia/cerebro.webp"},
  {href:"/desafio",title:"Desafio LUPA",description:"Responda perguntas e compare o que você sabe antes e depois de ler as evidências.",image:"/assets/images/cianotipia/cerebro.webp"},
  {href:"/impacto",title:"Laboratório de Impacto",description:"Compare cenários fictícios de acesso e continuidade até 2041, sem confundir com previsão.",image:"/assets/images/cianotipia/globo.webp"},
  {href:"/dossie",title:"Dossiê LUPA",description:"Organize uma investigação e exporte conclusões e fontes em um arquivo Markdown.",image:"/assets/images/cianotipia/estudos-1.webp"},

@@ -12,8 +12,8 @@ export interface QrOptions {
  */
 export function getCanonicalLiveUrl(code: string, origin?: string): string {
   const base =
-    origin ||
     process.env.LUPA_APP_BASE_URL ||
+    origin ||
     (typeof window !== "undefined" ? window.location.origin : "https://lupaa.vercel.app");
   return `${base.replace(/\/+$/, "")}/live/${code.toUpperCase()}`;
 }
