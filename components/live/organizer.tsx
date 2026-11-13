@@ -251,7 +251,7 @@ ${data.choices
             <h2>Configuração do Evento</h2>
 
             <label className="lx-field">
-              Chave de Administração
+              Chave de Administração (mínimo 32 caracteres)
               <input
                 type="password"
                 autoComplete="off"
@@ -285,7 +285,7 @@ ${data.choices
             <button
               className="lx-button"
               type="button"
-              disabled={busy || adminToken.length < 16}
+              disabled={busy || adminToken.length < 32}
               onClick={createSession}
             >
               {busy ? "Criando sessão…" : "Criar Nova Sessão Live"}
