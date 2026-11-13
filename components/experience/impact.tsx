@@ -38,7 +38,7 @@ export function ImpactExperience(){
    <p>A · {int.format(rowA?.active??0)}</p><div className="lx-bar"><span style={{width:((rowA?.active??0)/max*100)+"%"}}/></div>
    <p>B · {int.format(rowB?.active??0)}</p><div className="lx-bar"><span style={{width:((rowB?.active??0)/max*100)+"%",background:"#69b5d8"}}/></div>
   </div>
-  <div className="lx-table-wrap"><table className="lx-table"><caption>Comparação de saídas do mesmo modelo determinístico</caption><thead><tr><th>Métrica em {year}</th><th>Cenário A</th><th>Cenário B</th></tr></thead><tbody>
+  <div className="lx-table-wrap" tabIndex={0} role="region" aria-label="Tabela de comparação entre cenários"><table className="lx-table"><caption>Comparação de saídas do mesmo modelo determinístico</caption><thead><tr><th>Métrica em {year}</th><th>Cenário A</th><th>Cenário B</th></tr></thead><tbody>
    <tr><th>Iniciaram naquele ano</th><td>{int.format(rowA?.started??0)}</td><td>{int.format(rowB?.started??0)}</td></tr>
    <tr><th>Continuaram</th><td>{int.format(rowA?.continued??0)}</td><td>{int.format(rowB?.continued??0)}</td></tr>
    <tr><th>Saíram</th><td>{int.format(rowA?.exited??0)}</td><td>{int.format(rowB?.exited??0)}</td></tr>
