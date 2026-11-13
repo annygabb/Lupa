@@ -10,6 +10,13 @@ const checks=[
   {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
   {path:"/saude-mental",contains:["Emagrecer não resume","PHQ-9","41537305"]},
   {path:"/metodologia",contains:["Cada conclusão precisa","Como analisamos","uma evidência","cenários","Fontes auditáveis"]},
+  {path:"/experiencias",contains:["A ciência fica mais clara","Desafio LUPA"]},
+  {path:"/corpo-evidencia",contains:["O peso conta uma história","25% do peso perdido"]},
+  {path:"/desafio",contains:["Você sabe interpretar uma evidência?","O desafio não é acertar por sorte."]},
+  {path:"/impacto",contains:["Duas hipóteses.","Comparação explicável"]},
+  {path:"/dossie",contains:["Da pergunta à fonte.","Exportar dossiê"]},
+  {path:"/live",contains:["A ciência acontece","Entrar em uma sessão"]},
+  {path:"/live/organizador",contains:["Sua plateia participa.","Configuração do Evento"]},
 ];
 
 async function waitForServer() {

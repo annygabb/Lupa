@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1360 620" role="img" aria-labelledby="title desc">
+<title id="title">Cadeia de evidência científica LUPA: relação entre perda de composição corporal e contexto de UTI ainda não demonstrada</title>
+<desc id="desc">Dois blocos de estudos distintos: o SURMOUNT-1 mede mudança de composição corporal por DXA; os estudos em UTI observam músculo por tomografia e associações com mortalidade. Uma linha central interrompida indica que não existe ligação causal individual demonstrada entre esses achados.</desc>
+<rect width="1360" height="620" fill="#F7F8F4"/>
+<text x="65" y="68" font-family="DejaVu Sans, sans-serif" font-weight="bold" font-size="34" fill="#0E2A4A">O elo que a pesquisa ainda não demonstrou</text>
+<text x="65" y="107" font-family="DejaVu Sans, sans-serif" font-size="19" fill="#405A70">Duas populações, instrumentos diferentes, nenhuma previsão pessoal de UTI</text>
+<rect x="65" y="156" width="360" height="220" rx="20" fill="#EAF2F7" stroke="#2C7899" stroke-width="2"/>
+<text x="93" y="200" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="bold" fill="#0E2A4A">ESTUDO SOBRE TRATAMENTO</text>
+<text x="93" y="244" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#0E2A4A">SURMOUNT-1 / E04</text>
+<text x="93" y="285" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#0E2A4A">Composição por DXA</text>
+<text x="93" y="319" font-family="DejaVu Sans, sans-serif" font-size="17" fill="#405A70">Peso · gordura · massa magra</text>
+<text x="93" y="348" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#405A70">n=160 • 72 semanas</text>
+<rect x="934" y="156" width="360" height="220" rx="20" fill="#EAF2F7" stroke="#2C7899" stroke-width="2"/>
+<text x="962" y="200" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="bold" fill="#0E2A4A">ESTUDOS EM PACIENTES CRÍTICOS</text>
+<text x="962" y="244" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#0E2A4A">UTI / E12 e E13</text>
+<text x="962" y="285" font-family="DejaVu Sans, sans-serif" font-size="20" fill="#0E2A4A">TC ou ultrassom</text>
+<text x="962" y="319" font-family="DejaVu Sans, sans-serif" font-size="17" fill="#405A70">Músculo e associação a desfechos</text>
+<text x="962" y="348" font-family="DejaVu Sans, sans-serif" font-size="15" fill="#405A70">Outras populações e contextos</text>
+<path d="M425 262 H555" stroke="#2C7899" stroke-width="4" stroke-dasharray="12 9"/>
+<path d="M805 262 H934" stroke="#2C7899" stroke-width="4" stroke-dasharray="12 9"/>
+<circle cx="680" cy="262" r="99" fill="#FFF6EC" stroke="#AC6F37" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="680" y="246" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#8E3D34">ELO NÃO</text>
+<text x="680" y="275" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#8E3D34">DEMONSTRADO</text>
+<rect x="65" y="421" width="1229" height="112" rx="14" fill="white" stroke="#BACBD6" stroke-width="1.8"/>
+<text x="94" y="461" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#0E2A4A">O que o LUPA pode afirmar</text>
+<text x="94" y="496" font-family="DejaVu Sans, sans-serif" font-size="18" fill="#405A70">Há dados sobre mudança de composição corporal e associações em UTI, mas não um modelo que conecte</text>
+<text x="94" y="519" font-family="DejaVu Sans, sans-serif" font-size="18" fill="#405A70">essas populações para calcular o risco individual de um usuário de medicamento.</text>
+<text x="65" y="577" font-family="DejaVu Sans, sans-serif" font-size="14" fill="#405A70">Fontes: PMID 39996356 • PMID 40462133 • PMID 24108501   |   Painel educativo; não é diagnóstico nem prognóstico.</text>
+</svg>

@@ -84,6 +84,7 @@ export function SiteHeader() {
         <nav className="at-header__quick" aria-label="Atalhos">
           <Link href="/evidencias" aria-current={pathname.startsWith("/evidencias") ? "page" : undefined}>Evidências</Link>
           <Link href="/comparar" aria-current={pathname.startsWith("/comparar") ? "page" : undefined}>Comparar</Link>
+          <Link href="/experiencias" aria-current={pathname.startsWith("/experiencias") ? "page" : undefined}>Experiências</Link>
         </nav>
         <button ref={toggle} type="button" className="at-menu-toggle" aria-expanded={open} aria-controls="atlas-menu" onClick={() => setOpen(v => !v)}>
           <span className="at-menu-toggle__label">{open ? "Fechar" : "Índice"}</span>
@@ -96,13 +97,14 @@ export function SiteHeader() {
           <span className="at-menu__panel"/><span className="at-menu__panel"/><span className="at-menu__panel"/><span className="at-menu__panel"/>
         </div>
         <div className="at-menu__inner">
-          <p className="at-kicker at-menu__kicker">Índice do atlas · início e seis pranchas</p>
+          <p className="at-kicker at-menu__kicker">Índice do atlas · experiências e seis pranchas</p>
           <ul className="at-menu__list">
             <li className="at-menu__row-wrap">
               <Link className="at-menu__row" href="/" onClick={() => setOpen(false)} aria-current={pathname === "/" ? "page" : undefined}>
                 <span className="at-menu__n">00</span><span className="at-menu__label">Início</span>
               </Link>
             </li>
+            <li className="at-menu__row-wrap"><Link className="at-menu__row" href="/experiencias" onClick={() => setOpen(false)} aria-current={pathname.startsWith("/experiencias") ? "page" : undefined}><span className="at-menu__n">EX</span><span className="at-menu__label">Experiências interativas</span></Link></li>
             {plates.map(p => (
               <li key={p.href} className="at-menu__row-wrap">
                 <Link className="at-menu__row" href={p.href} onClick={() => setOpen(false)} onPointerEnter={() => setPeek(plates.indexOf(p))} onFocus={() => setPeek(plates.indexOf(p))} aria-current={pathname.startsWith(p.href) ? "page" : undefined}>
