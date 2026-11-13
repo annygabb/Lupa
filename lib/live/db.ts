@@ -278,7 +278,12 @@ export async function eventSnapshot(
     expiresAt: evt.expiresAt,
     counts: publicCounts,
     correctIndex: options.isOrganizer || evt.phase !== "pre" ? evt.correctIndex : undefined,
-    postQuestion: evt.postQuestion,
+    postQuestion: evt.postQuestion && (evt.phase === "post" || evt.phase === "closed")
+      ? (options.isOrganizer || evt.phase === "closed" ? evt.postQuestion : {
+          question: evt.postQuestion.question,
+          choices: evt.postQuestion.choices,
+        })
+      : undefined,
   };
 }
 
