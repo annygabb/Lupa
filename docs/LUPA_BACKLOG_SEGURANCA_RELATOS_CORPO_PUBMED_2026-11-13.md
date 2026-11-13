@@ -77,7 +77,6 @@
 ---
 
 ## 2. FUNDAMENTAÇÃO CIENTÍFICA E ESTUDOS CONFERIDOS NO PUBMED
-
 ### 2.1 Distinções conceituais que precisam aparecer na interface
 
 - **Peso total perdido**: diferença entre duas pesagens. Não equivale automaticamente a gordura perdida.
@@ -157,7 +156,6 @@ Subestudo com **160 participantes** com medidas DXA no início e na semana 72 (1
 - **No hackathon**, permitir demonstração **local sem envio**, com respostas fictícias explicitamente sinalizadas, enquanto persistência real de sintomas não estiver aprovada.
 
 ### 3.2 Texto inicial do questionário (microcopy pronta)
-
 > **Sua experiência pode ajudar a formular perguntas melhores.** Este espaço reúne relatos voluntários sobre medicamentos para controle do peso. Respostas pessoais não comprovam que um medicamento causou um sintoma e não substituem atendimento médico. Você pode pular perguntas ou continuar apenas no modo educativo. Não informe nomes, contatos ou dados de outras pessoas.
 
 **Tela de escolha 1 — “Você utiliza atualmente algum medicamento para controle do peso?”**
@@ -238,7 +236,6 @@ No `/desafio` ou em Live, oferecer questões de compreensão distintas da coleta
 **Rota existente a evoluir:** `/corpo-evidencia`. Pergunta central: **“Quando o peso diminui, quais tecidos podem compor essa mudança, e por que a função muscular merece atenção?”** Mostrar evidências sobre perda de composição e contextos de recuperação física **sem anunciar risco individual**.
 
 ### 4.2 Campos e como cada um afeta (ou não) o cálculo
-
 | Campo de UI | Obrigatoriedade | Propósito | Pode entrar no cálculo? |
 |---|---|---|---|
 | Peso inicial (kg) | sim para exemplo | base aritmética | **sim**, apenas para peso final após perda hipotética |
@@ -310,6 +307,176 @@ No `/desafio` ou em Live, oferecer questões de compreensão distintas da coleta
 **Card D — Pergunta científica**: “Como mudanças reais de composição **e função muscular** durante tratamento afetariam a reserva funcional em pessoas que precisam de cirurgia ou internação?” **Ainda não respondida pelos estudos acima.**
 
 ---
+
+### 4.9 ATUALIZAÇÃO DE ESCOPO — PROJEÇÃO EDUCATIVA DE RESERVA MUSCULAR, RECUPERAÇÃO E IMPACTO NO SISTEMA DE SAÚDE (13/11/2026)
+
+> **Nova orientação de produto:** não limitar a experiência a dizer “não há como calcular risco”. **Permitir simulações quantitativas de composição corporal, comparações com desfechos observados em OUTRAS populações e cenários ilustrativos de uso de recursos hospitalares**, com fórmulas e fontes auditáveis. O aplicativo **NÃO** estima o risco clínico de uma pessoa que usa Mounjaro e **NÃO** presume que a perda de massa magra por medicamento resulta em sarcopenia.
+
+#### 4.9.1 Pergunta de produto e raciocínio responsável
+
+A jornada deve responder de modo educativo:
+1. **O que pode acontecer com a composição do peso perdido?** Mostrar 20–25% como parâmetros de uma **simulação** (estudo SURMOUNT-1: ~25% do peso perdido classificado como massa magra na semana 72).
+2. **Por que a reserva e a função muscular importam?** Explicar participação em mobilidade, equilíbrio, autonomia, recuperação funcional, tosse/respiração e tolerância a doenças graves; tais funções **não podem ser medidas por peso ou silhueta**. Diferenciar músculo esquelético de massa magra DXA (que inclui outros tecidos e água) e distinguir massa de força muscular.
+3. **O que foi observado em pacientes cirúrgicos e críticos?** Exibir estudos reais sobre **sarcopenia ou baixa massa muscular comprovada** no início da internação, complicações, dias de ventilação, tempo de internação e custos. Mostrar a população, o desenho, o período, a medida e o grau de heterogeneidade; apresentar “associado” em vez de “causado”.
+4. **Como isso repercute sobre recursos hospitalares?** Criar laboratório separado por parâmetros independentes (número hipotético de admissões com sarcopenia já identificada, diferença de dias observada em outra população e custo/dia **informado pelo usuário como hipótese**, em moeda informada). Exibir leitos-dia e gasto aritmético **hipotético**, não economia atribuível ao medicamento ou projeção oficial do SUS.
+5. **Que questão científica permanece aberta?** “Uma possível mudança de massa magra durante tratamento necessariamente altera função muscular ou desfechos em UTI e cirurgia?” — os estudos citados **não oferecem uma ligação causal individual validada**; exigir pesquisa que acompanhe **uso do fármaco → composição e função medidas → evento hospitalar → desfecho** na mesma população, com controle de confundidores.
+
+**Proposta UX:** dois painéis quantitativos **paralelos**, unidos por um card explicativo de “lacuna de evidências”, e não por uma fórmula que converta quilos em probabilidade de óbito.
+
+#### 4.9.2 Estudos quantitativos PubMed adicionados e como exibi-los
+
+| ID | Evidência observada | População real / método | Limite obrigatório |
+|---|---|---|---|
+| PUB-01 · [PMID 39996356](https://pubmed.ncbi.nlm.nih.gov/39996356/) | Aproximadamente **75% de massa gorda e 25% de massa magra DO PESO PERDIDO** na semana 72 | Subestudo SURMOUNT-1, **n=160** com DXA (124 tirzepatida e 36 placebo), adultos com obesidade/sobrepeso; peso basal médio **102,5 kg** | **Não** é 25% do músculo total, medida de força, taxa mês a mês ou previsão para 65 kg |
+| PUB-07 · [PMID 40462133](https://pubmed.ncbi.nlm.nih.gov/40462133/) | Baixa massa muscular na TC da admissão e mortalidade: curto prazo **OR 2,33** (IC95% 1,90–2,87) e longo prazo **OR 2,67** (IC95% 1,45–4,92) | Meta-análise de **35 estudos, 9.366 pacientes críticos**; majoritariamente observacionais, heterogêneos | OR não é probabilidade; não converter em risco de usuário de tirzepatida |
+| PUB-15 · [PMID 35578299](https://pubmed.ncbi.nlm.nih.gov/35578299/) | Sarcopenia **pré-existente** associada a ventilação mecânica **+1,22 dia** (IC95% 0,39–2,05), internação UTI **+1,31 dia** (0,43–2,19) e internação hospitalar **+2,73 dias** (0,58–4,88), **diferenças médias entre grupos**, além de OR mortalidade 2,13 | Meta-análise de **17 estudos / 3.582 pacientes** sob ventilação mecânica; alta heterogeneidade nas durações (I² ~97–98%) | Os três tipos de dias **se sobrepõem temporalmente**; não somar totais nem aplicar a quem perdeu massa magra no tratamento |
+| PUB-08 · [PMID 37696253](https://pubmed.ncbi.nlm.nih.gov/37696253/) | Sarcopenia pré-operatória associada a maior frequência de complicações, mortalidade, permanência e menos altas para casa | Revisão/meta-análise de **294 estudos / 97.643 pacientes cirúrgicos** de várias especialidades | Exposição é sarcopenia identificada antes da cirurgia, não tirzepatida; desenhos e procedimentos heterogêneos |
+| PUB-16 · [PMID 33739153](https://pubmed.ncbi.nlm.nih.gov/33739153/) | Em cirurgia gastrointestinal oncológica, grupo com sarcopenia apresentou **+4,54 dias** de internação (diferença média; IC95% 2,49–6,59), com mais complicações | Meta-análise de **43 estudos / 16.716 pacientes** de cirurgia oncológica gastrointestinal | Não transferir para todas as cirurgias; não somar com outros estudos nem com dias de UTI |
+| PUB-17 · [PMID 27302103](https://pubmed.ncbi.nlm.nih.gov/27302103/) | Custo hospitalar ajustado associado à sarcopenia: **US$ 38.804 vs US$ 24.482**, diferença **US$ 14.322** | Coorte de **1.169 pacientes** em ressecções hepato-pancreato-biliares/coloretais, hospital dos **EUA, 2011–2013** | Valor histórico, contexto dos EUA e de cirurgias selecionadas; **não** preço atual brasileiro, custo extra causado por fármaco ou estimativa de gasto por usuário |
+| PUB-18 · [PMID 27167668](https://pubmed.ncbi.nlm.nih.gov/27167668/) | Sarcopenia associada a custos de internação **+€1.240** (idade <65) e **+€721** (≥65); estimativas relativas **+58,5%** e **+34%** respectivamente | Estudo observacional com **656 pessoas hospitalizadas** em contexto europeu, publicado em 2016 | Comparação contextual apenas; faixas etárias e casuística específicas; não converter automaticamente para valores do SUS |
+| PUB-19 · [PMID 36597123](https://pubmed.ncbi.nlm.nih.gov/36597123/) | Primeira semana de doença crítica: redução média **diária** da espessura do reto femoral ~**1,75%** ou área seccional ~**2,10%**, por ultrassom/TC; fraqueza adquirida na UTI ~48% | Revisão e meta-análise de pacientes **já criticamente enfermos**; medidas locais de músculo e elevada variação | Não é perda da massa magra total, nem taxa do efeito do Mounjaro; não extrapolar em progressão linear por semanas |
+| PUB-10 · [PMID 41405836](https://pubmed.ncbi.nlm.nih.gov/41405836/) | Pré-habilitação com exercício antes de cirurgia associada a redução de complicações e permanência em síntese de estudos randomizados | **99 ensaios / 8.222 participantes**, comparando programas de exercício com controle | Não concluir que treino cancela risco de alguém; intervenção, população e certeza de evidência variam |
+
+**Notas de integridade:** efeitos da literatura são associações/estimativas de grupo. As porcentagens do SURMOUNT-1, as diferenças de dias e os custos vêm de **populações independentes**. Não fazer uma regressão/score de risco “científico” juntando estudos incompatíveis. Na interface, mostrar o **intervalo de confiança** para as diferenças de grupo como CI da literatura, nunca como intervalo preditivo de um indivíduo. O “20–25%” continua sendo banda escolhida para ilustração, **não** IC do estudo.
+
+#### 4.9.3 Exemplo 65 kg — gráficos de composição e narrativa de reserva funcional
+
+**Hipótese do usuário:** peso inicial `65 kg`; perda acumulada **editável**, **não estimada a partir de dose**: `1 kg` no mês 1; `3 kg` no mês 3; `5 kg` no mês 5. Sensibilidade da fração de massa magra `q∈{0,20; 0,25}`.
+
+| Tempo | Peso hipotético | Perda acumulada escolhida | Massa magra **contida na perda**, hipótese q=20% | Hipótese q=25% | Interpretação honesta |
+|---|---:|---:|---:|---:|---|
+| Início | 65,0 kg | 0 kg | 0 kg | 0 kg | Não há medida basal real de massa magra |
+| 1 mês | 64,0 kg | 1 kg | 0,20 kg | 0,25 kg | **Não** é perda de músculo medida |
+| 3 meses | 62,0 kg | 3 kg | 0,60 kg | 0,75 kg | Não deduz força, capacidade de caminhar ou resistência |
+| 5 meses | 60,0 kg | 5 kg | 1,00 kg | 1,25 kg | **Não** permite inferir nova condição clínica |
+
+**Mensagem que deve surgir ao selecionar mês 5:**
+
+> “Neste exemplo, se a pessoa tivesse perdido 5 kg e entre 20% e 25% dessa perda tivesse sido classificada como massa magra, a parcela seria de 1,0 a 1,25 kg. Isso **não significa** que perdeu 1,0–1,25 kg de músculo, nem informa a força ou sua recuperação em uma cirurgia. A seguir, veja o que pesquisas encontraram em **outras pessoas**, com sarcopenia ou baixa massa muscular documentada, que precisaram de assistência hospitalar.”
+
+Em paralelo, exibir uma **régua de função muscular NÃO inferida** com rótulos `Força: não avaliada`, `Mobilidade: não avaliada`, `Massa muscular medida: não avaliada`, `Risco operatório: não estimado`. Não substituir por verde/amarelo/vermelho nem “percentual de vulnerabilidade” baseado no peso.
+
+#### 4.9.4 Painel hospitalar: dois modos, sem falsa causalidade
+
+**Modo 1 — EVIDÊNCIA OBSERVADA (apenas consulta):**
+
+- UTI/ventilação mecânica: exibir gráfico comparando diferenças **médias associadas** em pacientes com **sarcopenia prévia** vs grupo sem sarcopenia na literatura do PMID 35578299: **+1,22 dias** de ventilação mecânica; **+1,31 dia** de UTI; **+2,73 dias** de internação total. Cada barra tem IC95% e marca **“Diferença entre grupos de estudos; não é previsão pessoal”**. As durações não são somáveis.
+- Mortalidade em UTI: opcional **card contextual**, exibindo OR 2,33 (PMID 40462133) com legenda explicando OR versus risco absoluto; **sem converter em mortalidade de pessoa específica**.
+- Cirurgia: separador por especialidade. Mostrar associação generalista PMID 37696253; usar **+4,54 dias** apenas no painel de **cirurgia gastrointestinal oncológica** (PMID 33739153), contextualizando com cirurgia, período e IC95%. Sem transferir para outras cirurgias.
+- Custo histórico cirúrgico: gráfico lado a lado **US$ 24.482 vs US$ 38.804** (PMID 27302103), com etiqueta **EUA, 2011–2013, custos ajustados da casuística cirúrgica estudada**, nunca “custo do Mounjaro”. Não misturar referências históricas US$/EUR com R$ sem contexto ou ajuste.
+- Decomposição da carga hospitalar: dias-leito (capacidade ocupada), equipe/equipamentos (pressão potencial, **sem estimar horas de trabalho** na ausência de estudo), ventilação, recuperação/rehabilitação e custos observados. Esses itens explicam por que o sistema de saúde pode precisar de mais recursos, mas não provam impacto do medicamento.
+
+**Modo 2 — CENÁRIO DE RECURSOS DO SISTEMA (aritmética hipotética):**
+
+Variáveis **independentes do peso e medicamento**:
+
+| Variável | Tipo | Default didático | Regras |
+|---|---|---:|---|
+| `patientsWithDocumentedSarcopenia` | inteiro >=0 | 20 | **Coorte hipotética com sarcopenia documentada antes da internação**; usuário digita, não deriva da simulação de peso |
+| `additionalIcuDaysPerAdmission` | número não negativo | 1,31 | Valor de estudo PMID 35578299 por diferença de grupo; rótulo “associação observada — cenário de escala”, opção de **substituir por hipótese manual** com origem explícita |
+| `icuBedDayCost` | número >=0 | 3.000 | **R$ fictícios escolhidos para demonstrar cálculo**, NÃO custo real do SUS ou de hospital; default deve ser claramente marcado `HIPÓTESE ILUSTRATIVA` e ser editável/removível |
+| `currency` | enum | `BRL` | Não converter de moeda de estudo automaticamente |
+| `unit` | enum | `UTI` | Uma unidade por cálculo; **não somar** dias de UTI e de hospitalização geral sobrepostos |
+
+Fórmulas públicas reproduzíveis:
+
+```
+extraLeitoDiasIcu = patientsWithDocumentedSarcopenia * additionalIcuDaysPerAdmission
+valorIlustrativo = extraLeitoDiasIcu * icuBedDayCost
+```
+
+**Exemplo:** `20 pacientes` hipotéticos com sarcopenia prévia documentada × `1,31 dia` associado em meta-análise = `26,2 leitos-dia adicionais` **em cenário de escala**. Se o usuário supuser **R$ 3.000/leito-dia**, `26,2 × 3.000 = R$ 78.600` **ilustrativos**. Não é estimativa de despesa real de um hospital; não mede despesas atribuíveis ao Mounjaro; os estudos **não permitem afirmar que 20 pessoas após tirzepatida virariam pacientes sarcopênicos**.
+
+| N de admissões hipotéticas COM sarcopenia já confirmada | Dias de UTI associados escalados: N × 1,31 | Gasto ilustrativo assumindo R$ 3.000/dia |
+|---:|---:|---:|
+| 10 | 13,1 leitos-dia | R$ 39.300 |
+| 20 | 26,2 leitos-dia | R$ 78.600 |
+| 50 | 65,5 leitos-dia | R$ 196.500 |
+
+> **Aviso obrigatório a cada interação com o simulador hospitalar:** “Este cálculo é uma hipótese de planejamento construída com parâmetro de diferença média observado em estudos de **pacientes com sarcopenia pré-existente** e custo diário **hipotético**. Não há validação que relacione perda de massa magra por tirzepatida a esses dias ou valores. Não representa previsão de internações, gasto do SUS, efeito causal ou orientação médica.”
+Regras de antiabusos: não oferecer campo que converta `leanLossKg` diretamente em `patientsWithDocumentedSarcopenia`; não permitir que uma aba transfira seus números automaticamente para a outra, nem use `peso`, `medicamento`, `idade`, `silhueta` para calcular dias ou despesas hospitalares. Exibir **uma linha visível de separação científica** entre os módulos.
+
+#### 4.9.5 Wireframe textual e UX/UI
+
+Desktop, em ordem:
+
+1. **Entrada:** “O que o peso perdido pode representar?” com inputs de peso, altura opcional, idade opcional, silhueta visual, referência de medicamento e três cenários de perda **manualmente editáveis**.
+2. **Corpo ilustrativo + evolução:** silhueta abstrata com estados 0/1/3/5 meses, gráfico de composição da perda, barra 20–25%, unidade kg e tabela para leitores de tela.
+3. **Ponte didática:** título “Perder massa magra não é o mesmo que perder função muscular”. Card de lacuna científico-metodológica entre estudos de tratamento e estudos hospitalares.
+4. **UTI — estudos em outras populações:** cartas de evidência com diferenças de dias, metadados de grupo, IC e fonte; sem risco individual.
+5. **Cirurgias:** outcomes por especialidade e custos históricos de referência em dólares, se revisão aprovar.
+6. **Laboratório de impacto no sistema:** coorte hipotética, dias-leito, custo hipotético por leito-dia, sensibilidade por N, conclusões e “o que esse cálculo não prova”.
+7. **Por que preservar músculo importa:** força funcional, mobilidade, autonomia, envelhecimento, recuperação, pré-habilitação; links PubMed e explicação baseada em revisão sistemática, sem prescrição de treino.
+8. **Dossiê/exportação:** relatório com 3 camadas etiquetadas `OBSERVADO`, `ASSOCIAÇÃO EM OUTRA POPULAÇÃO`, `HIPÓTESE` e `LACUNA DE EVIDÊNCIA`. Nunca baixar informações de saúde inseridas pelo visitante sem consentimento e confirmação.
+
+Mobile 360/390/430 px: mesma ordem, controles em acordeão legível, cards isolados, barras com alternativas textuais, campos numéricos acessíveis, botões ≥44 px, tooltips não dependentes de hover; sempre mostrar origem de cada valor e selo neutro textual de categoria. Tab para usar **sem animações** e sem avatar.
+
+#### 4.9.6 Arquitetura, segurança e contrato de dados
+
+**Princípio:** projeções locais com dados de formulário permanecem no navegador; dados do PubMed devem residir no catálogo científico do projeto, versionados, revisados, com `PMID`, título, `studyPopulation`, `design`, `observedMetric`, `unit`, `statisticType`, `ci95`, `sampleN`, `observationPeriod`, `certainty`, `limitations`, `evidenceLayer`, `reviewStatus`, `reviewedAt`, `reviewer`. Evidência não aprovada não entra na tela pública.
+
+- Frontend: evoluir `components/experience/body-evidence.tsx` para subcomponentes `BodyIllustration`, `WeightCompositionTimeline`, `EvidenceGapBridge`, `HospitalEvidencePanel`, `HealthSystemScenario`, `EvidenceProvenance`, `ScientificDisclaimer`. **Nomes são proposta, não arquivos existentes**.
+- Engine: `features/experience/weight-composition-scenario.ts` e `features/experience/health-system-scenario.ts` como duas funções PURAS **independentes**, sem cruzar dados pessoais. Evitar `Number()` sem validar `NaN`, infinitos, negativos, máximos e números fracionários para N.
+- Catálogo: `features/evidence/hospital-impact.catalog.ts`, **novo arquivo proposto** com os PMIDs PUB-15 a PUB-19; não substituir atlas atual. Números publicados só após revisão de texto completo quando exigido e registro de data/versão.
+- Backend opcional de leitura: `GET /api/v1/evidence/hospital-impact` (rota **PROPOSTA**), com lista somente de estudos aprovados, paginação/ETag, sem identificadores de usuários. Calcular cenários no browser para evitar transmitir peso/idade/medicamento. Caso seja necessária exportação no servidor, implementar consentimento e minimização, sem persistência por padrão.
+- Não compartilhar dados coletados no novo questionário (sintomas, uso de medicação) com o simulador hospitalar, nem inferir sarcopenia a partir dos sintomas. Dados sensíveis exigem consentimento específico e finalidade clara; manter desativada a coleta persistente até revisão LGPD.
+- Logs/telemetria: somente eventos agregados de interação (`open_evidence`, `change_projection`, `export_nonpersonal`), nunca `65kg`, nome de medicamento escolhido, idade, sintomas, texto livre, cookie ou ID reidentificável.
+
+**Esquema de saída sugerido:**
+
+```ts
+// Especificação, não código implementado.
+type EvidenceLayer = "OBSERVADO" | "ASSOCIACAO" | "HIPOTESE" | "LACUNA";
+interface WeightScenarioPoint {
+  month: 0 | 1 | 3 | 5;
+  weightKg: number;
+  cumulativeLossKg: number;
+  leanShareOfLossKg: { assumed20pct: number; assumed25pct: number };
+  note: "NAO_E_MUSCULO_MEDIDO";
+}
+interface HospitalReference {
+  pmid: string;
+  studyPopulation: string;
+  outcome: "ICU_STAY" | "VENTILATION" | "HOSPITAL_STAY" | "SURGICAL_COST";
+  statisticType: "GROUP_MEAN_DIFFERENCE" | "ADJUSTED_GROUP_COST";
+  value: number;
+  unit: "day" | "USD";
+  ci95?: [number, number];
+  evidenceLayer: "ASSOCIACAO";
+  mayInferDrugIndividualRisk: false;
+}
+interface HealthSystemWhatIf {
+  patientsWithDocumentedSarcopenia: number;
+  assumedExtraIcuDaysPerAdmission: number;
+  assumedCostPerBedDay: number;
+  currency: "BRL" | "USD" | "EUR";
+  provenance: {
+    days: "ASSOCIACAO_OBSERVADA_USADA_COMO_PARAMETRO" | "HIPOTESE_MANUAL";
+    cost: "HIPOTESE_MANUAL";
+  };
+  mustShowNonCausalDisclaimer: true;
+}
+```
+
+**Não criar endpoints para probabilidades individuais de UTI, risco cirúrgico ou preço de Mounjaro; não há parâmetros clínicos validados para isso.**
+
+#### 4.9.7 Critérios de aceite, testes e gates
+
+| ID | Teste obrigatório | Aceite verificável |
+|---|---|---|
+| IMPACT-01 | `65 kg, perda 1/3/5 kg, q 20–25%` | valores 0,20–0,25; 0,60–0,75; 1,00–1,25 kg de **massa magra na perda**, sem chamá-la de músculo |
+| IMPACT-02 | Fonte da proporção | tooltip afirma n=160, semana 72, peso basal médio 102,5 kg; não aplica a qualquer mês como média |
+| IMPACT-03 | Dias de UTI | lê PUB-15, expõe +1,31 dia e CI, heterogeneidade, população pré-sarcopênica com ventilação; não transfere para paciente do primeiro painel |
+| IMPACT-04 | Cálculo 20 × 1,31 × 3.000 | 26,2 leitos-dia / R$ 78.600 **ilustrativos**, fórmula acessível e custo marcado como inventado para exemplo |
+| IMPACT-05 | Não somar dias | UTI + hospitalização total são sobrepostos; UI impede somatório de períodos |
+| IMPACT-06 | Custos históricos | U$ 14.322 rotulado **associação nos EUA 2011–2013**, sem conversão BRL automática ou inferência de custo clínico do fármaco |
+| IMPACT-07 | Sem dados sensíveis | sem POST de peso, idade, medicamento, texto livre; sem analytics com inputs |
+| IMPACT-08 | Segurança científica | busca no bundle/testes falha se gerar `riskOfDeathPercent`, `riskOfICU`, `sarcopeniaScore` de peso/droga |
+| IMPACT-09 | UX e acessibilidade | validação por tela PC 1440, mobile 360/390; teclado, foco, aria, gráficos com tabelas e `reduced-motion` || IMPACT-10 | Auditoria de evidências | cada número PubMed permite abrir o PMID e fonte, apresenta N, população, método, endpoint, tempo, limites, data de revisão |
+| IMPACT-11 | Custo e coorte | se pessoa tentar usar `usuários de Mounjaro` como N, explicar que estudo não estimou proporção de sarcopenia induzida por droga |
+| IMPACT-12 | Teste de compreensão | usuário diferencia “25% da perda” de “25% de todos os músculos”; entende cenário de recursos vs gasto real |
+
+**Etapa adicional após o Sprint 2:** `T-023 (P1)`: painel de impacto hospitalar comparativo com evidências PUB-15 a PUB-19, sem link causal. `T-024 (P1)`: simulador independente de dias-leito e custo hipotético, testes IMPACT-01 a IMPACT-12, exportação com provenance e revisão clínica. São propostas; **não implementadas na main**.
 
 ## 5. ARQUITETURA E CONTRATOS FUNCIONAIS
 
@@ -384,8 +551,7 @@ export type RespondentBranch =
       assessedByClinician?: "yes" | "no" | "prefer_not" }
   | { useStatus: "never"; knowsUser?: "yes" | "no" | "unknown" | "prefer_not";
       heardCategories?: SymptomCategory[]; heardFrom?: "person" | "social" | "news" | "clinician" | "study" | "unknown" | "other";
-      question?: string }
-  | { useStatus: "prefer_not" };
+      question?: string }  | { useStatus: "prefer_not" };
 
 export interface CompositionHypothesis {
   startWeightKg: number;  // não enviar ao backend
@@ -464,8 +630,7 @@ export interface CompositionHypothesis {
 - Executar análise de impacto de proteção de dados para uso e sintomas, revisar base jurídica LGPD, retenção e exercício de direitos; consultar especialista jurídico/privacidade.
 - Não publicar coleta de saúde sem esses gates. Demo local com dados fictícios é alternativa segura.
 - Proteger conteúdo livre de identificação, XSS, injeção, exposição em logs e vazamento em analytics, error reporting, backups, URLs, cache e export.
-- Filtrar dados agregados por mínimo n e impedir reidentificação cruzada.
-- Testar exclusão com recibo seguro e expurgo real; não produzir estatísticas de “frequência de efeitos colaterais na população” a partir de amostra voluntária.
+- Filtrar dados agregados por mínimo n e impedir reidentificação cruzada.- Testar exclusão com recibo seguro e expurgo real; não produzir estatísticas de “frequência de efeitos colaterais na população” a partir de amostra voluntária.
 
 ### P0-SEC-05. Operação e supply chain
 
@@ -544,8 +709,7 @@ Aplicar Hick (escolha simples), Fitts (área de toque ≥44 px), Jakob (padrões
 - [ ] Meses 1/3/5 exibem cenários manuais ou médias reais por tempo **revisadas**; sem extrapolação de semana 72.
 - [ ] Nenhuma taxa de sarcopenia, UTI, cirurgia ou mortalidade individual é inferida.
 - [ ] QR validado em Android/iPhone; SVG e PNG baixáveis conforme escopo; URL canônica segura.
-- [ ] Teste de carga/custos; SLO/backup/rollback e ambiente de produção confirmados.
-- [ ] Telas 1440/390/360/1920 aprovadas e compreensíveis pelo público-alvo.
+- [ ] Teste de carga/custos; SLO/backup/rollback e ambiente de produção confirmados.- [ ] Telas 1440/390/360/1920 aprovadas e compreensíveis pelo público-alvo.
 - [ ] Link do vídeo analisado **quando fornecido**, sem reutilizar conteúdo audiovisual, e eventuais fontes adicionais aprovadas.
 
 ---
@@ -585,6 +749,8 @@ Aplicar Hick (escolha simples), Fitts (área de toque ≥44 px), Jakob (padrões
 - **T-020:** aguardar URL do TikTok; analisar cada alegação e atualizar só com estudos PubMed verificáveis.
 - **T-021:** E2E com 2+ navegadores e DB real, Playwright mobile/desktop, axe e aparelhos físicos; 1000 usuários em carga autorizada.
 - **T-022:** confirmar Vercel/aliases/SHAs, migration, health, backup/rollback, latência e custos; só liberar após aceite.
+- **T-023 (P1):** incorporar em painel próprio estudos de UTI, ventilação, cirurgia e custos, com população, método, período, métrica e IC disponíveis, sem inferência causal com tirzepatida.
+- **T-024 (P1):** implementar cenário independente de leitos-dia e custos hipotéticos, validando fórmulas, origem de cada parâmetro, estados de erro, acessibilidade, privacidade e revisão científica.
 
 ### Sprint 4 — futuro (P2; NÃO antecipar)
 
@@ -622,8 +788,13 @@ Aplicar Hick (escolha simples), Fitts (área de toque ≥44 px), Jakob (padrões
 | PUB-10 | Pré-habilitação com exercício | 41405836 | https://pubmed.ncbi.nlm.nih.gov/41405836/ | preparo funcional / incerteza |
 | PUB-11 | Pré-habilitação nutrição/exercício | 42283400 | https://pubmed.ncbi.nlm.nih.gov/42283400/ | educação sobre reserva funcional |
 | PUB-12 | Efeitos gastrointestinais GLP-1 | 40189856 | https://pubmed.ncbi.nlm.nih.gov/40189856/ | categorias de relatos sem causalidade individual |
-| PUB-13 | GLP-1 e músculo em idosos | 42633386 | https://pubmed.ncbi.nlm.nih.gov/42633386/ | incerteza de massa/força |
-| PUB-14 | Meta-análise GLP-1 massa magra | 42321502 | https://pubmed.ncbi.nlm.nih.gov/42321502/ | peso relativo vs absoluto |
+| PUB-13 | GLP-1 e músculo em idosos | 42633386 | https://pubmed.ncbi.nlm.nih.gov/42633386/ | incerteza de massa/força || PUB-14 | Meta-análise GLP-1 massa magra | 42321502 | https://pubmed.ncbi.nlm.nih.gov/42321502/ | peso relativo vs absoluto |
+
+| PUB-15 | Sarcopenia preexistente e ventilação mecânica / duração de UTI e hospital (17 estudos, 3.582 pacientes) | 35578299 | https://pubmed.ncbi.nlm.nih.gov/35578299/ | diferenças médias **em outra população**, não predição individual |
+| PUB-16 | Sarcopenia e tempo de internação em cirurgia oncológica gastrointestinal (43 estudos, 16.716 pacientes) | 33739153 | https://pubmed.ncbi.nlm.nih.gov/33739153/ | +4,54 dias associados, somente a população específica |
+| PUB-17 | Custos hospitalares de cirurgia abdominal relacionados a sarcopenia (EUA, 2011–2013) | 27302103 | https://pubmed.ncbi.nlm.nih.gov/27302103/ | US$ 14.322 **de diferença ajustada observada** entre grupos, sem atribuição ao medicamento |
+| PUB-18 | Custo hospitalar relacionado à sarcopenia (656 pacientes) | 27167668 | https://pubmed.ncbi.nlm.nih.gov/27167668/ | associação histórica em euros, NÃO orçamento SUS |
+| PUB-19 | Perda muscular na primeira semana de UTI | 36597123 | https://pubmed.ncbi.nlm.nih.gov/36597123/ | contexto de doentes críticos; não converter em perda por GLP-1 |
 
 **Referências internas de implementação:**
 - Auditoria da `main`: `AUDITORIA_LUPA_GITHUB_MAIN_2026-11-13.md` (entregue separadamente); no repositório, revalidar em SHA atual.
@@ -633,3 +804,6 @@ Aplicar Hick (escolha simples), Fitts (área de toque ≥44 px), Jakob (padrões
 ### Resultado esperado
 
 > Uma plataforma que ajuda a compreender **o que se observou**, **quais perguntas ainda não têm resposta** e **por que massa magra, músculo e função não são sinônimos**. O LUPA pode mostrar um exemplo corporal de 65 kg, perdas hipotéticas em 1/3/5 meses, diferentes proporções ilustrativas da perda, e o papel da musculatura em estudos de UTI/cirurgia **sem fingir estimar o risco da pessoa**. O questionário acolhe relatos pessoais/indiretos com privacidade; esses relatos nunca viram prova causal. A liberação depende dos gates reais de backend, banco, segurança, LGPD, UX e revisão científica.
+
+
+**Adendo desta revisão (13/11/2026):** o módulo quantitativo proposto separa o cenário corporal da evidência de associação hospitalar. Parâmetros numéricos de UTI e cirurgia são contextualizados com PMIDs 35578299, 33739153 e 27302103; nenhum deles valida atribuir custo, dias de internação ou mortalidade ao uso de Mounjaro por uma pessoa específica. A documentação deste adendo é **especificação para implementação**, não afirmação de implementação concluída.
