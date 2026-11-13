@@ -13,8 +13,7 @@ export async function GET(req: NextRequest, { params }: Context) {
     return NextResponse.json({ error: "INVALID_CODE" }, { status: 400 });
   }
 
-  const origin = req.nextUrl.origin;
-  const targetUrl = getCanonicalLiveUrl(code, origin);
+  const targetUrl = getCanonicalLiveUrl(code, req.nextUrl.origin);
 
   const format = req.nextUrl.searchParams.get("format") || "svg";
 
