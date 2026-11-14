@@ -10,8 +10,9 @@ export function InstitutionalRecovery(){
  useEffect(()=>{
   const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
   if(hash.get("type")==="recovery" && hash.get("access_token")){
-   setToken(hash.get("access_token")||"");
+   const recoveryToken=hash.get("access_token")||"";
    history.replaceState(null,"",window.location.pathname);
+   queueMicrotask(()=>setToken(recoveryToken));
   }
  },[]);
  const submit=async(e:React.FormEvent)=>{
