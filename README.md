@@ -2,7 +2,9 @@
 
 Plataforma de pesquisa sobre medicamentos para emagrecimento, composição corporal, saúde mental, sarcopenia e cuidados críticos. O sistema separa **dado observado, associação e cenário hipotético**, preservando as fontes e os limites científicos.
 
-> **Estado em 08/11/2026 (branch `redesign/site-novo`):** Evidence Lens, Evidence Engine (`POST /api/interpretar`), Passaporte da Evidência, comparador explicável, análise de sensibilidade e pipeline PubMed em dry-run. **186 testes Vitest + 260 execuções Playwright** aprovados localmente no build de produção. Revisão clínica independente **pendente**; teste com usuários **não executado**. Detalhes em [docs/STATUS.md](docs/STATUS.md).
+> **ATUALIZAÇÃO EM 13–14/11/2026 — branch de implantação institucional:** o código inclui `/login`, `/recuperar-acesso`, autenticação por Supabase Auth, gestão Live com organização/RBAC, migrações SQL, votos por PostgREST/RPC, feedback educacional persistente e Broadcast (somente invalidação sem dados sensíveis). **Esses recursos dependem de projeto Supabase EXCLUSIVO LUPA e migrations aplicadas, ainda não comprovados.** A `main` em produção não recebe estas mudanças até revisão e validação do PR. Veja [a arquitetura inventariada](docs/ARQUITETURA_AS_BUILT_INTEGRAL_2026-11-13.md), [o plano de implantação](docs/LUPA_BACKLOG_SEGURANCA_RELATOS_CORPO_PUBMED_2026-11-13.md) e o [PR #8](https://github.com/annygabb/Lupa/pull/8).
+
+> **Estado histórico em 08/11/2026 (branch `redesign/site-novo`):** Evidence Lens, Evidence Engine (`POST /api/interpretar`), Passaporte da Evidência, comparador explicável, análise de sensibilidade e pipeline PubMed em dry-run. **186 testes Vitest + 260 execuções Playwright** aprovados localmente no build de produção. Revisão clínica independente **pendente**; teste com usuários **não executado**. Detalhes em [docs/STATUS.md](docs/STATUS.md).
 
 ## Onde acessar
 
@@ -22,6 +24,14 @@ O projeto está hospedado na Vercel pela equipe em **https://lupaa.vercel.app**.
 | `/metodologia` | Protocolo, níveis de evidência, 17 bloqueios de projeção explicados, glossário e fontes |
 | `GET/POST /api/interpretar` | Lista e interpreta afirmações (determinístico, sem IA) |
 | `/api/health` | Estado público do serviço sem segredos |
+| `/experiencias` | Catálogo de experiências educativas, dinâmicas e LUPA Live |
+| `/corpo-evidencia` | Simulação editável de peso, altura, idade, representação corporal e cenário de massa magra; não é diagnóstico |
+| `/relatos` | Questionário condicional LOCAL; nunca salva sintomas no backend |
+| `/login`, `/recuperar-acesso` | Login e recuperação de conta institucional via Supabase Auth |
+| `/live`, `/live/[code]` | Acesso via QR e votação anônima com cookie pseudônimo |
+| `/live/organizador`, `/live/apresentacao/[code]` | Gestão institucional e telão com atualização por Broadcast/fallback |
+| `/api/auth/*`, `/api/me` | Identidade validada no servidor, cookies HTTP-only e organização |
+| `/api/live/*` | Eventos, snapshots públicos/admin, votos, feedback e resumos |
 
 ## Executar localmente
 
@@ -63,7 +73,7 @@ A CI executa essas quatro verificações, **smoke HTTP das oito rotas**, auditor
 - **Massa magra por DXA não é sinônimo de força ou diagnóstico de sarcopenia.** Artigos de composição corporal e UTI não demonstram efeito causal do medicamento sobre UTI.
 - Os resultados da rota `/projecoes` são **cenários editáveis de fluxo**, não projeções epidemiológicas brasileiras, eficácia terapêutica, estimativas de mortalidade ou cobertura oficial do SUS.
 - A avaliação de possível incorporação de medicamentos pela Conitec não significa liberação automática para toda a população.
-- Nenhum paciente real, prontuário, autenticação de usuário, banco, SQL ou migração está implementado. O MVP público de pesquisa funciona sem Supabase.
+- Não há prontuários nem persistência de relatos de saúde. Há APIs de Auth, banco e migrations **em código**, mas não existe confirmação de projeto Supabase do LUPA provisionado e migrado. O atlas público de pesquisa pode funcionar sem essa infraestrutura; o LUPA Live institucional não.
 
 ## Documentação
 
