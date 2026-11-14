@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { createLiveEvent, liveDatabaseEnabled, liveDb } from "@/lib/live/db";
 import { liveQuestion } from "@/lib/live/content";
 import {
