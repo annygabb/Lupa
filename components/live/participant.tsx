@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { subscribeLiveInvalidations } from "@/lib/live/realtime-client";
 import Link from "next/link";
 import type { LiveSnapshot } from "@/lib/live/db";
 
@@ -61,10 +62,12 @@ export function LiveParticipant({ code }: { code: string }) {
     };
 
     void loadSnapshot();
-    const timer = setInterval(() => void loadSnapshot(), 3000);
+    const timer = setInterval(() => void loadSnapshot(), 15000);
+    const realtime = subscribeLiveInvalidations(normCode, () => void loadSnapshot());
     return () => {
       active = false;
       clearInterval(timer);
+      realtime.disconnect();
     };
   }, [normCode]);
 
