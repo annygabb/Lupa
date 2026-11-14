@@ -52,6 +52,7 @@ export function InstitutionalLogin() {
         </button>
         <Link href="/live" className="lx-button lx-button--line">Sou participante</Link>
       </div>
+      <p style={{marginTop:14}}><Link href="/recuperar-acesso">Esqueci minha senha</Link></p>
       <p className="lx-muted" style={{marginTop:16}}>Contas e permissões são criadas pelo responsável da instituição. Não existe chave administrativa padrão.</p>
     </form>
   </div></div>;
