@@ -36,6 +36,9 @@ export function LiveOrganizer() {
   const [code, setCode] = useState("");
   const [data, setData] = useState<LiveSnapshot | null>(null);
   const [qrSvg, setQrSvg] = useState<string>("");
+  const [feedbackSummary,setFeedbackSummary]=useState<{
+    total:number; suppressed:boolean; averageClarity:number|null; averageUsefulness:number|null
+  }|null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
@@ -99,6 +102,11 @@ export function LiveOrganizer() {
           startTransition(() => {
             setData(d);
           });
+          if(d.phase==="closed"){
+            const feedback=await fetch(`/api/live/${code}/feedback-summary`,{cache:"no-store"});
+            if(feedback.ok && active)
+              setFeedbackSummary(await feedback.json() as typeof feedbackSummary);
+          }else if(active)setFeedbackSummary(null);
         }
       } catch {
         if (active) setNote("Atualização em espera (verifique conexão).");
@@ -476,6 +484,17 @@ ${data.choices
                     </button>
                   </div>
                 )}
+
+                {/* Session feedback is optional. Small groups are suppressed. */}
+                {phase==="closed" && <div className="lx-science mb-4">
+                  <h3 className="font-bold mb-2">Avaliação educacional</h3>
+                  {!feedbackSummary ? <p className="lx-muted">Dados da avaliação ainda indisponíveis.</p> :
+                    <p>
+                      {feedbackSummary.total} avaliação(ões).{" "}
+                      {feedbackSummary.suppressed ? "Médias ocultadas para grupos com menos de cinco respostas." :
+                      `Clareza: ${feedbackSummary.averageClarity}/5 · Utilidade: ${feedbackSummary.averageUsefulness}/5.`}
+                    </p>}
+                </div>}
 
                 {/* Exportar e Excluir */}
                 <div className="flex flex-wrap gap-3 pt-3 border-t">
