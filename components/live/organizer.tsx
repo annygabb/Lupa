@@ -28,9 +28,12 @@ const NEXT_PHASE_ACTION: Record<string, string> = {
 };
 
 export function LiveOrganizer() {
-  const [adminToken, setAdminToken] = useState("");
+  const [organizations, setOrganizations] = useState<Array<{ id:string; name:string; role:string }>>([]);
+  const [organizationId, setOrganizationId] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [claimId, setClaimId] = useState(liveOptions[0]?.id ?? "massa-magra-nao-equivale-a-musculos");
-  const [code, setCode] = useState("CAFE2026BEEF");
+  const [code, setCode] = useState("");
   const [data, setData] = useState<LiveSnapshot | null>(null);
   const [qrSvg, setQrSvg] = useState<string>("");
   const [busy, setBusy] = useState(false);
@@ -42,6 +45,30 @@ export function LiveOrganizer() {
   const canonicalUrl = typeof window !== "undefined"
     ? getCanonicalLiveUrl(code, window.location.origin)
     : `https://lupaa.vercel.app/live/${code}`;
+
+  // Membership is fetched from the server; organization never grants itself a role.
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const res = await fetch("/api/me", {cache:"no-store"});
+        if (!res.ok) { if(active)setAuthenticated(false); return; }
+        const data = await res.json() as {organizations?:Array<{id:string;name:string;role:string}>};
+        const allowed=(data.organizations||[]).filter(o=>["owner","admin","organizer"].includes(o.role));
+        if(active){
+          setOrganizations(allowed);
+          setOrganizationId(allowed[0]?.id||"");
+          setAuthenticated(true);
+        }
+        const e=await fetch("/api/live",{cache:"no-store"});
+        if(e.ok){const events=(await e.json()) as {events?:Array<{code:string}>};
+          if(active&&events.events?.[0]?.code)setCode(events.events[0].code);
+        }
+      } catch { if(active)setError("Não foi possível verificar a conta institucional."); }
+      finally {if(active)setAuthLoading(false);}
+    })();
+    return ()=>{active=false;};
+  }, []);
 
   // Atualização do QR Code quando o código mudar
   useEffect(() => {
@@ -62,9 +89,9 @@ export function LiveOrganizer() {
 
     const loadSnapshot = async () => {
       try {
-        const res = await fetch(`/api/live/${code}`, {
+        const res = await fetch(`/api/live/${code}/admin`, {
           cache: "no-store",
-          headers: { "x-lupa-admin-token": adminToken },
+          credentials:"same-origin",
         });
         if (!res.ok) throw new Error("Falha ao atualizar painel.");
         const d = (await res.json()) as LiveSnapshot;
@@ -86,7 +113,7 @@ export function LiveOrganizer() {
       clearInterval(timer);
       realtime.disconnect();
     };
-  }, [code, adminToken]);
+  }, [code]);
 
   const createSession = async () => {
     setBusy(true);
@@ -97,14 +124,13 @@ export function LiveOrganizer() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-lupa-admin-token": adminToken,
         },
-        body: JSON.stringify({ claimId }),
+        body: JSON.stringify({ claimId, organizationId }),
       });
 
       const resData = (await res.json()) as { code?: string; error?: string; message?: string };
       if (!res.ok) {
-        throw new Error(resData.message || "Falha ao criar sessão. Verifique a chave de administrador.");
+        throw new Error(resData.message || "Falha ao criar sessão. Verifique seu login e a organização selecionada.");
       }
 
       if (resData.code) {
@@ -126,17 +152,14 @@ export function LiveOrganizer() {
       const next = NEXT_PHASE[data.phase];
       const res = await fetch(`/api/live/${code}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "x-lupa-admin-token": adminToken,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phase: next }),
       });
 
       if (!res.ok) throw new Error("Não foi possível avançar para a próxima fase.");
-      const updated = await fetch(`/api/live/${code}`, {
+      const updated = await fetch(`/api/live/${code}/admin`, {
         cache: "no-store",
-        headers: { "x-lupa-admin-token": adminToken },
+        credentials:"same-origin",
       });
       if (updated.ok) setData((await updated.json()) as LiveSnapshot);
     } catch (e) {
@@ -155,7 +178,7 @@ export function LiveOrganizer() {
     try {
       const res = await fetch(`/api/live/${code}`, {
         method: "DELETE",
-        headers: { "x-lupa-admin-token": adminToken },
+        credentials:"same-origin",
       });
       if (!res.ok) throw new Error("Não foi possível excluir a sessão.");
       setCode("");
@@ -253,18 +276,26 @@ ${data.choices
           <section className="lx-panel">
             <h2>Configuração do Evento</h2>
 
-            <label className="lx-field">
-              Chave de Administração (mínimo 32 caracteres)
-              <input
-                type="password"
-                autoComplete="off"
-                value={adminToken}
-                onChange={(e) => setAdminToken(e.target.value)}
-                placeholder="Chave de facilitador"
-              />
+            {authLoading ? <p className="lx-muted">Verificando sua conta institucional…</p> :
+              !authenticated ? <div className="lx-warning" role="alert">
+                Acesso institucional necessário. <Link href="/login" className="underline">Entrar com minha conta</Link>
+              </div> : (
+                <div className="lx-inline mb-4">
+                  <p className="lx-muted">Conectado ao painel autorizado.</p>
+                  <button type="button" className="lx-button lx-button--line"
+                    onClick={async()=>{
+                      await fetch("/api/auth/session",{method:"DELETE"});
+                      window.location.assign("/login");
+                    }}>Sair</button>
+                </div>
+              )}
+            {authenticated && organizations.length===0 && <p role="alert" className="lx-warning">Conta sem função de organizador. Solicite acesso institucional.</p>}
+            <label className="lx-field">Organização autorizada
+              <select value={organizationId} onChange={e=>setOrganizationId(e.target.value)} disabled={!authenticated}>
+                <option value="">Selecione uma organização</option>
+                {organizations.map(o=><option key={o.id} value={o.id}>{o.name} ({o.role})</option>)}
+              </select>
             </label>
-
-            <p className="lx-muted">A chave do facilitador deve ser configurada de forma privada. Não existe chave padrão de demonstração.</p>
 
             <label className="lx-field">
               Objetivo Científico / Questão
@@ -288,7 +319,7 @@ ${data.choices
             <button
               className="lx-button"
               type="button"
-              disabled={busy || adminToken.length < 32}
+              disabled={busy || !authenticated || !organizationId}
               onClick={createSession}
             >
               {busy ? "Criando sessão…" : "Criar Nova Sessão Live"}
