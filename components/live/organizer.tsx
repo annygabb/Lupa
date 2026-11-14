@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { subscribeLiveInvalidations } from "@/lib/live/realtime-client";
 import Link from "next/link";
 import { liveOptions, SCIENTIFIC_OBJECTIVES } from "@/lib/live/content";
 import { generateQrSvg, getCanonicalLiveUrl } from "@/lib/live/qr";
@@ -78,10 +79,12 @@ export function LiveOrganizer() {
     };
 
     void loadSnapshot();
-    const timer = setInterval(() => void loadSnapshot(), 3000);
+    const timer = setInterval(() => void loadSnapshot(), 15000);
+    const realtime = subscribeLiveInvalidations(code, () => void loadSnapshot());
     return () => {
       active = false;
       clearInterval(timer);
+      realtime.disconnect();
     };
   }, [code, adminToken]);
 
