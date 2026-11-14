@@ -38,14 +38,15 @@ export async function POST(request:NextRequest,{params}:Context){
    "lupa_event_feedback?event_id=eq."+rows[0].id+"&session_hash=eq."+hash+"&select=id&limit=1"
   );
   if(existing.length)return privateJson({error:"ALREADY_SENT"},409);
-  const inserted=await liveDb<Array<{id:number}>>("lupa_event_feedback?select=id",{
-   method:"POST",headers:{Prefer:"return=representation"},
+  const inserted=await liveDb<Array<{id:number}>>("lupa_event_feedback?on_conflict=event_id,session_hash&select=id",{
+   method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=representation"},
    body:JSON.stringify({event_id:rows[0].id,session_hash:hash,
     clarity:Number(input.clarity),usefulness:Number(input.usefulness),
     purpose_version:"experience-feedback-v1"}),
   });
-  if(!Array.isArray(inserted)||inserted.length!==1)
-   return privateJson({error:"FEEDBACK_WRITE_UNCONFIRMED"},503);
+  if(!Array.isArray(inserted))return privateJson({error:"FEEDBACK_WRITE_UNCONFIRMED"},503);
+  if(inserted.length===0)return privateJson({error:"ALREADY_SENT"},409);
+  if(inserted.length!==1)return privateJson({error:"FEEDBACK_WRITE_UNCONFIRMED"},503);
   const res=privateJson({saved:true},201);
   res.cookies.set(SID_COOKIE,sid,{httpOnly:true,secure:process.env.NODE_ENV==="production",
     sameSite:"lax",path:"/api/live/"+code, maxAge:4*3600});
