@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import type { NextRequest } from "next/server";
 
 export const SID_COOKIE = "lupa_live_sid";
@@ -19,16 +19,6 @@ export function sessionHash(sessionId: string) {
 
 export function validSessionId(input: string | undefined): input is string {
   return Boolean(input && /^[a-f0-9]{48}$/.test(input));
-}
-
-export function isOrganizerAuthorized(request: NextRequest) {
-  const expected = process.env.LUPA_LIVE_ADMIN_TOKEN;
-  const got = request.headers.get("x-lupa-admin-token");
-  // Jamais aceitar credenciais embutidas no bundle ou valor de demonstração.
-  if (!expected || expected.length < 32 || !got || got.length < 32) return false;
-  const a = createHash("sha256").update(got).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
 }
 
 export function sameOrigin(request: NextRequest) {

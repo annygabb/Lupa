@@ -1,105 +1,64 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { advanceLivePhase, deleteLiveEvent, eventSnapshot, liveDatabaseEnabled } from "@/lib/live/db";
+import { validCode } from "@/lib/live/security";
 import {
-  advanceLivePhase,
-  deleteLiveEvent,
-  eventSnapshot,
-  liveDatabaseEnabled,
-} from "@/lib/live/db";
-import { isOrganizerAuthorized, sameOrigin, validCode } from "@/lib/live/security";
+  getInstitutionalUser, requireEventManager, sameSiteWrite, privateJson,
+} from "@/lib/live/institutional-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+type Context = { params: Promise<{code:string}> };
 
-type Context = { params: Promise<{ code: string }> };
-
-const result = (data: unknown, status = 200) =>
-  NextResponse.json(data, {
-    status,
-    headers: { "Cache-Control": "no-store" },
-  });
-
-export async function GET(req: NextRequest, { params }: Context) {
+export async function GET(_request: NextRequest, {params}: Context) {
   const { code } = await params;
-  if (!validCode(code)) return result({ error: "INVALID_CODE" }, 400);
-  if (!liveDatabaseEnabled()) return result({ error: "LIVE_UNCONFIGURED" }, 503);
-
+  if (!validCode(code)) return privateJson({ error: "INVALID_CODE" }, 400);
+  if (!liveDatabaseEnabled()) return privateJson({ error: "LIVE_UNCONFIGURED" }, 503);
   try {
-    const isOrganizer = isOrganizerAuthorized(req);
-    const data = await eventSnapshot(code, { isOrganizer });
-    if (!data) return result({ error: "NOT_FOUND" }, 404);
-
-    // O organizador e o modo telão vêem totais completos; participantes só após a revelação
-    if (!isOrganizer) {
-      data.counts =
-        data.phase === "pre"
-          ? []
-          : data.phase === "reveal"
-          ? data.counts.filter((v) => v.phase === "pre")
-          : data.counts;
-    }
-
-    return result(data);
-  } catch {
-    return result({ error: "LIVE_READ_FAILED" }, 503);
-  }
+    // Strict PUBLIC response. Organizer gets a distinct authorized endpoint.
+    const snapshot = await eventSnapshot(code);
+    if (!snapshot) return privateJson({ error: "NOT_FOUND" }, 404);
+    snapshot.counts = snapshot.phase === "pre" ? [] :
+      snapshot.phase === "reveal" ? snapshot.counts.filter(c=>c.phase==="pre") :
+      snapshot.counts;
+    return privateJson(snapshot);
+  } catch { return privateJson({ error: "LIVE_READ_FAILED" }, 503); }
 }
 
-export async function PATCH(req: NextRequest, { params }: Context) {
+export async function PATCH(request: NextRequest, {params}: Context) {
   const { code } = await params;
-  if (!validCode(code)) return result({ error: "INVALID_CODE" }, 400);
-  if (!liveDatabaseEnabled()) return result({ error: "LIVE_UNCONFIGURED" }, 503);
-  if (!sameOrigin(req)) return result({ error: "INVALID_ORIGIN" }, 403);
-  if (!isOrganizerAuthorized(req)) return result({ error: "UNAUTHORIZED" }, 401);
-
-  let nextPhase: string;
+  if (!validCode(code)) return privateJson({ error: "INVALID_CODE" }, 400);
+  if (!liveDatabaseEnabled()) return privateJson({ error: "LIVE_UNCONFIGURED" }, 503);
+  if (!sameSiteWrite(request)) return privateJson({ error: "INVALID_ORIGIN" }, 403);
+  const user = await getInstitutionalUser();
+  if (!user) return privateJson({ error: "UNAUTHENTICATED" }, 401);
   try {
-    const input = await req.json();
-    nextPhase = input?.phase;
-  } catch {
-    return result({ error: "INVALID_JSON" }, 400);
-  }
-
-  if (!["reveal", "post", "closed"].includes(nextPhase)) {
-    return result({ error: "INVALID_PHASE" }, 400);
-  }
-
-  try {
-    const item = await eventSnapshot(code, { isOrganizer: true });
-    if (!item) return result({ error: "NOT_FOUND" }, 404);
-
-    const transitions: Record<string, string> = {
-      pre: "reveal",
-      reveal: "post",
-      post: "closed",
-    };
-    if (transitions[item.phase] !== nextPhase) {
-      return result({ error: "INVALID_TRANSITION" }, 409);
-    }
-
-    const success = await advanceLivePhase(
-      code,
-      nextPhase as "pre" | "reveal" | "post" | "closed"
-    );
-    if (!success) return result({ error: "PHASE_CHANGED" }, 409);
-
-    return result({ phase: nextPhase });
-  } catch {
-    return result({ error: "LIVE_UPDATE_FAILED" }, 503);
-  }
+    if (!await requireEventManager(user.id, code)) return privateJson({ error: "FORBIDDEN" }, 403);
+    const raw = await request.text();
+    if (raw.length > 512) return privateJson({ error: "PAYLOAD_TOO_LARGE" }, 413);
+    const payload = JSON.parse(raw) as { phase?: unknown };
+    const next = payload?.phase;
+    if (!["reveal","post","closed"].includes(String(next)))
+      return privateJson({ error: "INVALID_PHASE" }, 400);
+    const current = await eventSnapshot(code, {isOrganizer:true});
+    if (!current) return privateJson({ error: "NOT_FOUND" }, 404);
+    const allowed:Record<string,string> = { pre:"reveal",reveal:"post",post:"closed" };
+    if (allowed[current.phase] !== next) return privateJson({ error:"INVALID_TRANSITION" }, 409);
+    const changed = await advanceLivePhase(code, next as "reveal"|"post"|"closed");
+    if (!changed) return privateJson({ error:"PHASE_CHANGED" }, 409);
+    return privateJson({ phase:next });
+  } catch { return privateJson({ error:"LIVE_UPDATE_FAILED" }, 503); }
 }
 
-/** Exclusão explícita e irreversível de um evento; votos e limites removidos por CASCADE. */
-export async function DELETE(req: NextRequest, { params }: Context) {
-  const { code } = await params;
-  if (!validCode(code)) return result({ error: "INVALID_CODE" }, 400);
-  if (!liveDatabaseEnabled()) return result({ error: "LIVE_UNCONFIGURED" }, 503);
-  if (!sameOrigin(req)) return result({ error: "INVALID_ORIGIN" }, 403);
-  if (!isOrganizerAuthorized(req)) return result({ error: "UNAUTHORIZED" }, 401);
-
+export async function DELETE(request: NextRequest, {params}: Context) {
+  const {code} = await params;
+  if (!validCode(code)) return privateJson({ error:"INVALID_CODE" },400);
+  if (!liveDatabaseEnabled()) return privateJson({ error:"LIVE_UNCONFIGURED" },503);
+  if (!sameSiteWrite(request)) return privateJson({ error:"INVALID_ORIGIN" },403);
+  const user=await getInstitutionalUser();
+  if(!user) return privateJson({ error:"UNAUTHENTICATED" },401);
   try {
-    const deleted = await deleteLiveEvent(code);
-    return deleted ? result({ deleted: true, code }) : result({ error: "NOT_FOUND" }, 404);
-  } catch {
-    return result({ error: "LIVE_DELETE_FAILED" }, 503);
-  }
+    if (!await requireEventManager(user.id,code)) return privateJson({ error:"FORBIDDEN" },403);
+    const deleted=await deleteLiveEvent(code);
+    return deleted ? privateJson({deleted:true,code}) : privateJson({error:"NOT_FOUND"},404);
+  } catch {return privateJson({error:"LIVE_DELETE_FAILED"},503);}
 }

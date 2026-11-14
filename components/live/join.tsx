@@ -45,8 +45,8 @@ export function LiveJoin() {
         </button>
       </form>
 
-      {/* Botão de Demonstração Imediata */}
-      <div className="p-4 bg-[#eef4fa] rounded-xl border border-[#d5e4f1] text-center space-y-2">
+      {/* Demo local: nunca anunciar um evento efêmero como sessão de produção. */}
+      {process.env.NODE_ENV !== "production" && <div className="p-4 bg-[#eef4fa] rounded-xl border border-[#d5e4f1] text-center space-y-2">
         <p className="text-xs text-[#0e2a4a] font-medium">
           Deseja testar a votação ao vivo agora mesmo?
         </p>
@@ -57,7 +57,7 @@ export function LiveJoin() {
         >
           Entrar na Sessão de Teste (CAFE2026BEEF) ↗
         </button>
-      </div>
+      </div>}
 
       <div className="pt-4 border-t border-[#d5e4f1] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
         <span>Você é facilitador ou organizador?</span>

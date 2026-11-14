@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { subscribeLiveInvalidations } from "@/lib/live/realtime-client";
 import Link from "next/link";
 import type { LiveSnapshot } from "@/lib/live/db";
 
@@ -33,6 +34,9 @@ export function LiveParticipant({ code }: { code: string }) {
   const [feedbackClarity, setFeedbackClarity] = useState<number>(5);
   const [feedbackUseful, setFeedbackUseful] = useState<number>(5);
   const [feedbackSent, setFeedbackSent] = useState(false);
+  const [feedbackPurposeAccepted, setFeedbackPurposeAccepted] = useState(false);
+  const [feedbackBusy, setFeedbackBusy] = useState(false);
+  const [feedbackError, setFeedbackError] = useState("");
   const [, startTransition] = useTransition();
 
   const normCode = code.toUpperCase();
@@ -61,10 +65,12 @@ export function LiveParticipant({ code }: { code: string }) {
     };
 
     void loadSnapshot();
-    const timer = setInterval(() => void loadSnapshot(), 3000);
+    const timer = setInterval(() => void loadSnapshot(), 15000);
+    const realtime = subscribeLiveInvalidations(normCode, () => void loadSnapshot());
     return () => {
       active = false;
       clearInterval(timer);
+      realtime.disconnect();
     };
   }, [normCode]);
 
@@ -107,6 +113,22 @@ export function LiveParticipant({ code }: { code: string }) {
     } finally {
       setBusy(false);
     }
+  };
+
+  const submitFeedback = async () => {
+    if (feedbackBusy || !feedbackPurposeAccepted) return;
+    setFeedbackBusy(true); setFeedbackError("");
+    try {
+      const res = await fetch(`/api/live/${normCode}/feedback`, {
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({clarity:feedbackClarity,usefulness:feedbackUseful,purposeAccepted:true}),
+      });
+      if (!res.ok) throw Error(res.status===409
+        ? "A avaliação já foi enviada ou a sessão foi encerrada."
+        : "Não foi possível salvar a avaliação. Tente novamente.");
+      setFeedbackSent(true);
+    } catch(e) {setFeedbackError(e instanceof Error?e.message:"Falha ao salvar avaliação.");}
+    finally {setFeedbackBusy(false);}
   };
 
   const phase = data?.phase ?? "pre";
@@ -297,17 +319,25 @@ export function LiveParticipant({ code }: { code: string }) {
                           </div>
                         </div>
 
+                        <label className="flex items-start gap-2 text-xs text-[#153a63]">
+                          <input type="checkbox" checked={feedbackPurposeAccepted}
+                            onChange={e=>setFeedbackPurposeAccepted(e.target.checked)}/>
+                          Concordo em enviar notas de clareza e utilidade para avaliação educacional.
+                          Não incluo sintomas nem dados clínicos nesta avaliação.
+                        </label>
+                        {feedbackError && <p role="alert" className="lx-warning">{feedbackError}</p>}
                         <button
                           type="button"
                           className="lx-button text-xs py-2 w-full"
-                          onClick={() => setFeedbackSent(true)}
+                          onClick={() => void submitFeedback()}
+                          disabled={!feedbackPurposeAccepted || feedbackBusy}
                         >
-                          Pré-visualizar avaliação
+                          {feedbackBusy ? "Salvando…" : "Enviar avaliação"}
                         </button>
                       </div>
                     ) : (
                       <div className="p-3 bg-emerald-50 text-emerald-800 text-xs rounded-lg border border-emerald-300">
-                        Prévia local: esta avaliação não foi enviada nem salva. A coleta persistente requer consentimento e proteção de dados.
+                        Avaliação educacional registrada no banco com sucesso. Respostas individuais não são exibidas no telão.
                       </div>
                     )}
                   </div>
@@ -317,7 +347,7 @@ export function LiveParticipant({ code }: { code: string }) {
                 <div className="mt-8 pt-4 border-t border-[#d5e4f1] text-[11px] text-[#9dbedc] space-y-1">
                   <p className="font-semibold text-[#071a33]">Privacidade garantida por design:</p>
                   <p className="text-gray-500 leading-relaxed">
-                    Não coletamos nome, e-mail, telefone, CPF nem dados clínicos. Um token temporário pseudônimo impede votos duplicados na mesma rodada.
+                    Votos e notas de experiência são armazenados com identificador pseudônimo efêmero, sem nome, CPF, sintomas ou prontuário. A avaliação é opcional; relatos sobre medicamentos permanecem apenas locais em /relatos.
                   </p>
                 </div>
 

@@ -64,11 +64,11 @@ export async function POST(req: NextRequest, { params }: Context) {
 
     const status = outcome.accepted
       ? 201
-      : outcome.reason === "RATE_LIMITED"
+      : (outcome.reason === "RATE_LIMITED" || outcome.reason === "RATE_LIMIT")
       ? 429
       : outcome.reason === "ALREADY_VOTED"
       ? 409
-      : outcome.reason === "EVENT_NOT_FOUND"
+      : (outcome.reason === "EVENT_NOT_FOUND" || outcome.reason === "NOT_FOUND")
       ? 404
       : 409;
 
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest, { params }: Context) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      path: "/api/live/" + code + "/vote",
+      path: "/api/live/" + code,
       maxAge: 60 * 60 * 4,
     });
 
