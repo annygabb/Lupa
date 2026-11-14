@@ -5,8 +5,8 @@
  * para desenvolvimento, testes E2E e demonstração no hackathon sem falhas 503.
  */
 
-const url = () => process.env.LUPA_SUPABASE_URL?.replace(/\/+$/, "");
-const secret = () => process.env.LUPA_SUPABASE_SERVICE_ROLE_KEY;
+const url = () => (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.LUPA_SUPABASE_URL)?.replace(/\/+$/, "");
+const secret = () => process.env.SUPABASE_SECRET_KEY || process.env.LUPA_SUPABASE_SERVICE_ROLE_KEY;
 
 export class LiveDatabaseUnavailable extends Error {
   constructor() {
@@ -26,7 +26,8 @@ export function allowLocalDemo(): boolean {
 export function liveDatabaseEnabled(): boolean {
   // Em produção, nunca simular persistência quando o banco está ausente.
   return allowLocalDemo() || (isSupabaseConfigured() &&
-    Boolean(process.env.LUPA_LIVE_SIGNING_SECRET && process.env.LUPA_LIVE_ADMIN_TOKEN));
+    Boolean(process.env.LUPA_LIVE_SIGNING_SECRET &&
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY));
 }
 
 export function liveDatabaseMode(): "supabase" | "local-resilient" {
@@ -157,7 +158,7 @@ export async function liveDb<T>(path: string, init: RequestInit = {}): Promise<T
     cache: "no-store",
     headers: {
       apikey: key,
-      Authorization: "Bearer " + key,
+      ...(key.startsWith("sb_secret_") ? {} : { Authorization: "Bearer " + key }),
       "Content-Type": "application/json",
       Accept: "application/json",
       ...init.headers,
@@ -179,6 +180,8 @@ export async function createLiveEvent(event: {
   question: string;
   choices: string[];
   correctIndex?: number;
+  organizationId?: string;
+  createdBy?: string;
   postQuestion?: {
     question: string;
     choices: string[];
@@ -197,6 +200,8 @@ export async function createLiveEvent(event: {
           choices: event.choices,
           correct_index: event.correctIndex ?? 1,
           post_question: event.postQuestion ?? null,
+          ...(event.organizationId ? { organization_id: event.organizationId } : {}),
+          ...(event.createdBy ? { created_by: event.createdBy } : {}),
         }),
       });
       return { code: event.code };
