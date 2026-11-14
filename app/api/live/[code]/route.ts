@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { advanceLivePhase, deleteLiveEvent, eventSnapshot, liveDatabaseEnabled, liveDb } from "@/lib/live/db";
+import { advanceLivePhase, deleteLiveEvent, eventSnapshot, liveDatabaseEnabled } from "@/lib/live/db";
 import { validCode } from "@/lib/live/security";
 import {
   getInstitutionalUser, requireEventManager, sameSiteWrite, privateJson,
