@@ -141,6 +141,12 @@ create trigger lupa_notify_vote_after_insert
  after insert on public.lupa_live_votes
  for each row execute function public.lupa_notify_vote_change();
 
+-- Feedback only broadcasts a generic refresh event, never the submitted notes.
+drop trigger if exists lupa_notify_feedback_after_insert on public.lupa_event_feedback;
+create trigger lupa_notify_feedback_after_insert
+ after insert on public.lupa_event_feedback
+ for each row execute function public.lupa_notify_vote_change();
+
 -- No persistent symptoms/medication data table: /relatos remains client-local
 -- pending governance, specific legal basis and independent clinical/privacy review.
 comment on table public.lupa_event_feedback is 'Optional feedback about educational experience only (1-5). No health/symptom reports.';
