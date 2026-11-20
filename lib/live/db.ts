@@ -94,6 +94,14 @@ interface LocalRateLimit {
   resetAt: number;
 }
 
+export interface LocalAuditEntry {
+  organizationId: string;
+  eventCode: string;
+  actorId: string;
+  action: "event_created" | "phase_advanced" | "event_deleted";
+  createdAt: string;
+}
+
 // Armazenamento singleton em memória global
 declare global {
   // eslint-disable-next-line no-var
@@ -102,11 +110,14 @@ declare global {
   var __LUPA_LOCAL_LIVE_VOTES__: LocalStoredVote[] | undefined;
   // eslint-disable-next-line no-var
   var __LUPA_LOCAL_LIVE_RATE_LIMITS__: Map<string, LocalRateLimit> | undefined;
+  // eslint-disable-next-line no-var
+  var __LUPA_LOCAL_LIVE_AUDITS__: LocalAuditEntry[] | undefined;
 }
 
 const localEvents = (globalThis.__LUPA_LOCAL_LIVE_EVENTS__ ??= new Map());
 const localVotes = (globalThis.__LUPA_LOCAL_LIVE_VOTES__ ??= []);
 const localRateLimits = (globalThis.__LUPA_LOCAL_LIVE_RATE_LIMITS__ ??= new Map());
+const localAudits = (globalThis.__LUPA_LOCAL_LIVE_AUDITS__ ??= []);
 
 // Seed inicial de um evento demo padrão para testes imediatos
 if (allowLocalDemo() && localEvents.size === 0) {
@@ -410,4 +421,63 @@ export async function deleteLiveEvent(code: string): Promise<boolean> {
     }
   }
   return true;
+}
+
+export async function recordAuditAction(params: {
+  organizationId: string;
+  eventCode: string;
+  actorId: string;
+  action: "event_created" | "phase_advanced" | "event_deleted";
+}): Promise<boolean> {
+  if (isSupabaseConfigured()) {
+    try {
+      await liveDb("lupa_live_audit", {
+        method: "POST",
+        body: JSON.stringify({
+          organization_id: params.organizationId,
+          event_code: params.eventCode,
+          actor_id: params.actorId,
+          action: params.action,
+        }),
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  if (allowLocalDemo()) {
+    localAudits.push({
+      organizationId: params.organizationId,
+      eventCode: params.eventCode,
+      actorId: params.actorId,
+      action: params.action,
+      createdAt: new Date().toISOString(),
+    });
+    return true;
+  }
+  return false;
+}
+
+export function getLocalAudits(): LocalAuditEntry[] {
+  return [...localAudits];
+}
+
+export function cleanupExpiredLocalRecords(): { eventsDeleted: number; rateLimitsDeleted: number } {
+  let eventsDeleted = 0;
+  const now = Date.now();
+  for (const [code, evt] of localEvents.entries()) {
+    if (new Date(evt.expiresAt).getTime() < now) {
+      localEvents.delete(code);
+      eventsDeleted++;
+    }
+  }
+  let rateLimitsDeleted = 0;
+  for (const [key, rl] of localRateLimits.entries()) {
+    if (rl.resetAt < now) {
+      localRateLimits.delete(key);
+      rateLimitsDeleted++;
+    }
+  }
+  return { eventsDeleted, rateLimitsDeleted };
 }

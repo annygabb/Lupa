@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { NextRequest } from "next/server";
-import { createLiveEvent, liveDatabaseEnabled, liveDb } from "@/lib/live/db";
+import { createLiveEvent, liveDatabaseEnabled, liveDb, recordAuditAction } from "@/lib/live/db";
 import { liveQuestion } from "@/lib/live/content";
 import {
   getInstitutionalUser, membershipsOf, requireOrganizationManager,
@@ -57,13 +57,12 @@ export async function POST(request: NextRequest) {
     });
     // An audit write must be durable, but failure to write audit does not
     // transform success into a retry that could create a second event.
-    try {
-      await liveDb("lupa_live_audit", {
-        method: "POST",
-        body: JSON.stringify({ organization_id: input.organizationId,
-          event_code: code, actor_id: user.id, action: "event_created" }),
-      });
-    } catch { /* Capture and alert in observability before production release. */ }
+    await recordAuditAction({
+      organizationId: input.organizationId,
+      eventCode: code,
+      actorId: user.id,
+      action: "event_created",
+    });
     return privateJson({
       code, organizationId: input.organizationId,
       joinUrl: "/live/" + code,

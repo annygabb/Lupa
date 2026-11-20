@@ -258,6 +258,36 @@ ${data.choices
     URL.revokeObjectURL(u);
   };
 
+  const exportCsvReport = () => {
+    if (!data) return;
+    const totalPre = preTotals.reduce((a, b) => a + b, 0);
+    const totalPost = postTotals.reduce((a, b) => a + b, 0);
+    const rows = [
+      ["Etapa", "Indice", "Alternativa", "Total_Votos", "Percentual"],
+    ];
+
+    data.choices.forEach((choice, i) => {
+      const pCount = preTotals[i];
+      const pPct = totalPre > 0 ? ((pCount / totalPre) * 100).toFixed(1) + "%" : "0.0%";
+      rows.push(["Pre", String(i), `"${choice.replace(/"/g, '""')}"`, String(pCount), pPct]);
+    });
+
+    data.choices.forEach((choice, i) => {
+      const postCount = postTotals[i];
+      const postPct = totalPost > 0 ? ((postCount / totalPost) * 100).toFixed(1) + "%" : "0.0%";
+      rows.push(["Pos", String(i), `"${choice.replace(/"/g, '""')}"`, String(postCount), postPct]);
+    });
+
+    const csvContent = "\uFEFF" + rows.map((r) => r.join(";")).join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = u;
+    a.download = `relatorio-lupa-live-${data.code}.csv`;
+    a.click();
+    URL.revokeObjectURL(u);
+  };
+
   const phase = data?.phase ?? "pre";
   const preTotals = [0, 1, 2].map(
     (i) => data?.counts.filter((c) => c.phase === "pre" && c.optionIndex === i).reduce((s, c) => s + c.count, 0) ?? 0
@@ -504,6 +534,13 @@ ${data.choices
                     onClick={exportReport}
                   >
                     Baixar Relatório (.md)
+                  </button>
+                  <button
+                    type="button"
+                    className="lx-button lx-button--line text-xs"
+                    onClick={exportCsvReport}
+                  >
+                    Baixar CSV (.csv)
                   </button>
                   <button
                     type="button"

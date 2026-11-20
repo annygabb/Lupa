@@ -18,6 +18,10 @@ const checks=[
   {path:"/dossie",contains:["Da pergunta à fonte.","Exportar dossiê"]},
   {path:"/live",contains:["A ciência acontece","Entrar em uma sessão"]},
   {path:"/live/organizador",contains:["Sua plateia participa.","Configuração do Evento"]},
+  {path:"/live/apresentacao/CAFE2026BEEF",contains:["Modo Telão","CAFE2026BEEF"]},
+  {path:"/live/CAFE2026BEEF",contains:["LUPA Live","CAFE2026BEEF"]},
+  {path:"/login",contains:["Login institucional"]},
+  {path:"/recuperar-acesso",contains:["Recuperar acesso institucional"]},
 ];
 
 async function waitForServer() {
@@ -46,4 +50,11 @@ const json=await health.json();
 const healthOk=health.status===200&&json.status==="ok";
 process.stdout.write((healthOk?"PASS":"FAIL")+" /api/health "+health.status+"\n");
 if(!healthOk)failures++;
+
+const liveHealth=await fetch(base+"/api/live/health",{signal:AbortSignal.timeout(5000)});
+const liveJson=await liveHealth.json();
+const liveHealthOk=liveHealth.status===200 || (liveHealth.status===503 && liveJson.status==="unconfigured");
+process.stdout.write((liveHealthOk?"PASS":"FAIL")+" /api/live/health "+liveHealth.status+" ("+liveJson.status+")\n");
+if(!liveHealthOk)failures++;
+
 if(failures) process.exitCode=1;
