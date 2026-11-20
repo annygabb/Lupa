@@ -147,15 +147,25 @@ export async function requireOrganizationManager(
   return memberships.some(m => m.organization_id === organizationId && mayManage(m.role));
 }
 
+export async function getEventOrganizationId(code: string): Promise<string | null> {
+  if (!/^[A-F0-9]{12}$/i.test(code)) return null;
+  try {
+    const events = await liveDb<Array<{ organization_id: string | null }>>(
+      "lupa_live_events?code=eq." + code + "&select=organization_id&limit=1"
+    );
+    return events?.[0]?.organization_id ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function requireEventManager(
   userId: string, code: string
 ): Promise<boolean> {
   if (!/^[A-F0-9]{12}$/i.test(code)) return false;
-  const events = await liveDb<Array<{ organization_id: string | null }>>(
-    "lupa_live_events?code=eq." + code + "&select=organization_id&limit=1"
-  );
-  if (!events.length || !events[0].organization_id) return false;
-  return requireOrganizationManager(userId, events[0].organization_id);
+  const orgId = await getEventOrganizationId(code);
+  if (!orgId) return false;
+  return requireOrganizationManager(userId, orgId);
 }
 
 export function privateJson(data: unknown, status = 200) {

@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
-import { advanceLivePhase, deleteLiveEvent, eventSnapshot, liveDatabaseEnabled } from "@/lib/live/db";
+import { advanceLivePhase, deleteLiveEvent, eventSnapshot, liveDatabaseEnabled, recordAuditAction } from "@/lib/live/db";
 import { validCode } from "@/lib/live/security";
 import {
-  getInstitutionalUser, requireEventManager, sameSiteWrite, privateJson,
+  getInstitutionalUser, requireEventManager, sameSiteWrite, privateJson, getEventOrganizationId,
 } from "@/lib/live/institutional-auth";
 
 export const runtime = "nodejs";
@@ -45,6 +45,15 @@ export async function PATCH(request: NextRequest, {params}: Context) {
     if (allowed[current.phase] !== next) return privateJson({ error:"INVALID_TRANSITION" }, 409);
     const changed = await advanceLivePhase(code, next as "reveal"|"post"|"closed");
     if (!changed) return privateJson({ error:"PHASE_CHANGED" }, 409);
+    const orgId = await getEventOrganizationId(code);
+    if (orgId) {
+      await recordAuditAction({
+        organizationId: orgId,
+        eventCode: code,
+        actorId: user.id,
+        action: "phase_advanced",
+      });
+    }
     return privateJson({ phase:next });
   } catch { return privateJson({ error:"LIVE_UPDATE_FAILED" }, 503); }
 }
@@ -58,7 +67,16 @@ export async function DELETE(request: NextRequest, {params}: Context) {
   if(!user) return privateJson({ error:"UNAUTHENTICATED" },401);
   try {
     if (!await requireEventManager(user.id,code)) return privateJson({ error:"FORBIDDEN" },403);
+    const orgId = await getEventOrganizationId(code);
     const deleted=await deleteLiveEvent(code);
+    if (deleted && orgId) {
+      await recordAuditAction({
+        organizationId: orgId,
+        eventCode: code,
+        actorId: user.id,
+        action: "event_deleted",
+      });
+    }
     return deleted ? privateJson({deleted:true,code}) : privateJson({error:"NOT_FOUND"},404);
   } catch {return privateJson({error:"LIVE_DELETE_FAILED"},503);}
 }

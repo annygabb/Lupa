@@ -17,6 +17,7 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
+    "cleanup:retention": "node scripts/retention-cleanup.mjs",
     "ingest:pubmed:dry-run": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/sync-pubmed.mjs --dry-run"
   },
   "dependencies": {
