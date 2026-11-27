@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.DS_Store
+npm-debug.log*
+playwright-report/
+test-results/
+
+# Relatórios locais do dry-run PubMed (candidatos; não versionar)
+reports/pubmed-dry-run/
+
+# Artefatos locais do E2E do Live (certificado de teste)
+.live-e2e/
