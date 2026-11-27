@@ -1,0 +1,136 @@
+name: Qualidade do LUPA Saúde
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm run lint
+      - name: Tipagem
+        run: pnpm run typecheck
+      - name: Testes unitários
+        run: pnpm run test
+      - name: Build
+        run: pnpm run build
+      - name: Smoke HTTP das rotas compiladas
+        run: |
+          PORT=3010 pnpm start &
+          APP_PID=$!
+          trap 'kill $APP_PID || true' EXIT
+          node scripts/smoke.mjs http://127.0.0.1:3010
+
+  browser-e2e:
+    name: Navegador real e acessibilidade
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Instalar Chromium do Playwright
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Compilar aplicação de teste
+        run: pnpm run build
+      - name: Executar E2E desktop e mobile e auditoria axe
+        run: pnpm run test:e2e
+      - name: Preservar relatório e evidências de falhas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  dependency-audit:
+    name: Segurança de dependências
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Auditar dependências de produção (high+)
+        run: pnpm audit --audit-level moderate
+
+  live-stack:
+    name: LUPA Live com Postgres (Supabase simulado)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      # Banco DESCARTÁVEL do runner. O nome precisa conter "e2e" (proteção do script).
+      LUPA_PG_TEST_URL: postgres://postgres:postgres@127.0.0.1:5432/lupa_e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.18.0"
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      - name: Aplicar migrações e testar RPCs, RLS e rotas sobre Postgres
+        run: |
+          node tests/support/prepare-db.mjs
+          pnpm exec vitest run tests/integration/live-supabase-stack.test.ts
+      - name: Instalar Chromium do Playwright
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Compilar aplicação
+        run: pnpm run build
+      - name: E2E do Live (login, organizador, telão, votos, fases, feedback, isolamento)
+        run: node scripts/test-live-stack.mjs

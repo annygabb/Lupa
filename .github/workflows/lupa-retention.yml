@@ -1,0 +1,36 @@
+name: LUPA Live - expurgo de retenção
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Somente conferir parâmetros, sem excluir registros"
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lupa-retention
+  cancel-in-progress: false
+
+jobs:
+  retention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Executar expurgo exclusivamente no projeto LUPA autorizado
+        env:
+          LUPA_SUPABASE_URL: ${{ secrets.LUPA_RETENTION_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.LUPA_RETENTION_SUPABASE_SECRET_KEY }}
+          LUPA_RETENTION_DAYS: "30"
+          LUPA_RETENTION_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+        run: node scripts/retention-cleanup.mjs

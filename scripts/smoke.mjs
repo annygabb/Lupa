@@ -1,0 +1,72 @@
+// Smoke HTTP da aplicação compilada, executado contra "next start" na CI.
+// Não é teste de navegador; é verificação das rotas de usuário e das páginas SSR/SSG.
+const base=process.argv[2]??"http://127.0.0.1:3010";
+const checks=[
+  {path:"/",contains:["Canetas para emagrecer","Por que o LUPA existe","benefícios, riscos"]},
+  {path:"/evidencias",contains:["Estudos sobre","medicamentos para emagrecer.","Em curadoria"]},
+  {path:"/evidencias/E04",contains:["SURMOUNT-1","Limitações"]},
+  {path:"/comparar",contains:["Compare estudos.","Enxergue além","dos números.","Cálculo combinado"]},
+  {path:"/musculos-uti",contains:["Além do peso","Que pergunta você quer responder?","A lacuna causal"]},
+  {path:"/projecoes",contains:["Projete hipóteses","Horizonte","2031","Exportar CSV"]},
+  {path:"/saude-mental",contains:["Emagrecer não resume","PHQ-9","41537305"]},
+  {path:"/metodologia",contains:["Cada conclusão precisa","Como analisamos","uma evidência","cenários","Fontes auditáveis"]},
+  {path:"/experiencias",contains:["A ciência fica mais clara","Desafio LUPA"]},
+  {path:"/corpo-evidencia",contains:["Seu cenário muda.","25% do peso perdido"]},
+  {path:"/relatos",contains:["Questionário opcional","Você utiliza atualmente"]},
+  {path:"/desafio",contains:["Você sabe interpretar uma evidência?","O desafio não é acertar por sorte."]},
+  {path:"/impacto",contains:["Duas hipóteses.","Comparação explicável"]},
+  {path:"/dossie",contains:["Da pergunta à fonte.","Exportar dossiê"]},
+  {path:"/live",contains:["A ciência acontece","Entrar em uma sessão"]},
+  {path:"/live/demo",contains:["Palco e Celular lado a lado","SANDBOX"]},
+  {path:"/live/organizador",contains:["Sua plateia participa.","Configuração do Evento"]},
+  {path:"/live/apresentacao/CAFE2026BEEF",contains:["Modo Telão","CAFE2026BEEF"]},
+  {path:"/live/CAFE2026BEEF",contains:["LUPA Live","CAFE2026BEEF"]},
+  {path:"/login",contains:["Login institucional"]},
+  {path:"/recuperar-acesso",contains:["Recuperar acesso institucional"]},
+];
+
+async function waitForServer() {
+  for(let attempt=0;attempt<40;attempt++){
+    try {
+      const response=await fetch(base,{signal:AbortSignal.timeout(1000)});
+      if(response.ok)return;
+    } catch { /* Next.js ainda iniciando */ }
+    await new Promise(resolve=>setTimeout(resolve,500));
+  }
+  throw Error("Servidor não respondeu em "+base);
+}
+
+await waitForServer();
+let failures=0;
+for(const check of checks){
+  const response=await fetch(base+check.path,{signal:AbortSignal.timeout(10_000)});
+  const html=await response.text();
+  const missing=check.contains.filter(word=>!html.includes(word));
+  const ok=response.status===200&&missing.length===0;
+  process.stdout.write((ok?"PASS":"FAIL")+" "+check.path+" HTTP "+response.status+(missing.length?" sem: "+missing.join(", "):"")+"\n");
+  if(!ok)failures++;
+}
+const health=await fetch(base+"/api/health",{signal:AbortSignal.timeout(5000)});
+const json=await health.json();
+const healthOk=health.status===200&&json.status==="ok";
+process.stdout.write((healthOk?"PASS":"FAIL")+" /api/health "+health.status+"\n");
+if(!healthOk)failures++;
+
+const liveHealth=await fetch(base+"/api/live/health",{signal:AbortSignal.timeout(5000)});
+const liveJson=await liveHealth.json();
+// O smoke do SITE PÚBLICO aceita o Live sem banco, mas deixa isso explícito:
+// as rotas /live/* acima só provam que as páginas abrem, não que o Live funciona.
+const liveReady=liveHealth.status===200 && liveJson.status==="ready";
+const liveHealthOk=liveReady || (liveHealth.status===503 && liveJson.status==="unconfigured") ||
+  (liveHealth.status===200 && liveJson.status==="local-demo");
+process.stdout.write((liveHealthOk?"PASS":"FAIL")+" /api/live/health "+liveHealth.status+" ("+liveJson.status+")\n");
+if(!liveHealthOk)failures++;
+if(!liveReady){
+  process.stdout.write("AVISO LUPA Live NÃO está pronto neste ambiente ("+liveJson.status+"): não demonstre login, organizador, votação ou telão.\n");
+  if(process.env.SMOKE_REQUIRE_LIVE==="1"){
+    process.stdout.write("FAIL SMOKE_REQUIRE_LIVE=1 exige /api/live/health = ready\n");
+    failures++;
+  }
+}
+
+if(failures) process.exitCode=1;

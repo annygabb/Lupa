@@ -1,0 +1,21 @@
+{
+  "servers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.86",
+        "--headless",
+        "--isolated"
+      ]
+    },
+    "agent-browser": {
+      "type": "stdio",
+      "command": "agent-browser",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}

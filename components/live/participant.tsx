@@ -1,0 +1,438 @@
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { subscribeLiveInvalidations } from "@/lib/live/realtime-client";
+import Link from "next/link";
+import type { LiveSnapshot } from "@/lib/live/db";
+import { liveErrorMessage, type LiveFailureKind } from "@/lib/live/public-snapshot";
+
+const STATUS_BADGE: Record<string, { label: string; live: boolean }> = {
+  pre: { label: "Votação aberta", live: true },
+  reveal: { label: "Em discussão", live: true },
+  post: { label: "2ª votação aberta", live: true },
+  closed: { label: "Encerrada", live: false },
+};
+
+const PHASE_LABELS: Record<string, { title: string; subtitle: string }> = {
+  pre: {
+    title: "1ª Rodada: Percepção Inicial",
+    subtitle: "Selecione a alternativa que melhor reflete sua compreensão do estudo.",
+  },
+  reveal: {
+    title: "Evidência em Discussão",
+    subtitle: "O facilitador está apresentando a evidência no telão. Aguarde a 2ª rodada.",
+  },
+  post: {
+    title: "2ª Rodada: Compreensão Equivalente",
+    subtitle: "Nova questão equivalente formulada para avaliar fixação do conceito.",
+  },
+  closed: {
+    title: "Sessão Concluída",
+    subtitle: "Agradecemos sua participação coletiva na construção da evidência.",
+  },
+};
+
+export function LiveParticipant({ code }: { code: string }) {
+  const [data, setData] = useState<LiveSnapshot | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [failure, setFailure] = useState<LiveFailureKind | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [submitted, setSubmitted] = useState<"pre" | "post" | null>(null);
+  const [chosen, setChosen] = useState<{ phase: "pre" | "post"; option: number } | null>(null);
+  const [feedbackClarity, setFeedbackClarity] = useState<number>(5);
+  const [feedbackUseful, setFeedbackUseful] = useState<number>(5);
+  const [feedbackSent, setFeedbackSent] = useState(false);
+  const [feedbackPurposeAccepted, setFeedbackPurposeAccepted] = useState(false);
+  const [feedbackBusy, setFeedbackBusy] = useState(false);
+  const [feedbackError, setFeedbackError] = useState("");
+  const [, startTransition] = useTransition();
+
+  const normCode = code.toUpperCase();
+
+  useEffect(() => {
+    let active = true;
+
+    const loadSnapshot = async () => {
+      try {
+        const response = await fetch(`/api/live/${normCode}`, { cache: "no-store" });
+        if (!response.ok) {
+          const body = (await response.json().catch(() => ({}))) as { error?: string };
+          const info = liveErrorMessage(response.status, body.error);
+          if (active) {
+            setFailure(info.kind);
+            setError(info.message);
+            // Sessão excluída ou inexistente: não manter na tela dados antigos como se estivessem ativos.
+            if (info.kind === "not-found" || info.kind === "invalid" || info.kind === "unconfigured") setData(null);
+          }
+          return;
+        }
+        const value = (await response.json()) as LiveSnapshot;
+        if (active) {
+          startTransition(() => {
+            setData(value);
+            setError("");
+            setFailure(null);
+            // O servidor informa se ESTA sessão já votou (sobrevive a recarregar a página).
+            if (value.viewer) {
+              if (value.viewer.feedbackSent) setFeedbackSent(true);
+              const votedNow = value.phase === "pre" ? value.viewer.votedPre
+                : value.phase === "post" ? value.viewer.votedPost : false;
+              if (votedNow) setSubmitted(value.phase as "pre" | "post");
+            }
+          });
+        }
+      } catch {
+        if (active) {
+          setFailure("offline");
+          setError("Sem conexão com o servidor. Tentaremos novamente automaticamente.");
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    void loadSnapshot();
+    const timer = setInterval(() => void loadSnapshot(), 15000);
+    const realtime = subscribeLiveInvalidations(normCode, () => void loadSnapshot(), "phase");
+    return () => {
+      active = false;
+      clearInterval(timer);
+      realtime.disconnect();
+    };
+  }, [normCode, reloadKey]);
+
+  const vote = async () => {
+    if (!data || chosen === null || chosen.phase !== data.phase || !["pre", "post"].includes(data.phase) || busy) {
+      return;
+    }
+
+    setBusy(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/live/${normCode}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phase: data.phase, optionIndex: chosen.option }),
+      });
+
+      const result = (await response.json().catch(() => ({}))) as { accepted?: boolean; reason?: string; error?: string };
+
+      if (!response.ok) {
+        if (result.reason === "ALREADY_VOTED") {
+          setSubmitted(data.phase as "pre" | "post");
+          throw new Error("Esta sessão já registrou seu voto nesta rodada.");
+        }
+        if (result.error === "SESSION_REQUIRED") {
+          // A sessão de participante expirou ou não foi emitida: renova e pede nova confirmação.
+          setReloadKey(k => k + 1);
+          throw new Error("Sua participação foi renovada. Confira a alternativa e confirme novamente.");
+        }
+        if (result.reason === "PHASE_UNAVAILABLE") {
+          setReloadKey(k => k + 1);
+          throw new Error("Esta rodada já foi encerrada pelo organizador.");
+        }
+        throw new Error(liveErrorMessage(response.status, result.error).message);
+      }
+
+      if (result.accepted) {
+        setSubmitted(data.phase as "pre" | "post");
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Sem conexão: o voto não foi registrado. Tente novamente.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const submitFeedback = async () => {
+    if (feedbackBusy || !feedbackPurposeAccepted) return;
+    setFeedbackBusy(true); setFeedbackError("");
+    try {
+      const res = await fetch(`/api/live/${normCode}/feedback`, {
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({clarity:feedbackClarity,usefulness:feedbackUseful,purposeAccepted:true}),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (body.error === "ALREADY_SENT") { setFeedbackSent(true); return; }
+        if (body.error === "SESSION_REQUIRED") {
+          setReloadKey(k => k + 1);
+          throw Error("Sua participação foi renovada. Envie a avaliação novamente.");
+        }
+        throw Error(body.error === "FEEDBACK_NOT_OPEN"
+          ? "A avaliação só fica aberta enquanto a sessão encerrada não expira."
+          : liveErrorMessage(res.status, body.error).message);
+      }
+      setFeedbackSent(true);
+    } catch(e) {setFeedbackError(e instanceof Error?e.message:"Falha ao salvar avaliação.");}
+    finally {setFeedbackBusy(false);}
+  };
+
+  const phase = data?.phase ?? "pre";
+  const votedInThisPhase = phase === submitted;
+  const phaseInfo = PHASE_LABELS[phase] || PHASE_LABELS.pre;
+
+  // No pós-teste, se houver pergunta equivalente curada, exibe ela
+  const questionText =
+    phase === "post" && data?.postQuestion ? data.postQuestion.question : data?.question;
+  const choicesList =
+    phase === "post" && data?.postQuestion ? data.postQuestion.choices : data?.choices || [];
+
+  return (
+    <div className="lx">
+      <div className="lx-main max-w-xl mx-auto">
+        {/* Cabeçalho Mobile */}
+        <header className="lx-head">
+          <div className="flex items-center justify-between mb-2">
+            <span className="lx-kicker m-0">LUPA Live · Sala {normCode}</span>
+            {data ? (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-[#153a63] text-white">
+                <span className={`w-1.5 h-1.5 rounded-full ${STATUS_BADGE[phase]?.live ? "bg-emerald-400 animate-pulse" : "bg-gray-300"}`} aria-hidden="true" />
+                {STATUS_BADGE[phase]?.label ?? phase}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-gray-200 text-[#0e2a4a]">
+                <span className="w-1.5 h-1.5 rounded-full bg-gray-500" aria-hidden="true" />
+                {loading ? "Conectando" : "Sem sessão ativa"}
+              </span>
+            )}
+          </div>
+          <h1>{data?.title ?? "Investigação Coletiva"}</h1>
+          <p className="lx-lead">{loading ? "Conectando à sessão…" : data ? phaseInfo.subtitle : "Não há uma sessão ativa disponível para este código."}</p>
+        </header>
+
+        <div className="lx-cols" style={{ gridTemplateColumns: "1fr" }}>
+          <section className="lx-panel">
+            {error && (
+              <div role="alert" className="lx-warning mb-4">
+                {error}
+              </div>
+            )}
+
+            {!data ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-[#0e2a4a] mb-4">
+                  {loading ? "Localizando a sessão do evento..." : failure === "unconfigured"
+                    ? "As sessões ao vivo não estão disponíveis neste ambiente."
+                    : failure === "offline" || failure === "unavailable"
+                      ? "Não foi possível carregar a sessão agora."
+                      : "Não encontramos uma sessão com este código."}
+                </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <Link href="/live" className="lx-button inline-block text-xs">
+                    Digitar outro código
+                  </Link>
+                  {failure === "unconfigured" && (
+                    <Link href="/live/demo" className="lx-button lx-button--line inline-block text-xs">
+                      Ver demonstração simulada
+                    </Link>
+                  )}
+                  {(failure === "offline" || failure === "unavailable") && (
+                    <button type="button" className="lx-button lx-button--line text-xs" onClick={() => setReloadKey(k => k + 1)}>
+                      Tentar novamente
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-3 border-b pb-2">
+                  <span className="text-xs uppercase font-mono tracking-wider text-[#1e5486] font-bold">
+                    {phaseInfo.title}
+                  </span>
+                  {votedInThisPhase && (
+                    <span className="text-xs font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
+                      ✓ Voto Computado
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="text-xl font-bold text-[#071a33] mb-6 leading-relaxed">
+                  {questionText}
+                </h2>
+
+                {/* Alternativas de Votação (Rodada Pré ou Pós) */}
+                {(phase === "pre" || phase === "post") && (
+                  <>
+                    <div className="lx-list space-y-3" role="group" aria-label="Alternativas da questão">
+                      {choicesList.map((choice, i) => {
+                        const isSelected = chosen?.phase === phase && chosen.option === i;
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            className={`lx-choice w-full text-left p-4 rounded-xl border transition-all ${
+                              isSelected
+                                ? "bg-[#153a63] text-white border-[#071a33] shadow-md ring-2 ring-[#3d78b0]"
+                                : "bg-white text-[#0e2a4a] border-[#d5e4f1] hover:border-[#3d78b0]"
+                            }`}
+                            aria-pressed={isSelected}
+                            disabled={votedInThisPhase || busy}
+                            onClick={() => setChosen({ phase: data.phase as "pre" | "post", option: i })}
+                          >
+                            <span className="font-bold mr-2 text-sm">{String.fromCharCode(65 + i)}.</span>
+                            <span className="text-sm leading-relaxed">{choice}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-6">
+                      <button
+                        className="lx-button w-full py-3.5 text-base font-bold shadow-md"
+                        type="button"
+                        onClick={vote}
+                        disabled={votedInThisPhase || busy || chosen === null || chosen.phase !== phase}
+                      >
+                        {busy
+                          ? "Gravando anonimamente…"
+                          : votedInThisPhase
+                          ? "✓ Resposta Registrada nesta Rodada"
+                          : "Confirmar e Enviar Resposta →"}
+                      </button>
+                    </div>
+
+                    {votedInThisPhase && (
+                      <div role="status" className="lx-science mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs">
+                        <strong>Resposta confirmada pelo servidor.</strong> Seu voto foi registrado com um identificador pseudônimo de sessão. Os totais agregados aparecem no telão quando o organizador liberar.
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Fase de Revelação da Evidência */}
+                {phase === "reveal" && (
+                  <div className="lx-science p-5 rounded-2xl bg-[#eef4fa] border-2 border-[#3d78b0] text-[#0e2a4a]">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#1e5486] font-bold mb-2">
+                      <span>●</span> Revelação da Evidência Científica
+                    </div>
+                    <p className="text-sm leading-relaxed font-medium mb-3">
+                      O apresentador está discutindo os dados no telão principal.
+                    </p>
+                    <p className="text-xs text-[#153a63] leading-relaxed">
+                      Em breve será aberta uma segunda rodada com questão equivalente para consolidar o entendimento.
+                    </p>
+                  </div>
+                )}
+
+                {/* Fase de Encerramento & Feedback Opcional */}
+                {phase === "closed" && (
+                  <div className="space-y-4">
+                    <div className="lx-science p-5 rounded-xl bg-[#eef4fa] border border-[#d5e4f1]">
+                      <h3 className="font-bold text-[#071a33] text-base mb-1">Sessão Finalizada</h3>
+                      <p className="text-xs text-[#0e2a4a] leading-relaxed">
+                        Obrigada por participar! A ciência ganha rigor quando confrontamos manchetes com as fontes originais.
+                      </p>
+                      <Link href="/relatos" className="lx-button lx-button--line mt-3 text-xs">
+                        Reflexão voluntária sobre o uso e possíveis sintomas (somente local)
+                      </Link>
+                    </div>
+
+                    {/* Formulário de Feedback Opcional */}
+                    {!feedbackSent ? (
+                      <div className="p-4 rounded-xl border border-[#d5e4f1] bg-white space-y-4">
+                        <p className="text-xs font-bold text-[#071a33] uppercase font-mono">
+                          Feedback Rápido da Experiência (Opcional)
+                        </p>
+
+                        <fieldset>
+                          <legend className="text-xs text-[#0e2a4a] block mb-1">
+                            Clareza da explicação (1 a 5):
+                          </legend>
+                          <div className="flex gap-2" role="radiogroup" aria-label="Clareza da explicação">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                type="button"
+                                role="radio"
+                                aria-checked={feedbackClarity === star}
+                                aria-label={star + " de 5"}
+                                onClick={() => setFeedbackClarity(star)}
+                                className={`min-w-11 min-h-11 rounded-lg text-xs font-mono font-bold ${
+                                  feedbackClarity >= star
+                                    ? "bg-[#1e5486] text-white"
+                                    : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {star}★
+                              </button>
+                            ))}
+                          </div>
+                        </fieldset>
+
+                        <fieldset>
+                          <legend className="text-xs text-[#0e2a4a] block mb-1">
+                            Utilidade do aprendizado (1 a 5):
+                          </legend>
+                          <div className="flex gap-2" role="radiogroup" aria-label="Utilidade do aprendizado">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                type="button"
+                                role="radio"
+                                aria-checked={feedbackUseful === star}
+                                aria-label={star + " de 5"}
+                                onClick={() => setFeedbackUseful(star)}
+                                className={`min-w-11 min-h-11 rounded-lg text-xs font-mono font-bold ${
+                                  feedbackUseful >= star
+                                    ? "bg-[#1e5486] text-white"
+                                    : "bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                {star}★
+                              </button>
+                            ))}
+                          </div>
+                        </fieldset>
+
+                        <label className="flex items-start gap-2 text-xs text-[#153a63]">
+                          <input type="checkbox" checked={feedbackPurposeAccepted}
+                            onChange={e=>setFeedbackPurposeAccepted(e.target.checked)}/>
+                          Concordo em enviar notas de clareza e utilidade para avaliação educacional.
+                          Não incluo sintomas nem dados clínicos nesta avaliação.
+                        </label>
+                        {feedbackError && <p role="alert" className="lx-warning">{feedbackError}</p>}
+                        <button
+                          type="button"
+                          className="lx-button text-xs py-2 w-full"
+                          onClick={() => void submitFeedback()}
+                          disabled={!feedbackPurposeAccepted || feedbackBusy}
+                        >
+                          {feedbackBusy ? "Salvando…" : "Enviar avaliação"}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="p-3 bg-emerald-50 text-emerald-800 text-xs rounded-lg border border-emerald-300">
+                        Avaliação registrada. Respostas individuais não são exibidas no telão; o organizador vê apenas médias de grupos com 5 ou mais avaliações.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Nota de Privacidade & LGPD */}
+                <div className="mt-8 pt-4 border-t border-[#d5e4f1] text-[11px] text-[#9dbedc] space-y-1">
+                  <p className="font-semibold text-[#071a33]">Privacidade por design:</p>
+                  <p className="text-gray-500 leading-relaxed">
+                    Votos e notas de experiência são armazenados com identificador pseudônimo efêmero, sem nome, CPF, sintomas ou prontuário. A avaliação é opcional; relatos sobre medicamentos permanecem apenas locais em /relatos.
+                  </p>
+                </div>
+
+                <div className="mt-4 pt-2 flex justify-between items-center text-xs">
+                  <Link href="/evidencias" className="text-[#1e5486] hover:underline font-medium">
+                    Explorar os 50 Estudos Canônicos →
+                  </Link>
+                  <Link href="/" className="text-gray-500 hover:underline">
+                    Início
+                  </Link>
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
