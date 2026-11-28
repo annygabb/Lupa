@@ -48,6 +48,7 @@ const CLAIM_RULES: readonly ClaimRule[] = [
 const SENSATIONAL_MARKERS: readonly { pattern: string; label: string }[] = [
   { pattern: "causa", label: "Linguagem de causalidade direta ('causa')" },
   { pattern: "prova", label: "Afirmação absoluta ('prova')" },
+  { pattern: "comprova", label: "Afirmação absoluta ('comprova')" },
   { pattern: "derrete", label: "Termo sensacionalista ('derrete')" },
   { pattern: "garante", label: "Promessa categórica ('garante')" },
   { pattern: "definitivo", label: "Promessa categórica ('definitivo')" },
@@ -66,6 +67,17 @@ export function normalizeText(raw: string): string {
     .trim();
 }
 
+/**
+ * Procura o termo no início de uma palavra ("causa" aceita "causam", mas não "acusa";
+ * "prova" não casa com "aprova"). Termos de até 3 letras ("uti", "sus", "dxa") só contam
+ * como palavra inteira, com plural opcional: "utilizar" e "útil" não são UTI.
+ */
+function containsTerm(normalized: string, term: string): boolean {
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const ending = term.length <= 3 ? "s?(?![a-z0-9])" : "";
+  return new RegExp("(?:^|[^a-z0-9])" + escaped + ending).test(normalized);
+}
+
 export interface HeadlineMatchResult {
   matched: boolean;
   status: "matched" | "out_of_scope";
@@ -81,7 +93,7 @@ export interface HeadlineMatchResult {
 export function matchHeadlineToClaim(rawText: string): HeadlineMatchResult {
   const normalized = normalizeText(rawText);
   const sensationalSignals = SENSATIONAL_MARKERS
-    .filter((m) => normalized.includes(m.pattern))
+    .filter((m) => containsTerm(normalized, m.pattern))
     .map((m) => m.label);
 
   let best: { claimId: string; score: number; terms: string[] } | null = null;
@@ -91,13 +103,13 @@ export function matchHeadlineToClaim(rawText: string): HeadlineMatchResult {
     const terms: string[] = [];
 
     for (const term of rule.strongTerms) {
-      if (normalized.includes(term)) {
+      if (containsTerm(normalized, term)) {
         score += 3;
         terms.push(term);
       }
     }
     for (const term of rule.supportingTerms) {
-      if (normalized.includes(term)) {
+      if (containsTerm(normalized, term)) {
         score += 1;
         terms.push(term);
       }

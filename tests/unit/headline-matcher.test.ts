@@ -18,6 +18,19 @@ describe("Raio-X determinístico de manchetes", () => {
     expect(res.interpretation?.classification).toBe("not_comparable");
   });
 
+  it("não confunde palavras comuns com termos curtos ou sinais sensacionalistas", () => {
+    for (const text of ["Ozempic é útil para emagrecer?", "Vale a pena utilizar Mounjaro?"]) {
+      const res = matchHeadlineToClaim(text);
+      expect(res.claimId).not.toBe("uti-mortalidade-nao-e-efeito-do-medicamento");
+      expect(res.matchedTerms).not.toContain("uti");
+    }
+    expect(matchHeadlineToClaim("Anvisa aprova nova caneta para obesidade").sensationalSignals).toEqual([]);
+    expect(matchHeadlineToClaim("Pacientes nas UTIs morrem mais?").claimId).toBe("uti-mortalidade-nao-e-efeito-do-medicamento");
+    expect(matchHeadlineToClaim("Estudo comprova que caneta causa depressão").sensationalSignals)
+      .toEqual(expect.arrayContaining(["Afirmação absoluta ('comprova')", "Linguagem de causalidade direta ('causa')"]));
+    expect(matchHeadlineToClaim("Canetas podem matar?").sensationalSignals.length).toBeGreaterThan(0);
+  });
+
   it("devolve out_of_scope quando o texto está fora do acervo curado (sem inventar resposta)", () => {
     const res = matchHeadlineToClaim("Qual a cotação do dólar amanhã?");
     expect(res.matched).toBe(false);

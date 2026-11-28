@@ -41,8 +41,9 @@ export function LiveParticipant({ code }: { code: string }) {
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState<"pre" | "post" | null>(null);
   const [chosen, setChosen] = useState<{ phase: "pre" | "post"; option: number } | null>(null);
-  const [feedbackClarity, setFeedbackClarity] = useState<number>(5);
-  const [feedbackUseful, setFeedbackUseful] = useState<number>(5);
+  // Sem nota pré-selecionada: um 5/5 já marcado inflaria a avaliação de quem só confirma o envio.
+  const [feedbackClarity, setFeedbackClarity] = useState<number | null>(null);
+  const [feedbackUseful, setFeedbackUseful] = useState<number | null>(null);
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [feedbackPurposeAccepted, setFeedbackPurposeAccepted] = useState(false);
   const [feedbackBusy, setFeedbackBusy] = useState(false);
@@ -148,7 +149,7 @@ export function LiveParticipant({ code }: { code: string }) {
   };
 
   const submitFeedback = async () => {
-    if (feedbackBusy || !feedbackPurposeAccepted) return;
+    if (feedbackBusy || !feedbackPurposeAccepted || feedbackClarity === null || feedbackUseful === null) return;
     setFeedbackBusy(true); setFeedbackError("");
     try {
       const res = await fetch(`/api/live/${normCode}/feedback`, {
@@ -352,7 +353,7 @@ export function LiveParticipant({ code }: { code: string }) {
                                 aria-label={star + " de 5"}
                                 onClick={() => setFeedbackClarity(star)}
                                 className={`min-w-11 min-h-11 rounded-lg text-xs font-mono font-bold ${
-                                  feedbackClarity >= star
+                                  feedbackClarity !== null && feedbackClarity >= star
                                     ? "bg-[#1e5486] text-white"
                                     : "bg-gray-100 text-gray-700"
                                 }`}
@@ -377,7 +378,7 @@ export function LiveParticipant({ code }: { code: string }) {
                                 aria-label={star + " de 5"}
                                 onClick={() => setFeedbackUseful(star)}
                                 className={`min-w-11 min-h-11 rounded-lg text-xs font-mono font-bold ${
-                                  feedbackUseful >= star
+                                  feedbackUseful !== null && feedbackUseful >= star
                                     ? "bg-[#1e5486] text-white"
                                     : "bg-gray-100 text-gray-700"
                                 }`}
@@ -399,9 +400,9 @@ export function LiveParticipant({ code }: { code: string }) {
                           type="button"
                           className="lx-button text-xs py-2 w-full"
                           onClick={() => void submitFeedback()}
-                          disabled={!feedbackPurposeAccepted || feedbackBusy}
+                          disabled={!feedbackPurposeAccepted || feedbackBusy || feedbackClarity === null || feedbackUseful === null}
                         >
-                          {feedbackBusy ? "Salvando…" : "Enviar avaliação"}
+                          {feedbackBusy ? "Salvando…" : feedbackClarity === null || feedbackUseful === null ? "Escolha as duas notas" : "Enviar avaliação"}
                         </button>
                       </div>
                     ) : (
@@ -422,7 +423,7 @@ export function LiveParticipant({ code }: { code: string }) {
 
                 <div className="mt-4 pt-2 flex justify-between items-center text-xs">
                   <Link href="/evidencias" className="text-[#1e5486] hover:underline font-medium">
-                    Explorar os 50 Estudos Canônicos →
+                    Explorar as 50 referências do acervo →
                   </Link>
                   <Link href="/" className="text-gray-500 hover:underline">
                     Início

@@ -121,7 +121,7 @@ export function ScenarioLab() {
                       <label htmlFor={id} className="px-field__label">{f.label}</label>
                       <div className="px-field__row">
                         <input id={id} type="number" inputMode="decimal" className="px-field__input" min={f.min} max={f.max} step={f.step}
-                          value={v} onChange={e => setField(f.key, Number(e.target.value))}
+                          value={Number.isFinite(v) ? v : ""} onChange={e => setField(f.key, e.target.value === "" ? NaN : Number(e.target.value))}
                           aria-invalid={invalid || undefined} aria-describedby={id + "-help" + (invalid ? " " + id + "-error" : "")}/>
                         <span className="px-field__unit" aria-hidden="true">{f.unit}</span>
                       </div>

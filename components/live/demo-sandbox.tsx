@@ -23,15 +23,16 @@ const NEXT_PHASE: Record<SandboxPhase, { next: SandboxPhase; label: string } | n
 
 /**
  * A demonstração começa SEM votos. Votos de "plateia" só aparecem quando o apresentador
- * clica em "+5 votos fictícios", e são distribuídos da MESMA forma no pré e no pós-teste:
- * a sandbox não embute nenhum ganho de aprendizagem. Qualquer diferença entre rodadas
- * vem dos cliques de quem está testando, não de um resultado medido.
+ * clica em "+6 votos fictícios": 2 para cada alternativa, no pré e no pós-teste. Como o
+ * gabarito muda de posição entre as rodadas, só a divisão igual garante que a sandbox não
+ * embute ganho (nem perda) de aprendizagem. Qualquer diferença entre rodadas vem dos
+ * cliques de quem está testando, não de um resultado medido.
  */
 function initialAudienceVotes(): [number, number, number] {
   return [0, 0, 0];
 }
 
-const FICTITIOUS_PATTERNS: Array<[number, number, number]> = [[2, 2, 1], [1, 2, 2], [2, 1, 2]];
+const FICTITIOUS_BURST: [number, number, number] = [2, 2, 2];
 
 export function LiveDemoSandbox() {
   const options = liveOptions;
@@ -84,12 +85,9 @@ export function LiveDemoSandbox() {
     }
   };
 
-  const [burstIndex, setBurstIndex] = useState(0);
   const simulateAudienceBurst = () => {
-    const pattern = FICTITIOUS_PATTERNS[burstIndex % FICTITIOUS_PATTERNS.length];
-    setBurstIndex(i => i + 1);
     const add = (prev: [number, number, number]): [number, number, number] =>
-      [prev[0] + pattern[0], prev[1] + pattern[1], prev[2] + pattern[2]];
+      [prev[0] + FICTITIOUS_BURST[0], prev[1] + FICTITIOUS_BURST[1], prev[2] + FICTITIOUS_BURST[2]];
     if (phase === "pre") setPreCounts(add);
     else if (phase === "post") setPostCounts(add);
   };
@@ -124,7 +122,7 @@ export function LiveDemoSandbox() {
 
         <div className="lx-warning" role="note" data-testid="sandbox-disclaimer">
           <strong>Simulação com dados fictícios.</strong> Nenhum voto desta página vem de pessoas reais nem é salvo.
-          Os botões “+5 votos fictícios” distribuem votos igualmente entre as alternativas no pré e no pós-teste;
+          Os botões “+6 votos fictícios” dão 2 votos a cada alternativa, no pré e no pós-teste;
           a comparação final é ilustrativa e <strong>não é um resultado de aprendizagem medido</strong>.
         </div>
 
@@ -149,7 +147,7 @@ export function LiveDemoSandbox() {
               )}
               {(phase === "pre" || phase === "post") && (
                 <button type="button" className="lx-button lx-button--line" onClick={simulateAudienceBurst}>
-                  +5 votos fictícios
+                  +6 votos fictícios
                 </button>
               )}
               <button type="button" className="lx-button lx-button--line" onClick={() => resetSandbox(claimId)}>

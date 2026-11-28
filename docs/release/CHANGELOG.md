@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-28 — Revisão de código
+
+### Interface e conteúdo
+- Busca do acervo: "tirzepatida", "semaglutida" e "liraglutida" encontram os mesmos registros que o nome em inglês
+  e o comercial (antes cada grafia perdia registros); plurais simples ("músculos", "UTIs", "renais") deixam de zerar
+  a busca. O texto pesquisável de cada registro é calculado uma vez.
+- Raio-X de manchetes: termos casam no início da palavra e termos curtos só como palavra inteira. "Ozempic é útil?"
+  e "utilizar Mounjaro" não são mais classificados como manchete sobre UTI; "Anvisa aprova" não é mais marcado como
+  afirmação absoluta; "comprova" passa a ser sinalizado.
+- `/live/demo`: "+6 votos fictícios" (2 por alternativa). O padrão anterior de 5 votos mudava a cada clique e, como o
+  gabarito muda de posição entre pré e pós, exibia diferenças de até ±20 p.p. sem nenhum voto real.
+- Laboratório de cenários: apagar um campo numérico mostra o erro de validação em vez de recalcular com 0.
+- Participante do Live: as notas de clareza e utilidade começam sem seleção (antes 5/5 pré-marcado).
+- Movimento reduzido: animações infinitas param de piscar (`animation-iteration-count: 1`).
+- Textos: telão não chama a evidência de "revisada"; participante fala em "50 referências do acervo".
+
 ## 2026-11-26 — Remediação da auditoria técnica
 
 ### LUPA Live (segurança e backend)

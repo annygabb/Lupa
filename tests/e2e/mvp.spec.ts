@@ -108,6 +108,19 @@ test.describe("LUPA — fluxos reais",()=>{
     await expect(page.getByRole("button",{name:"Exportar CSV"})).toBeVisible();
   });
 
+  test("simulador não troca campo apagado por zero",async({page})=>{
+    await page.goto("/projecoes");
+    await page.waitForFunction(()=>Boolean(document.documentElement.dataset.motion));
+    const retention=page.locator("#scenario-annualRetentionPct");
+    await retention.fill("");
+    await expect(retention).toHaveValue("");
+    await expect(retention).toHaveAttribute("aria-invalid","true");
+    await expect(page.locator("#scenario-annualRetentionPct-error")).toHaveText("Use um valor entre 0 e 100.");
+    await expect(page.locator('section[aria-label="Horizontes de simulação"]')).toHaveCount(0);
+    await retention.fill("65");
+    await expect(page.locator('section[aria-label="Horizontes de simulação"]')).toBeVisible();
+  });
+
   test("simulador exporta CSV e JSON com premissas rastreáveis",async({page})=>{
     await page.goto("/projecoes");
     // Espera a hidratação (o provider de movimento marca o <html>) antes de clicar.

@@ -16,7 +16,7 @@ const PHASE_LABELS: Record<string, { title: string; subtitle: string; badge: str
   },
   reveal: {
     title: "Revelação & Evidência Científica",
-    subtitle: "Confrontando a percepção da plateia com a evidência canônica revisada.",
+    subtitle: "Confrontando a percepção da plateia com a evidência em curadoria, sem revisão clínica independente.",
     badge: "Discussão Científica",
   },
   post: {

@@ -130,7 +130,8 @@ test.describe.serial("LUPA Live com banco", () => {
     await expect(page.getByText(/Fase Atual: Sessão Encerrada/)).toBeVisible();
     await p1.reload();
     await p1.getByLabel(/Concordo em enviar notas/).check();
-    await p1.getByRole("radio", { name: "4 de 5" }).first().click();
+    await p1.getByRole("radiogroup", { name: "Clareza da explicação" }).getByRole("radio", { name: "4 de 5" }).click();
+    await p1.getByRole("radiogroup", { name: "Utilidade do aprendizado" }).getByRole("radio", { name: "3 de 5" }).click();
     await p1.getByRole("button", { name: "Enviar avaliação" }).click();
     await expect(p1.getByText(/Avaliação registrada/)).toBeVisible();
     expect(await count("feedback")).toBe(1);

@@ -53,3 +53,22 @@ test("sandbox deixa explícito que os votos são fictícios e não fabrica ganho
   await page.getByRole("button", { name: /Encerrar simulação/ }).click();
   await expect(page.getByTestId("sandbox-result-disclaimer")).toContainText("(0 no pré, 0 no pós)");
 });
+
+test("votos fictícios não criam diferença entre pré e pós em nenhum objetivo", async ({ page }) => {
+  await page.goto("/live/demo");
+  const objective = page.getByLabel("Objetivo científico da sessão");
+  const ids = await objective.locator("option").evaluateAll(options => options.map(o => (o as HTMLOptionElement).value));
+  expect(ids.length).toBeGreaterThan(1);
+  for (const id of ids) {
+    await objective.selectOption(id);
+    await page.getByRole("button", { name: "+6 votos fictícios" }).click();
+    await page.getByRole("button", { name: /Encerrar Pré e Revelar/ }).click();
+    await page.getByRole("button", { name: /Abrir 2ª Rodada/ }).click();
+    await page.getByRole("button", { name: "+6 votos fictícios" }).click();
+    await page.getByRole("button", { name: /Encerrar simulação/ }).click();
+    // O gabarito muda de posição entre as rodadas; com votos iguais por alternativa, a diferença é zero.
+    await expect(page.getByTestId("sandbox-result-disclaimer")).toContainText("(6 no pré, 6 no pós)");
+    await expect(page.getByText("+0 p.p.")).toBeVisible();
+    await page.getByRole("button", { name: "Reiniciar demo" }).click();
+  }
+});

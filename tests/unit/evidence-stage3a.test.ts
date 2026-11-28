@@ -72,6 +72,21 @@ describe("Etapa 3A: busca e filtros locais",()=>{
     expect(searchUnifiedEvidence({query:"Ozempic"}).total).toBeGreaterThan(0);
     expect(searchUnifiedEvidence({query:"Zepbound"}).total).toBeGreaterThan(0);
   });
+  it("encontra os mesmos registros pelo nome em português, em inglês ou comercial",()=>{
+    const ids=(query:string)=>searchUnifiedEvidence({query,limit:100}).items.map(x=>x.id).sort();
+    expect(ids("tirzepatida")).toEqual(ids("tirzepatide"));
+    expect(ids("Mounjaro")).toEqual(ids("tirzepatida"));
+    expect(ids("semaglutida")).toEqual(ids("Ozempic"));
+    expect(ids("liraglutida")).toEqual(ids("liraglutide"));
+    // E13 (UTI) só cita a tirzepatida para dizer que ela não foi avaliada: não entra na busca pelo medicamento.
+    expect(ids("tirzepatida")).not.toContain("E13");
+  });
+  it("aceita plurais simples sem perder os resultados do singular",()=>{
+    for(const [plural,singular] of [["músculos","músculo"],["UTIs","UTI"],["renais","renal"],["efeitos adversos","efeito adverso"]]){
+      expect(searchUnifiedEvidence({query:plural,limit:100}).total).toBe(searchUnifiedEvidence({query:singular,limit:100}).total);
+    }
+    expect(searchUnifiedEvidence({query:"músculos"}).total).toBeGreaterThan(0);
+  });
   it("filtra temas e medicamentos em conjunção",()=>{
     const result=searchUnifiedEvidence({topics:["mental"],drugs:["tirzepatide"]});
     expect(result.total).toBeGreaterThan(0);

@@ -101,5 +101,7 @@ a, button, select, summary { -webkit-tap-highlight-color: transparent; }
   *, *::before, *::after {
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
+    /* Sem isto, animações infinitas (animate-pulse/animate-ping) piscam a cada quadro. */
+    animation-iteration-count: 1 !important;
   }
 }
